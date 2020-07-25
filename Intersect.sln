@@ -30,6 +30,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intersect.Tests.Network", "Intersect.Tests.Network\Intersect.Tests.Network.csproj", "{E66A4B60-E79C-4222-A702-94D3CC7A2377}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intersect.Building", "Intersect.Building\Intersect.Building.csproj", "{3CEB8210-E2AD-429C-86F0-EAAD9F49C160}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intersect.Examples.ClientPlugin", "Intersect.Examples.ClientPlugin\Intersect.Examples.ClientPlugin.csproj", "{4208A6E4-D72C-4E8C-88EE-61F939777062}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -323,6 +324,26 @@ Global
 		{3CEB8210-E2AD-429C-86F0-EAAD9F49C160}.Tespia|Any CPU.Build.0 = Release|Any CPU
 		{3CEB8210-E2AD-429C-86F0-EAAD9F49C160}.Tespia|x86.ActiveCfg = Release|Any CPU
 		{3CEB8210-E2AD-429C-86F0-EAAD9F49C160}.Tespia|x86.Build.0 = Release|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Debug|x86.Build.0 = Debug|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Diagnostic|Any CPU.ActiveCfg = Debug|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Diagnostic|Any CPU.Build.0 = Debug|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Diagnostic|x86.ActiveCfg = Debug|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Diagnostic|x86.Build.0 = Debug|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.NoFody|Any CPU.ActiveCfg = Release|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.NoFody|Any CPU.Build.0 = Release|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.NoFody|x86.ActiveCfg = Release|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.NoFody|x86.Build.0 = Release|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Release|x86.ActiveCfg = Release|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Release|x86.Build.0 = Release|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Tespia|Any CPU.ActiveCfg = Release|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Tespia|Any CPU.Build.0 = Release|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Tespia|x86.ActiveCfg = Release|Any CPU
+		{4208A6E4-D72C-4E8C-88EE-61F939777062}.Tespia|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
