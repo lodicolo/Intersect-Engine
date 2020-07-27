@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 using Intersect.Client.Framework.Graphics;
@@ -6,6 +6,8 @@ using Intersect.Client.General;
 using Intersect.Client.Interface.Game.Chat;
 using Intersect.Client.Localization;
 using Intersect.Logging;
+
+using JetBrains.Annotations;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -51,6 +53,31 @@ namespace Intersect.Client.MonoGame.Graphics
             mHeight = packFrame.SourceRect.Height;
         }
 
+        private void Load([NotNull] Stream stream)
+        {
+            try
+            {
+                mTexture = Texture2D.FromStream(mGraphicsDevice, stream);
+                if (mTexture != null)
+                {
+                    mWidth = mTexture.Width;
+                    mHeight = mTexture.Height;
+                    mLoadError = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                //Failed to load texture.. lets log like we do with audio
+                Log.Error($"Error loading '{mName}'.", ex);
+                ChatboxMsg.AddMessage(
+                    new ChatboxMsg(
+                        Strings.Errors.LoadFile.ToString(Strings.Words.lcase_sprite) + " [" + mName + "]",
+                        new Color(0xBF, 0x0, 0x0)
+                    )
+                );
+            }
+        }
+
         public void LoadTexture()
         {
             if (mTexture != null)
@@ -73,27 +100,7 @@ namespace Intersect.Client.MonoGame.Graphics
 
             using (var fileStream = new FileStream(mPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                try
-                {
-                    mTexture = Texture2D.FromStream(mGraphicsDevice, fileStream);
-                    if (mTexture != null)
-                    {
-                        mWidth = mTexture.Width;
-                        mHeight = mTexture.Height;
-                        mLoadError = false;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //Failed to load texture.. lets log like we do with audio
-                    Log.Error($"Error loading '{mName}'.", ex);
-                    ChatboxMsg.AddMessage(
-                        new ChatboxMsg(
-                            Strings.Errors.LoadFile.ToString(Strings.Words.lcase_sprite) + " [" + mName + "]",
-                            new Color(0xBF, 0x0, 0x0)
-                        )
-                    );
-                }
+                Load(fileStream);
             }
         }
 
