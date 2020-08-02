@@ -259,6 +259,12 @@
     <Compile Include="Logging\Microsoft\Extensions\Logging\IntersectLoggerFactory.cs" />
     <Compile Include="Logging\Microsoft\Extensions\Logging\IntersectLogScope.cs" />
     <Compile Include="Logging\LogConfiguration.cs" />
+    <Compile Include="Membership\Group.cs" />
+    <Compile Include="Membership\GroupMembership.cs" />
+    <Compile Include="Membership\GroupPermission.cs" />
+    <Compile Include="Membership\GroupRole.cs" />
+    <Compile Include="Membership\GroupType.cs" />
+    <Compile Include="Membership\IGroupMember.cs" />
     <Compile Include="Models\DatabaseObject.cs" />
     <Compile Include="Enums\Access.cs" />
     <Compile Include="Enums\AdminActions.cs" />
@@ -303,7 +309,10 @@
     <Compile Include="GameObjects\Events\EventMovement.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Models\IFolderable.cs" />
+    <Compile Include="Models\ILocalizedObject.cs" />
     <Compile Include="Models\INamedObject.cs" />
+    <Compile Include="Models\LocalizedContentString.cs" />
+    <Compile Include="Models\LocalizedContentString.Provider.cs" />
     <Compile Include="Network\Ceras.cs" />
     <Compile Include="Network\ConnectionPacket.cs" />
     <Compile Include="Network\Events\ConnectionEventArgs.cs" />
