@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 
 using Intersect.Logging;
 using Intersect.Network;
@@ -15,6 +16,8 @@ namespace Intersect.Server.Networking
 
     public class Client
     {
+
+        public CultureInfo Locale { get; set; } = CultureInfo.CurrentCulture;
 
         public Guid EditorMap = Guid.Empty;
 

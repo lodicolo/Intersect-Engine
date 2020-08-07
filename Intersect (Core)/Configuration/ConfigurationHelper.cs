@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
 using Intersect.IO.Files;
+using Intersect.Json;
 using Intersect.Logging;
 
 using JetBrains.Annotations;
@@ -11,9 +14,24 @@ using Newtonsoft.Json;
 
 namespace Intersect.Configuration
 {
-
     public static class ConfigurationHelper
     {
+        private static IList<JsonConverter> Converters { get; }
+
+        private static JsonSerializerSettings CommonSettings { get; }
+
+        static ConfigurationHelper()
+        {
+            Converters = new List<JsonConverter>
+            {
+                new CultureInfoConverter()
+            };
+
+            CommonSettings = new JsonSerializerSettings
+            {
+                Converters = Converters
+            };
+        }
 
         [NotNull]
         public static T Load<T>([NotNull] T configuration, [NotNull] string filePath, bool failQuietly = false)
@@ -28,7 +46,7 @@ namespace Intersect.Configuration
             {
                 var json = File.ReadAllText(filePath, Encoding.UTF8);
 
-                JsonConvert.PopulateObject(json, configuration);
+                JsonConvert.PopulateObject(json, configuration, CommonSettings);
 
                 return configuration;
             }
@@ -57,7 +75,7 @@ namespace Intersect.Configuration
 
             try
             {
-                var json = JsonConvert.SerializeObject(configuration, Formatting.Indented);
+                var json = JsonConvert.SerializeObject(configuration, Formatting.Indented, CommonSettings);
 
                 File.WriteAllText(filePath, json, Encoding.UTF8);
 
@@ -102,7 +120,5 @@ namespace Intersect.Configuration
 
             return configuration;
         }
-
     }
-
 }

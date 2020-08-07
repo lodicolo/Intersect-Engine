@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -121,6 +122,11 @@ namespace Intersect.Configuration
         /// Menu background art
         /// </summary>
         public string MenuBackground { get; set; } = DEFAULT_MENU_BACKGROUND;
+
+        /// <summary>
+        /// Current client locale.
+        /// </summary>
+        public CultureInfo Locale { get; set; } = CultureInfo.CurrentCulture;
 
         // TODO: What is this for?
         public List<string> IntroImages { get; set; } = new List<string>();

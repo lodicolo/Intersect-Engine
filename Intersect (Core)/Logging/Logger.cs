@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
+
+using Intersect.Localization;
 
 using JetBrains.Annotations;
 
@@ -81,18 +84,21 @@ namespace Intersect.Logging
                 return;
             }
 
-            string trace = null;
-            if (logLevel == LogLevel.Trace)
+            using (LocaleStack.Push(CultureInfo.InvariantCulture))
             {
-                trace = Environment.StackTrace;
-            }
-
-            foreach (var output in Configuration.Outputs)
-            {
-                output.Write(Configuration, logLevel, exception, message);
-                if (trace != null)
+                string trace = null;
+                if (logLevel == LogLevel.Trace)
                 {
-                    output.Write(Configuration, logLevel, trace);
+                    trace = Environment.StackTrace;
+                }
+
+                foreach (var output in Configuration.Outputs)
+                {
+                    output.Write(Configuration, logLevel, exception, message);
+                    if (trace != null)
+                    {
+                        output.Write(Configuration, logLevel, trace);
+                    }
                 }
             }
         }

@@ -11,6 +11,7 @@ using Intersect.GameObjects.Crafting;
 using Intersect.GameObjects.Events;
 using Intersect.GameObjects.Maps;
 using Intersect.GameObjects.Maps.MapList;
+using Intersect.Localization;
 using Intersect.Logging;
 using Intersect.Models;
 using Intersect.Network;
@@ -151,97 +152,100 @@ namespace Intersect.Server.Networking
                 throw new Exception("Client is null!");
             }
 
-            if (client.Banned)
+            using (LocaleStack.Push(client.Locale))
             {
-                return false;
-            }
-
-            switch (packet)
-            {
-                case Network.Packets.EditorPacket _ when !client.IsEditor:
+                if (client.Banned)
+                {
                     return false;
+                }
 
-                case null:
-                    Log.Error($@"Received null packet from {client.Id} ({client.Name}).");
+                switch (packet)
+                {
+                    case Network.Packets.EditorPacket _ when !client.IsEditor:
+                        return false;
+
+                    case null:
+                        Log.Error($@"Received null packet from {client.Id} ({client.Name}).");
+                        client.Disconnect("Error processing packet.");
+
+                        return true;
+                }
+
+                if (!packet.IsValid)
+                {
+                    return false;
+                }
+
+                try
+                {
+                    var sanitizedFields = packet.Sanitize();
+                    if (sanitizedFields != null)
+                    {
+                        var sanitizationBuilder = new StringBuilder(256, 8192);
+                        sanitizationBuilder.Append("Received out-of-bounds values in '");
+                        sanitizationBuilder.Append(packet.GetType().Name);
+                        sanitizationBuilder.Append("' packet from '");
+                        sanitizationBuilder.Append(client.GetIp());
+                        sanitizationBuilder.Append("', '");
+                        sanitizationBuilder.Append(client.Name);
+                        sanitizationBuilder.AppendLine("': ");
+
+                        foreach (var field in sanitizedFields)
+                        {
+                            sanitizationBuilder.Append(field.Key);
+                            sanitizationBuilder.Append(" = ");
+                            sanitizationBuilder.Append(field.Value.Before);
+                            sanitizationBuilder.Append(" => ");
+                            sanitizationBuilder.Append(field.Value.After);
+                            sanitizationBuilder.AppendLine();
+                        }
+
+                        Log.Warn(sanitizationBuilder.ToString());
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Log.Error(
+                        $"Client Packet Error! [Packet: {packet.GetType().Name} | User: {client.Name ?? ""} | Player: {client.Entity?.Name ?? ""} | IP {client.GetIp()}]"
+                    );
+
+                    Log.Error(exception);
                     client.Disconnect("Error processing packet.");
 
-                    return true;
-            }
+                    return false;
+                }
 
-            if (!packet.IsValid)
-            {
-                return false;
-            }
-
-            try
-            {
-                var sanitizedFields = packet.Sanitize();
-                if (sanitizedFields != null)
+                try
                 {
-                    var sanitizationBuilder = new StringBuilder(256, 8192);
-                    sanitizationBuilder.Append("Received out-of-bounds values in '");
-                    sanitizationBuilder.Append(packet.GetType().Name);
-                    sanitizationBuilder.Append("' packet from '");
-                    sanitizationBuilder.Append(client.GetIp());
-                    sanitizationBuilder.Append("', '");
-                    sanitizationBuilder.Append(client.Name);
-                    sanitizationBuilder.AppendLine("': ");
+                    HandlePacket(client, client.Entity, (dynamic)packet);
+                }
+                catch (Exception exception)
+                {
+                    var packetType = packet.GetType().Name;
+                    var packetMessage =
+                        $"Client Packet Error! [Packet: {packetType} | User: {client.Name ?? ""} | Player: {client.Entity?.Name ?? ""} | IP {client.GetIp()}]";
 
-                    foreach (var field in sanitizedFields)
+                    // TODO: Re-combine these once we figure out how to prevent the OutOfMemoryException that happens occasionally
+                    Log.Error(packetMessage);
+                    Log.Error(new ExceptionInfo(exception));
+                    if (exception.InnerException != null)
                     {
-                        sanitizationBuilder.Append(field.Key);
-                        sanitizationBuilder.Append(" = ");
-                        sanitizationBuilder.Append(field.Value.Before);
-                        sanitizationBuilder.Append(" => ");
-                        sanitizationBuilder.Append(field.Value.After);
-                        sanitizationBuilder.AppendLine();
+                        Log.Error(new ExceptionInfo(exception.InnerException));
                     }
 
-                    Log.Warn(sanitizationBuilder.ToString());
-                }
-            }
-            catch (Exception exception)
-            {
-                Log.Error(
-                    $"Client Packet Error! [Packet: {packet.GetType().Name} | User: {client.Name ?? ""} | Player: {client.Entity?.Name ?? ""} | IP {client.GetIp()}]"
-                );
-
-                Log.Error(exception);
-                client.Disconnect("Error processing packet.");
-
-                return false;
-            }
-
-            try
-            {
-                HandlePacket(client, client.Entity, (dynamic) packet);
-            }
-            catch (Exception exception)
-            {
-                var packetType = packet.GetType().Name;
-                var packetMessage =
-                    $"Client Packet Error! [Packet: {packetType} | User: {client.Name ?? ""} | Player: {client.Entity?.Name ?? ""} | IP {client.GetIp()}]";
-
-                // TODO: Re-combine these once we figure out how to prevent the OutOfMemoryException that happens occasionally
-                Log.Error(packetMessage);
-                Log.Error(new ExceptionInfo(exception));
-                if (exception.InnerException != null)
-                {
-                    Log.Error(new ExceptionInfo(exception.InnerException));
-                }
-
-                // Make the call that triggered the OOME in the first place so that we know when it stops happening
-                Log.Error(exception, packetMessage);
+                    // Make the call that triggered the OOME in the first place so that we know when it stops happening
+                    Log.Error(exception, packetMessage);
 
 #if DIAGNOSTIC
                 client.Disconnect($"Error processing packet type '{packetType}'.");
 #else
-                client.Disconnect($"Error processing packet.");
+                    client.Disconnect($"Error processing packet.");
 #endif
-                return false;
-            }
+                    return false;
+                }
 
-            return true;
+                return true;
+            }
         }
 
         #region "Client Packets"
@@ -251,6 +255,11 @@ namespace Intersect.Server.Networking
         {
             client.Pinged();
             PacketSender.SendPing(client, false);
+        }
+
+        public void HandlePacket(Client client, Player player, LocalePacket localePacket)
+        {
+            client.Locale = localePacket.Locale;
         }
 
         //LoginPacket

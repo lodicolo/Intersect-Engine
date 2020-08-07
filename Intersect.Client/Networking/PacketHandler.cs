@@ -13,13 +13,20 @@ using Intersect.Client.Interface.Menu;
 using Intersect.Client.Items;
 using Intersect.Client.Localization;
 using Intersect.Client.Maps;
+using Intersect.Configuration;
 using Intersect.Enums;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Maps;
 using Intersect.GameObjects.Maps.MapList;
 using Intersect.Logging;
 using Intersect.Network;
+using Intersect.Network.Packets.Client;
 using Intersect.Network.Packets.Server;
+
+using ChatMsgPacket = Intersect.Network.Packets.Server.ChatMsgPacket;
+using PartyInvitePacket = Intersect.Network.Packets.Server.PartyInvitePacket;
+using PingPacket = Intersect.Network.Packets.Server.PingPacket;
+using TradeRequestPacket = Intersect.Network.Packets.Server.TradeRequestPacket;
 
 namespace Intersect.Client.Networking
 {
@@ -68,6 +75,7 @@ namespace Intersect.Client.Networking
         {
             Main.JoinGame();
             Globals.JoiningGame = true;
+            Network.SendPacket(new LocalePacket { Locale = ClientConfiguration.Instance.Locale });
         }
 
         //MapAreaPacket
