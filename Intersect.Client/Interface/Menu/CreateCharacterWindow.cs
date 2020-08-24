@@ -540,7 +540,7 @@ namespace Intersect.Client.Interface.Menu
         private void BackButton_Clicked(Base sender, ClickedEventArgs arguments)
         {
             Hide();
-            if (Options.Player.MaxCharacters <= 1)
+            if (Options.PlayerConfiguration.MaxCharacters <= 1)
             {
                 //Logout
                 mMainMenu.Show();

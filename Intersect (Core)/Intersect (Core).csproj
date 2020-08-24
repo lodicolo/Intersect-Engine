@@ -193,6 +193,10 @@
     <Compile Include="Configuration\IConfigurable.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\ConfigurationHelper.cs" />
+    <Compile Include="Configuration\Server\Services\SmtpConfiguration.cs" />
+    <Compile Include="Configuration\Server\Users\PlayerConfiguration.cs" />
+    <Compile Include="Configuration\Server\Users\UserConfiguration.cs" />
+    <Compile Include="Configuration\Text\AllowedTextConfiguration.cs" />
     <Compile Include="Config\ChatOptions.cs" />
     <Compile Include="Config\LootOptions.cs" />
     <Compile Include="Config\PacketOptions.cs" />
@@ -296,7 +300,6 @@
     <Compile Include="Enums\Vitals.cs" />
     <Compile Include="Enums\WarpDirection.cs" />
     <Compile Include="Extensions\GameObjectInfoAttribute.cs" />
-    <Compile Include="Config\PlayerOptions.cs" />
     <Compile Include="GameObjects\Crafting\CraftBase.cs" />
     <Compile Include="GameObjects\Crafting\CraftingTableBase.cs" />
     <Compile Include="GameObjects\Events\Condition.cs" />
@@ -484,6 +487,7 @@
     <Compile Include="Security\ApiVisibilityAttribute.cs" />
     <Compile Include="Security\Claims\IntersectClaimTypes.cs" />
     <Compile Include="Serialization\Json\SingleOrArrayConverter.cs" />
+    <Compile Include="Serialization\NetworkVisibilityAttribute.cs" />
     <Compile Include="Threading\ConcurrentInstance.cs" />
     <Compile Include="Threading\LockingActionQueue.cs" />
     <Compile Include="Threading\Threaded.cs" />
@@ -572,6 +576,7 @@
     <Compile Include="Utilities\MathHelper.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="Network\NetworkHelper.cs" />
+    <Compile Include="Utilities\LengthConstraint.cs" />
     <Compile Include="Utilities\Nullability.cs" />
     <Compile Include="Utilities\Randomization.cs" />
     <Compile Include="Utilities\Retry.cs" />
@@ -579,6 +584,11 @@
     <Compile Include="Utilities\TextUtils.cs" />
     <Compile Include="Utilities\CSharpFeatures.cs" />
     <Compile Include="Utilities\ReflectionUtils.cs" />
+    <Compile Include="Utilities\Text\FormatRules\ITextFormatRule.cs" />
+    <Compile Include="Utilities\Text\FormatRules\TextFormatLengthRule.cs" />
+    <Compile Include="Utilities\Text\FormatRules\TextFormatPatternRule.cs" />
+    <Compile Include="Utilities\Text\FormatRules\TextFormatRangeRule.cs" />
+    <Compile Include="Utilities\Text\FormatRules\TextFormatRuleMatcher.cs" />
     <Compile Include="Utilities\ValueUtils.cs" />
     <Compile Include="Utilities\VersionHelper.cs" />
     <Compile Include="Localization\LocaleArgument.cs" />
@@ -596,6 +606,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Configuration\Game\" />
+    <Folder Include="Configuration\Server\Security\" />
     <Folder Include="Factories\" />
     <Folder Include="IO\FileSystem\" />
   </ItemGroup>

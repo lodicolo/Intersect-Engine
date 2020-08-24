@@ -2,6 +2,7 @@
 using System.IO;
 
 using Intersect.Config;
+using Intersect.Configuration.Server.Users;
 
 using JetBrains.Annotations;
 
@@ -48,7 +49,9 @@ namespace Intersect
 
         public DatabaseOptions PlayerDatabase = new DatabaseOptions();
 
-        [JsonProperty("Player")] public PlayerOptions PlayerOpts = new PlayerOptions();
+        public PlayerConfiguration Player { get; set; } = new PlayerConfiguration();
+
+        public UserConfiguration User { get; set; } = new UserConfiguration();
 
         [JsonProperty("Party")] public PartyOptions PartyOpts = new PartyOptions();
 
@@ -67,23 +70,23 @@ namespace Intersect
         //Public Getters
         public static ushort ServerPort { get => Instance._serverPort; set => Instance._serverPort = value; }
 
-        public static int MaxStatValue => Instance.PlayerOpts.MaxStat;
+        public static int MaxStatValue => Instance.Player.MaxStat;
 
-        public static int MaxLevel => Instance.PlayerOpts.MaxLevel;
+        public static int MaxLevel => Instance.Player.MaxLevel;
 
-        public static int MaxInvItems => Instance.PlayerOpts.MaxInventory;
+        public static int MaxInvItems => Instance.Player.MaxInventory;
 
-        public static int MaxPlayerSkills => Instance.PlayerOpts.MaxSpells;
+        public static int MaxPlayerSkills => Instance.Player.MaxSpells;
 
-        public static int MaxBankSlots => Instance.PlayerOpts.MaxBank;
+        public static int MaxBankSlots => Instance.Player.MaxBankSlots;
 
-        public static int MaxCharacters => Instance.PlayerOpts.MaxCharacters;
+        public static int MaxCharacters => Instance.Player.MaxCharacters;
 
-        public static int ItemDropChance => Instance.PlayerOpts.ItemDropChance;
+        public static int ItemDropChance => Instance.Player.ItemDropChance;
 
-        public static int RequestTimeout => Instance.PlayerOpts.RequestTimeout;
+        public static int RequestTimeout => Instance.Player.RequestTimeout;
 
-        public static int TradeRange => Instance.PlayerOpts.TradeRange;
+        public static int TradeRange => Instance.Player.TradeRange;
 
         public static int WeaponIndex => Instance.EquipmentOpts.WeaponSlot;
 
@@ -160,7 +163,7 @@ namespace Intersect
         }
 
         [NotNull]
-        public static PlayerOptions Player => Instance.PlayerOpts;
+        public static PlayerConfiguration PlayerConfiguration => Instance.Player;
 
         [NotNull]
         public static EquipmentOptions Equipment => Instance.EquipmentOpts;
