@@ -232,13 +232,13 @@ namespace Intersect.Server.Database.PlayerData
 
         [NotNull] private static readonly Func<PlayerContext, Guid, IEnumerable<Ban>> ByUser =
             EF.CompileQuery<PlayerContext, Guid, Ban>(
-                (context, userId) => context.Bans.Where(ban => ban.UserId == userId && ban.EndTime > DateTime.UtcNow)
+                (context, userId) => context.Bans.AsQueryable().Where(ban => ban.UserId == userId && ban.EndTime > DateTime.UtcNow)
             ) ??
             throw new InvalidOperationException();
 
         [NotNull] private static readonly Func<PlayerContext, string, IEnumerable<Ban>> ByIp =
             EF.CompileQuery<PlayerContext, string, Ban>(
-                (context, ip) => context.Bans.Where(
+                (context, ip) => context.Bans.AsQueryable().Where(
                     ban => string.Equals(ban.Ip, ip, StringComparison.OrdinalIgnoreCase) &&
                            ban.EndTime > DateTime.UtcNow
                 )

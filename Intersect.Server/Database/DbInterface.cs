@@ -405,7 +405,7 @@ namespace Intersect.Server.Database
         {
             lock (mPlayerDbLock)
             {
-                return sPlayerDb.Players.Where(
+                return sPlayerDb.Players.AsQueryable().Where(
                         p => string.Equals(p.Name.Trim(), name.Trim(), StringComparison.CurrentCultureIgnoreCase)
                     )
                     ?.First()
@@ -490,7 +490,7 @@ namespace Intersect.Server.Database
             lock (mPlayerDbLock)
             {
                 // ReSharper disable once SpecifyStringComparison
-                var user = sPlayerDb.Users.Where(p => p.Name.ToLower() == username.ToLower())
+                var user = sPlayerDb.Users.AsQueryable().Where(p => p.Name.ToLower() == username.ToLower())
                     .Select(p => new {p.Password, p.Salt})
                     .FirstOrDefault();
 

@@ -269,7 +269,7 @@ namespace Intersect.Server.Database.PlayerData
 
         [NotNull] private static readonly Func<PlayerContext, int, int, IEnumerable<User>> QueryUsers =
             EF.CompileQuery(
-                (PlayerContext context, int offset, int count) => context.Users.OrderBy(user => user.Id.ToString())
+                (PlayerContext context, int offset, int count) => context.Users.AsQueryable().OrderBy(user => user.Id.ToString())
                     .Skip(offset)
                     .Take(count)
                     .Include(p => p.Ban)
@@ -280,7 +280,7 @@ namespace Intersect.Server.Database.PlayerData
         [NotNull] private static readonly Func<PlayerContext, string, User> QueryUserByName =
             EF.CompileQuery(
                 // ReSharper disable once SpecifyStringComparison
-                (PlayerContext context, string username) => context.Users.Where(u => u.Name.ToLower() == username.ToLower())
+                (PlayerContext context, string username) => context.Users.AsQueryable().Where(u => u.Name.ToLower() == username.ToLower())
                     .Include(p => p.Ban)
                     .Include(p => p.Mute)
                     .Include(p => p.Players)
@@ -306,7 +306,7 @@ namespace Intersect.Server.Database.PlayerData
 
         [NotNull] private static readonly Func<PlayerContext, Guid, User> QueryUserById =
             EF.CompileQuery(
-                (PlayerContext context, Guid id) => context.Users.Where(u => u.Id == id)
+                (PlayerContext context, Guid id) => context.Users.AsQueryable().Where(u => u.Id == id)
                     .Include(p => p.Ban)
                     .Include(p => p.Mute)
                     .Include(p => p.Players)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Linq.Expressions;
 
 using Intersect.Server.Database;
 using Intersect.Server.Database.PlayerData;
@@ -202,7 +203,7 @@ namespace Intersect.Server.Entities
 
         [NotNull] private static readonly Func<PlayerContext, int, int, IEnumerable<Player>> QueryPlayers =
             EF.CompileQuery(
-                (PlayerContext context, int offset, int count) => context.Players
+                (PlayerContext context, int offset, int count) => context.Players.AsQueryable()
                     .OrderBy(player => player.Id.ToString())
                     .Skip(offset)
                     .Take(count)
@@ -219,7 +220,7 @@ namespace Intersect.Server.Entities
 
         [NotNull] private static readonly Func<PlayerContext, int, int, IEnumerable<Player>> QueryPlayersWithRank =
             EF.CompileQuery(
-                (PlayerContext context, int offset, int count) => context.Players
+                (PlayerContext context, int offset, int count) => context.Players.AsQueryable()
                     .OrderByDescending(entity => EF.Property<dynamic>(entity, "Level"))
                     .ThenByDescending(entity => EF.Property<dynamic>(entity, "Exp"))
                     .Skip(offset)
@@ -238,7 +239,7 @@ namespace Intersect.Server.Entities
         [NotNull]
         private static readonly Func<PlayerContext, int, int, IEnumerable<Player>> QueryPlayersWithRankAscending =
             EF.CompileQuery(
-                (PlayerContext context, int offset, int count) => context.Players
+                (PlayerContext context, int offset, int count) => context.Players.AsQueryable()
                     .OrderBy(entity => EF.Property<dynamic>(entity, "Level"))
                     .ThenBy(entity => EF.Property<dynamic>(entity, "Exp"))
                     .Skip(offset)
@@ -256,7 +257,7 @@ namespace Intersect.Server.Entities
 
         [NotNull] private static readonly Func<PlayerContext, Guid, Player> QueryPlayerById =
             EF.CompileQuery(
-                (PlayerContext context, Guid id) => context.Players.Where(p => p.Id == id)
+                (PlayerContext context, Guid id) => context.Players.AsQueryable().Where(p => p.Id == id)
                     .Include(p => p.Bank)
                     .Include(p => p.Friends)
                     .ThenInclude(p => p.Target)
@@ -271,7 +272,7 @@ namespace Intersect.Server.Entities
 
         [NotNull] private static readonly Func<PlayerContext, string, Player> QueryPlayerByName =
             EF.CompileQuery(
-                (PlayerContext context, string name) => context.Players.Where(p => p.Name == name)
+                (PlayerContext context, string name) => context.Players.AsQueryable().Where(p => p.Name == name)
                     .Include(p => p.Bank)
                     .Include(p => p.Friends)
                     .ThenInclude(p => p.Target)

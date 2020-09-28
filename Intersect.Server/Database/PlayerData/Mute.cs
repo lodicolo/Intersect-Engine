@@ -256,13 +256,13 @@ namespace Intersect.Server.Database.PlayerData
         [NotNull] private static readonly Func<PlayerContext, Guid, IEnumerable<Mute>> ByUser =
             EF.CompileQuery<PlayerContext, Guid, Mute>(
                 (context, userId) =>
-                    context.Mutes.Where(mute => mute.UserId == userId && mute.EndTime > DateTime.UtcNow)
+                    context.Mutes.AsQueryable().Where(mute => mute.UserId == userId && mute.EndTime > DateTime.UtcNow)
             ) ??
             throw new InvalidOperationException();
 
         [NotNull] private static readonly Func<PlayerContext, string, IEnumerable<Mute>> ByIp =
             EF.CompileQuery<PlayerContext, string, Mute>(
-                (context, ip) => context.Mutes.Where(
+                (context, ip) => context.Mutes.AsQueryable().Where(
                     mute => string.Equals(mute.Ip, ip, StringComparison.OrdinalIgnoreCase) &&
                             mute.EndTime > DateTime.UtcNow
                 )

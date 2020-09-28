@@ -120,7 +120,7 @@ namespace Intersect.Server.Database.GameData
             [NotNull]
             internal static readonly Func<GameContext, int, int, IEnumerable<ServerVariableBase>> ServerVariables =
                 EF.CompileQuery(
-                    (GameContext context, int page, int count) => context.ServerVariables
+                    (GameContext context, int page, int count) => context.ServerVariables.AsQueryable()
                         .OrderBy(variable => variable.Id.ToString())
                         .Skip(page * count)
                         .Take(count)

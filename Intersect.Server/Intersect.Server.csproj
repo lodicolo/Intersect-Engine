@@ -63,7 +63,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Intersect.Server.Core.Program</StartupObject>
+    <StartupObject>Intersect.Server.Prototype.PrototypeProgram</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
@@ -494,6 +494,11 @@
     <Compile Include="Entities\Pathfinding\SpatialAStar.cs" />
     <Compile Include="Entities\Pathfinding\PathfinderTarget.cs" />
     <Compile Include="Entities\Pathfinding\PriorityQueue.cs" />
+    <Compile Include="Migrations\Prototype\20200805180216_Prototype_Initial.cs" />
+    <Compile Include="Migrations\Prototype\20200805180216_Prototype_Initial.designer.cs">
+      <DependentUpon>20200805180216_Prototype_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Prototype\PrototypeContextModelSnapshot.cs" />
     <Compile Include="Networking\Client.cs" />
     <Compile Include="Entities\Npc.cs" />
     <Compile Include="Networking\Helpers\NetDebug.cs" />
@@ -659,6 +664,21 @@
     <Compile Include="Plugins\Helpers\ServerLifecycleHelper.cs" />
     <Compile Include="Plugins\IServerPluginContext.cs" />
     <Compile Include="Plugins\ServerPluginContext.cs" />
+    <Compile Include="Prototype\IPrototypeContext.cs" />
+    <Compile Include="Prototype\IPrototypeEntity.cs" />
+    <Compile Include="Prototype\LocalizedContentString.cs" />
+    <Compile Include="Prototype\PrototypeContainer.cs" />
+    <Compile Include="Prototype\PrototypeHasComposite.cs" />
+    <Compile Include="Prototype\PrototypeHasCompositeContainer.cs" />
+    <Compile Include="Prototype\PrototypeProgram.cs" />
+    <Compile Include="Prototype\PrototypeContext.cs" />
+    <Compile Include="Prototype\PrototypeJunctionEntity.cs" />
+    <Compile Include="Prototype\PrototypeServer.cs" />
+    <Compile Include="Prototype\PrototypeSetEntity.cs" />
+    <Compile Include="Prototype\PrototypeSimpleEntity.cs" />
+    <Compile Include="Prototype\ContentString.cs" />
+    <Compile Include="Prototype\PrototypeStrings.cs" />
+    <Compile Include="Prototype\Snippet.cs" />
     <Compile Include="Web\RestApi\Attributes\DebugAuthorizeAttribute.cs" />
     <Compile Include="Web\RestApi\Attributes\ConfigurableAuthorizeAttribute.cs" />
     <Compile Include="Web\RestApi\Authentication\AuthenticationProvider.cs" />
@@ -821,7 +841,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets'))" />
     <Error Condition="!Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.EntityFrameworkCore.Design.2.1.3\build\net461\Microsoft.EntityFrameworkCore.Design.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.EntityFrameworkCore.Design.2.1.3\build\net461\Microsoft.EntityFrameworkCore.Design.props'))" />
     <Error Condition="!Exists('..\packages\Costura.Fody.3.3.3\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.3.3\build\Costura.Fody.props'))" />
     <Error Condition="!Exists('..\packages\Fody.4.2.1\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.4.2.1\build\Fody.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.0.0\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.0.0\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />

@@ -89,7 +89,7 @@ namespace Intersect.Server.Database.PlayerData.Players
 
         public static Bag GetBag(PlayerContext context, Guid id)
         {
-            var bag = context.Bags.Where(p => p.Id == id).Include(p => p.Slots).SingleOrDefault();
+            var bag = context.Bags.AsQueryable().Where(p => p.Id == id).Include(p => p.Slots).SingleOrDefault();
             if (bag != null)
             {
                 bag.Slots = bag.Slots.OrderBy(p => p.Slot).ToList();

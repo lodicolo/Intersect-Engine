@@ -129,7 +129,7 @@ namespace Intersect.Server.Database.PlayerData.Api
             lock (DbInterface.GetPlayerContextLock())
             {
                 var tokenQuery = DbInterface.GetPlayerContext()
-                    ?.RefreshTokens.Where(queryToken => queryToken.ClientId == clientId);
+                    ?.RefreshTokens.AsQueryable().Where(queryToken => queryToken.ClientId == clientId);
 
                 return tokenQuery.AsEnumerable()?.ToList();
             }
@@ -145,7 +145,7 @@ namespace Intersect.Server.Database.PlayerData.Api
             lock (DbInterface.GetPlayerContextLock())
             {
                 var tokenQuery = DbInterface.GetPlayerContext()
-                    ?.RefreshTokens.Where(queryToken => queryToken.UserId == userId);
+                    ?.RefreshTokens.AsQueryable().Where(queryToken => queryToken.UserId == userId);
 
                 return tokenQuery.AsEnumerable()?.ToList();
             }
