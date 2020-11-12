@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 
 using Intersect.Config;
+using Intersect.Server.Database.Migration;
 
 using JetBrains.Annotations;
 
@@ -15,16 +16,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Intersect.Server.Database
 {
-
     /// <summary>
     /// Abstract DbContext class for all Intersect database contexts.
     /// </summary>
     /// <inheritdoc cref="DbContext" />
     /// <inheritdoc cref="ISeedableContext" />
-    public abstract class IntersectDbContext<T> : DbContext, ISeedableContext where T : IntersectDbContext<T>
+    public abstract class IntersectDbContext<TContext> : DbContext, ISeedableContext
+        where TContext : IntersectDbContext<TContext>
     {
-
-        [NotNull] private static readonly IDictionary<Type, ConstructorInfo> constructorCache =
+        [NotNull]
+        private static readonly IDictionary<Type, ConstructorInfo> constructorCache =
             new ConcurrentDictionary<Type, ConstructorInfo>();
 
         private static DbConnectionStringBuilder configuredConnectionStringBuilder;
@@ -50,6 +51,8 @@ namespace Intersect.Server.Database
             ConnectionStringBuilder = connectionStringBuilder;
             DatabaseType = databaseType;
 
+            Logger = dbLogger ?? Intersect.Logging.Log.Default;
+
             //Translate Intersect.Logging.LogLevel into LoggerFactory Log Level
             if (dbLogger != null && logLevel > Intersect.Logging.LogLevel.None)
             {
@@ -58,34 +61,42 @@ namespace Intersect.Server.Database
                 {
                     case Intersect.Logging.LogLevel.None:
                         break;
+
                     case Intersect.Logging.LogLevel.Error:
                         efLogLevel = LogLevel.Error;
 
                         break;
+
                     case Intersect.Logging.LogLevel.Warn:
                         efLogLevel = LogLevel.Warning;
 
                         break;
+
                     case Intersect.Logging.LogLevel.Info:
                         efLogLevel = LogLevel.Information;
 
                         break;
+
                     case Intersect.Logging.LogLevel.Trace:
                         efLogLevel = LogLevel.Trace;
 
                         break;
+
                     case Intersect.Logging.LogLevel.Verbose:
                         efLogLevel = LogLevel.Trace;
 
                         break;
+
                     case Intersect.Logging.LogLevel.Debug:
                         efLogLevel = LogLevel.Debug;
 
                         break;
+
                     case Intersect.Logging.LogLevel.Diagnostic:
                         efLogLevel = LogLevel.Trace;
 
                         break;
+
                     case Intersect.Logging.LogLevel.All:
                         efLogLevel = LogLevel.Trace;
 
@@ -102,11 +113,11 @@ namespace Intersect.Server.Database
 
             if (!isTemporary)
             {
-                Current = this as T;
+                Current = this as TContext;
             }
         }
 
-        public static T Current { get; private set; }
+        public static TContext Current { get; private set; }
 
         private static ILoggerFactory MsExtLoggerFactory { get; } =
             LoggerFactory.Create(builder => builder.AddConsole());
@@ -125,6 +136,32 @@ namespace Intersect.Server.Database
         [NotNull]
         public ICollection<string> PendingMigrations =>
             Database?.GetPendingMigrations()?.ToList() ?? new List<string>();
+
+        public ICollection<DataMigrationMetadata> PendingDataMigrations
+        {
+            get
+            {
+                var allMigrationsForContext = DataMigrationMetadata.FindAvailableMigrations<TContext>();
+
+                try
+                {
+                    return allMigrationsForContext.Where(
+                            availableMigration => __DataMigrationsHistory.Any(
+                                history => history.Id == availableMigration.DataMigrationAttribute.Id
+                            )
+                        )
+                        .ToList();
+                }
+                catch
+                {
+                    return allMigrationsForContext;
+                }
+            }
+        }
+
+        protected Intersect.Logging.Logger Logger { get; }
+
+        public DbSet<DataMigrationHistory> __DataMigrationsHistory { get; set; }
 
         public DbSet<TType> GetDbSet<TType>() where TType : class
         {
@@ -146,12 +183,12 @@ namespace Intersect.Server.Database
         }
 
         [NotNull]
-        public static T Create(
+        public static TContext Create(
             DatabaseOptions.DatabaseType? databaseType = null,
             DbConnectionStringBuilder connectionStringBuilder = null
         )
         {
-            var type = typeof(T);
+            var type = typeof(TContext);
             if (!constructorCache.TryGetValue(type, out var constructorInfo))
             {
                 constructorInfo = type.GetConstructor(
@@ -172,7 +209,7 @@ namespace Intersect.Server.Database
                     connectionStringBuilder ?? configuredConnectionStringBuilder,
                     databaseType ?? configuredDatabaseType
                 }
-            ) is T contextInstance))
+            ) is TContext contextInstance))
             {
                 throw new InvalidOperationException();
             }
@@ -247,8 +284,72 @@ namespace Intersect.Server.Database
             }
         }
 
-        public virtual void MigrationsProcessed([NotNull] string[] migrations) { }
+        protected virtual void OnMigrationsProcessed(IEnumerable<string> migrationsProcessed)
+        {
+        }
 
+        public virtual void MigrationsProcessed([NotNull] string[] migrationsProcessed) { }
+
+        public static List<DataMigrationHistory> HandleProcessedSchemaMigrations(
+            TContext context,
+            IEnumerable<string> processedSchemaMigrations,
+            IEnumerable<DataMigrationMetadata> pendingDataMigrations
+        )
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            if (processedSchemaMigrations == null)
+            {
+                throw new ArgumentNullException(nameof(processedSchemaMigrations));
+            }
+
+            context.OnMigrationsProcessed(processedSchemaMigrations);
+
+            var appliedMigrations = context.Database.GetAppliedMigrations();
+            var availableMigrations = DataMigrationMetadata.FindAvailableMigrations<TContext>();
+
+            var applicableDataMigrations = pendingDataMigrations.Where(
+                    metadata =>
+                    {
+                        var ids = metadata.RequiresMigrationAttributes.Select(migration => migration.Id);
+                        return ids.Any(processedSchemaMigrations.Contains) && ids.All(appliedMigrations.Contains);
+                    }
+                )
+                .OrderBy(metadata => metadata.DataMigrationAttribute.Id)
+                .ToList();
+
+            var appliedDataMigrations = applicableDataMigrations.TakeWhile(
+                    pendingDataMigration =>
+                    {
+                        if (!(Activator.CreateInstance(pendingDataMigration.Type) is DataMigration<TContext> instance))
+                        {
+                            context.Logger.Warn($"Failed to create instance of {pendingDataMigration.Type.FullName}");
+                            return false;
+                        }
+
+                        if (!instance.Up(context))
+                        {
+                            context.Logger.Warn($"Failed to apply upgrade {pendingDataMigration.Type.FullName}");
+                            return false;
+                        }
+
+                        return true;
+                    }
+                )
+                .ToList();
+
+            var appliedDataMigrationHistory = appliedDataMigrations.Select(
+                    appliedDataMigration => appliedDataMigration.CreateHistory<TContext>()
+                )
+                .ToList();
+
+            context.__DataMigrationsHistory.AddRange(appliedDataMigrationHistory);
+            context.SaveChanges();
+
+            return appliedDataMigrationHistory;
+        }
     }
-
 }

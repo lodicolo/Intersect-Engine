@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-
-using Intersect.Config;
+﻿using Intersect.Config;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Crafting;
 using Intersect.GameObjects.Events;
 using Intersect.GameObjects.Maps.MapList;
-using Intersect.Server.Database.GameData.Migrations;
 using Intersect.Server.Maps;
 
 using JetBrains.Annotations;
 
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
+
+using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
 
 namespace Intersect.Server.Database.GameData
 {
-
     public class GameContext : IntersectDbContext<GameContext>
     {
-
         public GameContext() : base(DefaultConnectionStringBuilder)
         {
             Current = this;
@@ -99,18 +95,10 @@ namespace Intersect.Server.Database.GameData
         {
         }
 
-        public override void MigrationsProcessed(string[] migrations)
-        {
-            if (migrations.IndexOf("20190611170819_CombiningSwitchesVariables") > -1)
-            {
-                Beta6Migration.Run(this);
-            }
-        }
-
         internal static class Queries
         {
-
-            [NotNull] internal static readonly Func<GameContext, Guid, ServerVariableBase> ServerVariableById =
+            [NotNull]
+            internal static readonly Func<GameContext, Guid, ServerVariableBase> ServerVariableById =
                 EF.CompileQuery(
                     (GameContext context, Guid id) =>
                         context.ServerVariables.FirstOrDefault(variable => variable.Id == id)
@@ -126,9 +114,6 @@ namespace Intersect.Server.Database.GameData
                         .Take(count)
                 ) ??
                 throw new InvalidOperationException();
-
         }
-
     }
-
 }

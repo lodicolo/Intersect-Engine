@@ -43,10 +43,8 @@ using MySql.Data.MySqlClient;
 
 namespace Intersect.Server.Database
 {
-
     public static class DbInterface
     {
-
         //Entity Framework Contexts are NOT threadsafe.. and using multiple contexts simultaneously doesn't work well due to us keeping players/maps/etc in memory.
         //This class interfaces with a single playerdb and gamedb context and makes sure requests for information are handled in a safe manner.
 
@@ -208,11 +206,18 @@ namespace Intersect.Server.Database
                 // ignored
             }
 
-            var gameMigrations = sGameDb.PendingMigrations;
-            var showGameMigrationWarning = gameMigrations.Any() && !gameMigrations.Contains("20180905042857_Initial");
-            var playerMigrations = sPlayerDb.PendingMigrations;
+            var pendingGameSchemaMigrations = sGameDb.PendingMigrations;
+            var pendingGameDataMigrations = sGameDb.PendingDataMigrations;
+            var showGameMigrationWarning = (pendingGameSchemaMigrations.Any() &&
+                                            !pendingGameSchemaMigrations.Contains("20180905042857_Initial")) ||
+                                           pendingGameDataMigrations.Any();
+
+            var pendingPlayerSchemaMigrations = sPlayerDb.PendingMigrations;
+            var pendingPlayerDataMigrations = sPlayerDb.PendingDataMigrations;
             var showPlayerMigrationWarning =
-                playerMigrations.Any() && !playerMigrations.Contains("20180927161502_InitialPlayerDb");
+                (pendingPlayerSchemaMigrations.Any() &&
+                 !pendingPlayerSchemaMigrations.Contains("20180927161502_InitialPlayerDb")) ||
+                pendingPlayerDataMigrations.Any();
 
             if (showGameMigrationWarning || showPlayerMigrationWarning)
             {
@@ -247,23 +252,27 @@ namespace Intersect.Server.Database
 
             sGameDb.Database.Migrate();
             var remainingGameMigrations = sGameDb.PendingMigrations;
-            var processedGameMigrations = new List<string>(gameMigrations);
+            var processedGameMigrations = new List<string>(pendingGameSchemaMigrations);
             foreach (var itm in remainingGameMigrations)
             {
                 processedGameMigrations.Remove(itm);
             }
 
-            sGameDb.MigrationsProcessed(processedGameMigrations.ToArray());
+            GameContext.HandleProcessedSchemaMigrations(
+                sGameDb, processedGameMigrations.ToArray(), pendingGameDataMigrations
+            );
 
             sPlayerDb.Database.Migrate();
             var remainingPlayerMigrations = sPlayerDb.PendingMigrations;
-            var processedPlayerMigrations = new List<string>(playerMigrations);
+            var processedPlayerMigrations = new List<string>(pendingPlayerSchemaMigrations);
             foreach (var itm in remainingPlayerMigrations)
             {
                 processedPlayerMigrations.Remove(itm);
             }
 
-            sPlayerDb.MigrationsProcessed(processedPlayerMigrations.ToArray());
+            PlayerContext.HandleProcessedSchemaMigrations(
+                sPlayerDb, processedPlayerMigrations.ToArray(), pendingPlayerDataMigrations
+            );
 #if DEBUG
             if (ServerContext.Instance.RestApi.Configuration.SeedMode)
             {
@@ -369,7 +378,9 @@ namespace Intersect.Server.Database
 
         public static Player GetUserCharacter(User user, Guid characterId)
         {
-            if (user == null) return null;
+            if (user == null)
+                return null;
+
             foreach (var character in user.Players)
             {
                 if (character.Id == characterId)
@@ -610,68 +621,85 @@ namespace Intersect.Server.Database
                     AnimationBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Class:
                     ClassBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Item:
                     ItemBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Npc:
                     NpcBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Projectile:
                     ProjectileBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Quest:
                     QuestBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Resource:
                     ResourceBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Shop:
                     ShopBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Spell:
                     SpellBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.CraftTables:
                     CraftingTableBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Crafts:
                     CraftBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Map:
                     MapBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Event:
                     EventBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.PlayerVariable:
                     PlayerVariableBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.ServerVariable:
                     ServerVariableBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Tileset:
                     TilesetBase.Lookup.Clear();
 
                     break;
+
                 case GameObjectType.Time:
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -691,6 +719,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Class:
                         foreach (var cls in sGameDb.Classes)
                         {
@@ -698,6 +727,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Item:
                         foreach (var itm in sGameDb.Items)
                         {
@@ -705,6 +735,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Npc:
                         foreach (var npc in sGameDb.Npcs)
                         {
@@ -712,6 +743,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Projectile:
                         foreach (var proj in sGameDb.Projectiles)
                         {
@@ -719,6 +751,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Quest:
                         foreach (var qst in sGameDb.Quests)
                         {
@@ -726,6 +759,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Resource:
                         foreach (var res in sGameDb.Resources)
                         {
@@ -733,6 +767,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Shop:
                         foreach (var shp in sGameDb.Shops)
                         {
@@ -740,6 +775,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Spell:
                         foreach (var spl in sGameDb.Spells)
                         {
@@ -747,6 +783,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.CraftTables:
                         foreach (var craft in sGameDb.CraftingTables)
                         {
@@ -754,6 +791,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Crafts:
                         foreach (var craft in sGameDb.Crafts)
                         {
@@ -761,6 +799,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Map:
                         var maps = sGameDb.Maps.ToArray();
                         foreach (var map in maps)
@@ -769,6 +808,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Event:
                         foreach (var evt in sGameDb.Events)
                         {
@@ -776,6 +816,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.PlayerVariable:
                         foreach (var psw in sGameDb.PlayerVariables)
                         {
@@ -783,6 +824,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.ServerVariable:
                         foreach (var psw in sGameDb.ServerVariables)
                         {
@@ -790,6 +832,7 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Tileset:
                         foreach (var psw in sGameDb.Tilesets)
                         {
@@ -797,8 +840,10 @@ namespace Intersect.Server.Database
                         }
 
                         break;
+
                     case GameObjectType.Time:
                         break;
+
                     default:
                         throw new ArgumentOutOfRangeException(nameof(gameObjectType), gameObjectType, null);
                 }
@@ -824,62 +869,77 @@ namespace Intersect.Server.Database
                     dbObj = new AnimationBase(predefinedid);
 
                     break;
+
                 case GameObjectType.Class:
                     dbObj = new ClassBase(predefinedid);
 
                     break;
+
                 case GameObjectType.Item:
                     dbObj = new ItemBase(predefinedid);
 
                     break;
+
                 case GameObjectType.Npc:
                     dbObj = new NpcBase(predefinedid);
 
                     break;
+
                 case GameObjectType.Projectile:
                     dbObj = new ProjectileBase(predefinedid);
 
                     break;
+
                 case GameObjectType.Resource:
                     dbObj = new ResourceBase(predefinedid);
 
                     break;
+
                 case GameObjectType.Shop:
                     dbObj = new ShopBase(predefinedid);
 
                     break;
+
                 case GameObjectType.Spell:
                     dbObj = new SpellBase(predefinedid);
 
                     break;
+
                 case GameObjectType.CraftTables:
                     dbObj = new CraftingTableBase(predefinedid);
 
                     break;
+
                 case GameObjectType.Crafts:
                     dbObj = new CraftBase(predefinedid);
 
                     break;
+
                 case GameObjectType.Map:
                     dbObj = new MapInstance(predefinedid);
 
                     break;
+
                 case GameObjectType.Event:
                     dbObj = new EventBase(predefinedid);
 
                     break;
+
                 case GameObjectType.PlayerVariable:
                     dbObj = new PlayerVariableBase(predefinedid);
 
                     break;
+
                 case GameObjectType.ServerVariable:
                     dbObj = new ServerVariableBase(predefinedid);
 
                     break;
+
                 case GameObjectType.Tileset:
                     dbObj = new TilesetBase(predefinedid);
 
                     break;
+
                 case GameObjectType.Time:
                     break;
 
@@ -1032,22 +1092,27 @@ namespace Intersect.Server.Database
                         sGameDb.Animations.Remove((AnimationBase) gameObject);
 
                         break;
+
                     case GameObjectType.Class:
                         sGameDb.Classes.Remove((ClassBase) gameObject);
 
                         break;
+
                     case GameObjectType.Item:
                         sGameDb.Items.Remove((ItemBase) gameObject);
 
                         break;
+
                     case GameObjectType.Npc:
                         sGameDb.Npcs.Remove((NpcBase) gameObject);
 
                         break;
+
                     case GameObjectType.Projectile:
                         sGameDb.Projectiles.Remove((ProjectileBase) gameObject);
 
                         break;
+
                     case GameObjectType.Quest:
 
                         if (((QuestBase) gameObject).StartEvent != null)
@@ -1074,47 +1139,58 @@ namespace Intersect.Server.Database
                         sGameDb.Quests.Remove((QuestBase) gameObject);
 
                         break;
+
                     case GameObjectType.Resource:
                         sGameDb.Resources.Remove((ResourceBase) gameObject);
 
                         break;
+
                     case GameObjectType.Shop:
                         sGameDb.Shops.Remove((ShopBase) gameObject);
 
                         break;
+
                     case GameObjectType.Spell:
                         sGameDb.Spells.Remove((SpellBase) gameObject);
 
                         break;
+
                     case GameObjectType.CraftTables:
                         sGameDb.CraftingTables.Remove((CraftingTableBase) gameObject);
 
                         break;
+
                     case GameObjectType.Crafts:
                         sGameDb.Crafts.Remove((CraftBase) gameObject);
 
                         break;
+
                     case GameObjectType.Map:
                         sGameDb.Maps.Remove((MapInstance) gameObject);
                         MapInstance.Lookup.Delete(gameObject);
 
                         break;
+
                     case GameObjectType.Event:
                         sGameDb.Events.Remove((EventBase) gameObject);
 
                         break;
+
                     case GameObjectType.PlayerVariable:
                         sGameDb.PlayerVariables.Remove((PlayerVariableBase) gameObject);
 
                         break;
+
                     case GameObjectType.ServerVariable:
                         sGameDb.ServerVariables.Remove((ServerVariableBase) gameObject);
 
                         break;
+
                     case GameObjectType.Tileset:
                         sGameDb.Tilesets.Remove((TilesetBase) gameObject);
 
                         break;
+
                     case GameObjectType.Time:
                         break;
                 }
@@ -1922,7 +1998,6 @@ namespace Intersect.Server.Database
 
         private struct IdTrace
         {
-
             public long Id;
 
             public string Trace;
@@ -1931,9 +2006,6 @@ namespace Intersect.Server.Database
             {
                 return $"{Id:000000}: {Trace}";
             }
-
         }
-
     }
-
 }
