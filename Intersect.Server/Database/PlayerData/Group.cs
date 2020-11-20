@@ -16,6 +16,7 @@ namespace Intersect.Server.Database.PlayerData
 
         public Guid GroupTypeId { get; set; }
 
+        [JsonIgnore, NotMapped]
         public GroupTypeDescriptor GroupType => GroupTypeDescriptor.Get(GroupTypeId);
 
         public string Name { get; set; }
