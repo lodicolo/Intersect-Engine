@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-
-using Intersect.Enums;
+﻿using Intersect.Enums;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Crafting;
 using Intersect.GameObjects.Events;
@@ -17,6 +9,7 @@ using Intersect.Logging;
 using Intersect.Network;
 using Intersect.Network.Packets.Server;
 using Intersect.Server.Database;
+using Intersect.Server.Database.PlayerData;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities.Events;
@@ -30,12 +23,18 @@ using JetBrains.Annotations;
 
 using Newtonsoft.Json;
 
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+
 namespace Intersect.Server.Entities
 {
-
     public partial class Player : Entity
     {
-
         //Online Players List
         [NotNull] private static readonly Dictionary<Guid, Player> OnlinePlayers = new Dictionary<Guid, Player>();
 
@@ -61,8 +60,7 @@ namespace Intersect.Server.Entities
 
         public static int OnlineCount => OnlinePlayers.Count;
 
-        [JsonProperty("MaxVitals"), NotMapped]
-        public new int[] MaxVitals => GetMaxVitals();
+        [JsonProperty("MaxVitals"), NotMapped] public new int[] MaxVitals => GetMaxVitals();
 
         //Name, X, Y, Dir, Etc all in the base Entity Class
         public Guid ClassId { get; set; }
@@ -80,42 +78,32 @@ namespace Intersect.Server.Entities
             set => Equipment = DatabaseUtils.LoadIntArray(value, Options.EquipmentSlots.Count);
         }
 
-        [NotMapped]
-        public int[] Equipment { get; set; } = new int[Options.EquipmentSlots.Count];
+        [NotMapped] public int[] Equipment { get; set; } = new int[Options.EquipmentSlots.Count];
 
         public DateTime? LastOnline { get; set; }
 
         //Bank
-        [NotNull, JsonIgnore]
-        public virtual List<BankSlot> Bank { get; set; } = new List<BankSlot>();
+        [NotNull, JsonIgnore] public virtual List<BankSlot> Bank { get; set; } = new List<BankSlot>();
 
         //Friends
-        [NotNull, JsonIgnore]
-        public virtual List<Friend> Friends { get; set; } = new List<Friend>();
+        [NotNull, JsonIgnore] public virtual List<Friend> Friends { get; set; } = new List<Friend>();
 
         //HotBar
-        [NotNull, JsonIgnore]
-        public virtual List<HotbarSlot> Hotbar { get; set; } = new List<HotbarSlot>();
+        [NotNull, JsonIgnore] public virtual List<HotbarSlot> Hotbar { get; set; } = new List<HotbarSlot>();
 
         //Quests
-        [NotNull, JsonIgnore]
-        public virtual List<Quest> Quests { get; set; } = new List<Quest>();
+        [NotNull, JsonIgnore] public virtual List<Quest> Quests { get; set; } = new List<Quest>();
 
         //Variables
-        [NotNull, JsonIgnore]
-        public virtual List<Variable> Variables { get; set; } = new List<Variable>();
+        [NotNull, JsonIgnore] public virtual List<Variable> Variables { get; set; } = new List<Variable>();
 
-        [JsonIgnore, NotMapped]
-        public bool IsValidPlayer => !IsDisposed && Client?.Entity == this;
+        [JsonIgnore, NotMapped] public bool IsValidPlayer => !IsDisposed && Client?.Entity == this;
 
-        [NotMapped]
-        public long ExperienceToNextLevel => GetExperienceToNextLevel(Level);
+        [NotMapped] public long ExperienceToNextLevel => GetExperienceToNextLevel(Level);
 
-        [NotMapped, JsonIgnore]
-        public long ClientAttackTimer { get; set; }
+        [NotMapped, JsonIgnore] public long ClientAttackTimer { get; set; }
 
-        [NotMapped, JsonIgnore]
-        public long ClientMoveTimer { get; set; }
+        [NotMapped, JsonIgnore] public long ClientMoveTimer { get; set; }
 
         public static Player FindOnline(Guid id)
         {
@@ -867,17 +855,24 @@ namespace Intersect.Server.Entities
                     // If in party, split the exp.
                     if (Party != null && Party.Count > 0)
                     {
-                        var partyMembersInXpRange = Party.Where(partyMember => partyMember.InRangeOf(this, Options.Party.SharedXpRange));
+                        var partyMembersInXpRange = Party.Where(
+                            partyMember => partyMember.InRangeOf(this, Options.Party.SharedXpRange)
+                        );
+
                         var partyExperience = descriptor.Experience / partyMembersInXpRange.Count();
-                        foreach (var partyMember in partyMembersInXpRange) {
+                        foreach (var partyMember in partyMembersInXpRange)
+                        {
                             partyMember.GiveExperience(partyExperience);
                             partyMember.UpdateQuestKillTasks(entity);
                         }
 
                         if (partyEvent != null)
                         {
-                            foreach (var partyMember in Party) {
-                                if (partyMember.InRangeOf(this, Options.Party.NpcDeathCommonEventStartRange) && !(partyMember == this && playerEvent != null)) {
+                            foreach (var partyMember in Party)
+                            {
+                                if (partyMember.InRangeOf(this, Options.Party.NpcDeathCommonEventStartRange) &&
+                                    !(partyMember == this && playerEvent != null))
+                                {
                                     partyMember.StartCommonEvent(partyEvent);
                                 }
                             }
@@ -1117,8 +1112,10 @@ namespace Intersect.Server.Entities
                 case Player player when friendly != player.InParty(this):
                 case Resource _ when spell != null:
                     return false;
+
                 case Npc npc:
                     return !friendly && npc.CanPlayerAttack(this) || friendly && npc.IsAllyOf(this);
+
                 default:
                     return true;
             }
@@ -1480,7 +1477,9 @@ namespace Intersect.Server.Entities
         /// <param name="itemId">The Id for the item to be handed out to the player.</param>
         /// <param name="quantity">The quantity of items to be handed out to the player.</param>
         /// <returns>Whether the player received the item or not.</returns>
-        public bool TryGiveItem(Guid itemId, int quantity) => TryGiveItem(new Item(itemId, quantity), ItemHandling.Normal, false, true);
+        public bool TryGiveItem(Guid itemId, int quantity) => TryGiveItem(
+            new Item(itemId, quantity), ItemHandling.Normal, false, true
+        );
 
         /// <summary>
         /// Attempts to give the player an item. Returns whether or not it succeeds.
@@ -1489,7 +1488,8 @@ namespace Intersect.Server.Entities
         /// <param name="quantity">The quantity of items to be handed out to the player.</param>
         /// <param name="handler">The way to handle handing out this item.</param>
         /// <returns>Whether the player received the item or not.</returns>
-        public bool TryGiveItem(Guid itemId, int quantity, ItemHandling handler) => TryGiveItem(new Item(itemId, quantity), handler, false, true);
+        public bool TryGiveItem(Guid itemId, int quantity, ItemHandling handler) =>
+            TryGiveItem(new Item(itemId, quantity), handler, false, true);
 
         /// <summary>
         /// Attempts to give the player an item. Returns whether or not it succeeds.
@@ -1500,7 +1500,13 @@ namespace Intersect.Server.Entities
         /// <param name="bankOverflow">Should we allow the items to overflow into the player's bank when their inventory is full.</param>
         /// <param name="sendUpdate">Should we send an inventory update when we are done changing the player's items.</param>
         /// <returns>Whether the player received the item or not.</returns>
-        public bool TryGiveItem(Guid itemId, int quantity, ItemHandling handler, bool bankOverflow = false, bool sendUpdate = true) => TryGiveItem(new Item(itemId, quantity), handler, bankOverflow, sendUpdate);
+        public bool TryGiveItem(
+            Guid itemId,
+            int quantity,
+            ItemHandling handler,
+            bool bankOverflow = false,
+            bool sendUpdate = true
+        ) => TryGiveItem(new Item(itemId, quantity), handler, bankOverflow, sendUpdate);
 
         /// <summary>
         /// Attempts to give the player an item. Returns whether or not it succeeds.
@@ -1510,7 +1516,12 @@ namespace Intersect.Server.Entities
         /// <param name="bankOverflow">Should we allow the items to overflow into the player's bank when their inventory is full.</param>
         /// <param name="sendUpdate">Should we send an inventory update when we are done changing the player's items.</param>
         /// <returns>Whether the player received the item or not.</returns>
-        public bool TryGiveItem(Item item, ItemHandling handler = ItemHandling.Normal, bool bankOverflow = false, bool sendUpdate = true)
+        public bool TryGiveItem(
+            Item item,
+            ItemHandling handler = ItemHandling.Normal,
+            bool bankOverflow = false,
+            bool sendUpdate = true
+        )
         {
             // Is this a valid item?
             if (item.Descriptor == null)
@@ -1535,6 +1546,7 @@ namespace Intersect.Server.Entities
                     }
 
                     break;
+
                 case ItemHandling.Overflow:
                     if (CanGiveItem(item)) // Can receive item under regular rules.
                     {
@@ -1563,6 +1575,7 @@ namespace Intersect.Server.Entities
                     }
 
                     break;
+
                 case ItemHandling.UpTo:
                     if (CanGiveItem(item)) // Can receive item under regular rules.
                     {
@@ -1577,14 +1590,14 @@ namespace Intersect.Server.Entities
                     }
 
                     break;
-                    // Did you forget to change this method when you added something? ;)
+
+                // Did you forget to change this method when you added something? ;)
                 default:
                     throw new NotImplementedException();
             }
 
             return bankOverflow && TryDepositItem(item, sendUpdate);
         }
-
 
         /// <summary>
         /// Gives the player an item. NOTE: This method MAKES ZERO CHECKS to see if this is possible!
@@ -1594,7 +1607,6 @@ namespace Intersect.Server.Entities
         /// <param name="sendUpdate"></param>
         private void GiveItem(Item item, bool sendUpdate)
         {
-
             // Decide how we're going to handle this item.
             var existingSlot = FindInventoryItemSlot(item.Descriptor.Id);
             var updateSlots = new List<int>();
@@ -1630,7 +1642,6 @@ namespace Intersect.Server.Entities
 
             // Update quests for this item.
             UpdateGatherItemQuests(item.ItemId);
-
         }
 
         /// <summary>
@@ -1649,6 +1660,7 @@ namespace Intersect.Server.Entities
                     slots.Add(inventorySlot);
                 }
             }
+
             return slots;
         }
 
@@ -1806,7 +1818,8 @@ namespace Intersect.Server.Entities
                     return;
                 }
 
-                if (ItemCooldowns.ContainsKey(itemBase.Id) && ItemCooldowns[itemBase.Id] > Globals.Timing.MillisecondsUTC)
+                if (ItemCooldowns.ContainsKey(itemBase.Id) &&
+                    ItemCooldowns[itemBase.Id] > Globals.Timing.MillisecondsUTC)
                 {
                     //Cooldown warning!
                     PacketSender.SendChatMsg(this, Strings.Items.cooldown);
@@ -1821,6 +1834,7 @@ namespace Intersect.Server.Entities
                         PacketSender.SendChatMsg(this, Strings.Items.cannotuse);
 
                         return;
+
                     case ItemTypes.Consumable:
                         var value = 0;
                         var color = CustomColors.Items.ConsumeHp;
@@ -1881,6 +1895,7 @@ namespace Intersect.Server.Entities
                         TryTakeItem(Items[slot], 1);
 
                         break;
+
                     case ItemTypes.Equipment:
                         for (var i = 0; i < Options.EquipmentSlots.Count; i++)
                         {
@@ -1903,6 +1918,7 @@ namespace Intersect.Server.Entities
                         EquipItem(itemBase, slot);
 
                         break;
+
                     case ItemTypes.Spell:
                         if (itemBase.SpellId == Guid.Empty)
                         {
@@ -1930,6 +1946,7 @@ namespace Intersect.Server.Entities
                         }
 
                         break;
+
                     case ItemTypes.Event:
                         var evt = EventBase.Get(itemBase.EventId);
                         if (evt == null || !StartCommonEvent(evt))
@@ -1943,10 +1960,12 @@ namespace Intersect.Server.Entities
                         }
 
                         break;
+
                     case ItemTypes.Bag:
                         OpenBag(Item, itemBase);
 
                         break;
+
                     default:
                         PacketSender.SendChatMsg(this, Strings.Items.notimplemented);
 
@@ -1988,7 +2007,12 @@ namespace Intersect.Server.Entities
         /// <param name="handler">The method in which we intend to handle taking away the item from our player.</param>
         /// <param name="sendUpdate">Do we need to send an inventory update after taking away the item.</param>
         /// <returns></returns>
-        public bool TryTakeItem(InventorySlot slot, int amount, ItemHandling handler = ItemHandling.Normal, bool sendUpdate = true)
+        public bool TryTakeItem(
+            InventorySlot slot,
+            int amount,
+            ItemHandling handler = ItemHandling.Normal,
+            bool sendUpdate = true
+        )
         {
             if (Items == null || slot == Item.None || slot == null)
             {
@@ -2010,6 +2034,7 @@ namespace Intersect.Server.Entities
                     toTake = amount;
 
                     break;
+
                 case ItemHandling.UpTo:
                     // Can we take all our items or just some?
                     toTake = slot.Quantity >= amount ? amount : slot.Quantity;
@@ -2053,7 +2078,6 @@ namespace Intersect.Server.Entities
             // Update quest progress and we're done!
             UpdateGatherItemQuests(slot.ItemId);
             return true;
-
         }
 
         /// <summary>
@@ -2064,7 +2088,12 @@ namespace Intersect.Server.Entities
         /// <param name="handler">The method in which we intend to handle taking away the item from our player.</param>
         /// <param name="sendUpdate">Do we need to send an inventory update after taking away the item.</param>
         /// <returns>Whether the item was taken away successfully or not.</returns>
-        public bool TryTakeItem(Guid itemId, int amount, ItemHandling handler = ItemHandling.Normal, bool sendUpdate = true)
+        public bool TryTakeItem(
+            Guid itemId,
+            int amount,
+            ItemHandling handler = ItemHandling.Normal,
+            bool sendUpdate = true
+        )
         {
             if (Items == null)
             {
@@ -2086,6 +2115,7 @@ namespace Intersect.Server.Entities
                     toTake = amount;
 
                     break;
+
                 case ItemHandling.UpTo:
                     // Can we take all our items or just some?
                     var itemCount = FindInventoryItemQuantity(itemId);
@@ -2093,7 +2123,7 @@ namespace Intersect.Server.Entities
 
                     break;
 
-                    // Did you forget something? ;)
+                // Did you forget something? ;)
                 default:
                     throw new NotImplementedException();
             }
@@ -2151,7 +2181,8 @@ namespace Intersect.Server.Entities
         /// <param name="sendUpdate"></param>
         private void TakeItem(InventorySlot slot, int amount, bool sendUpdate = true)
         {
-            if (slot.Quantity > amount) // This slot contains more than what we're trying to take away here. Update the quantity.
+            if (slot.Quantity > amount
+            ) // This slot contains more than what we're trying to take away here. Update the quantity.
             {
                 slot.Quantity -= amount;
             }
@@ -2198,7 +2229,8 @@ namespace Intersect.Server.Entities
         /// <param name="itemId">The item Id to look for.</param>
         /// <param name="quantity">The quantity of the item to look for.</param>
         /// <returns>An <see cref="InventorySlot"/> that contains the item, or null if none are found.</returns>
-        public InventorySlot FindInventoryItemSlot(Guid itemId, int quantity = 1) => FindInventoryItemSlots(itemId, quantity).FirstOrDefault();
+        public InventorySlot FindInventoryItemSlot(Guid itemId, int quantity = 1) =>
+            FindInventoryItemSlots(itemId, quantity).FirstOrDefault();
 
         /// <summary>
         /// Finds all inventory slots matching the desired item and quantity.
@@ -2592,9 +2624,10 @@ namespace Intersect.Server.Entities
                                 if (shop.SellingItems[slot].CostItemQuantity * buyItemAmt ==
                                     Items[
                                             FindInventoryItemSlot(
-                                                shop.SellingItems[slot].CostItemId,
-                                                shop.SellingItems[slot].CostItemQuantity * buyItemAmt
-                                            ).Slot]
+                                                    shop.SellingItems[slot].CostItemId,
+                                                    shop.SellingItems[slot].CostItemQuantity * buyItemAmt
+                                                )
+                                                .Slot]
                                         .Quantity)
                                 {
                                     TryTakeItem(
@@ -4098,8 +4131,10 @@ namespace Intersect.Server.Entities
             {
                 case Player otherPlayer:
                     return IsAllyOf(otherPlayer);
+
                 case Npc otherNpc:
                     return otherNpc.IsAllyOf(this);
+
                 default:
                     return base.IsAllyOf(otherEntity);
             }
@@ -4340,6 +4375,7 @@ namespace Intersect.Server.Entities
 
                     break;
                 }
+
                 default:
                     base.CastSpell(spellId, spellSlot);
 
@@ -4572,6 +4608,7 @@ namespace Intersect.Server.Entities
                     {
                         case QuestProgressState.OnAnyTask:
                             return true;
+
                         case QuestProgressState.BeforeTask:
                             if (quest.GetTaskIndex(taskId) != -1)
                             {
@@ -4579,6 +4616,7 @@ namespace Intersect.Server.Entities
                             }
 
                             break;
+
                         case QuestProgressState.OnTask:
                             if (quest.GetTaskIndex(taskId) != -1)
                             {
@@ -4586,6 +4624,7 @@ namespace Intersect.Server.Entities
                             }
 
                             break;
+
                         case QuestProgressState.AfterTask:
                             if (quest.GetTaskIndex(taskId) != -1)
                             {
@@ -4593,6 +4632,7 @@ namespace Intersect.Server.Entities
                             }
 
                             break;
+
                         default:
                             throw new ArgumentOutOfRangeException(nameof(progress), progress, null);
                     }
@@ -5066,14 +5106,17 @@ namespace Intersect.Server.Entities
                                 evt.Value.PageInstance.GlobalClone.ChangeDir(1);
 
                                 break;
+
                             case 1:
                                 evt.Value.PageInstance.GlobalClone.ChangeDir(0);
 
                                 break;
+
                             case 2:
                                 evt.Value.PageInstance.GlobalClone.ChangeDir(3);
 
                                 break;
+
                             case 3:
                                 evt.Value.PageInstance.GlobalClone.ChangeDir(2);
 
@@ -5183,6 +5226,7 @@ namespace Intersect.Server.Entities
                                         }
 
                                         break;
+
                                     case VariableDataTypes.Number:
                                         if (newValue >= cmd.Minimum && newValue <= cmd.Maximum)
                                         {
@@ -5191,6 +5235,7 @@ namespace Intersect.Server.Entities
                                         }
 
                                         break;
+
                                     case VariableDataTypes.String:
                                         if (newValueString.Length >= cmd.Minimum &&
                                             newValueString.Length <= cmd.Maximum)
@@ -5200,6 +5245,7 @@ namespace Intersect.Server.Entities
                                         }
 
                                         break;
+
                                     case VariableDataTypes.Boolean:
                                         value.Boolean = newValue > 0;
                                         success = true;
@@ -5353,26 +5399,34 @@ namespace Intersect.Server.Entities
                             {
                                 case CommonEventTrigger.None:
                                     break;
+
                                 case CommonEventTrigger.Login:
                                     break;
+
                                 case CommonEventTrigger.LevelUp:
                                     break;
+
                                 case CommonEventTrigger.OnRespawn:
                                     break;
+
                                 case CommonEventTrigger.SlashCommand:
                                     break;
+
                                 case CommonEventTrigger.Autorun:
                                     break;
+
                                 case CommonEventTrigger.PVPKill:
                                     //Add victim as a parameter
                                     tmpEvent.SetParam("victim", param);
 
                                     break;
+
                                 case CommonEventTrigger.PVPDeath:
                                     //Add killer as a parameter
                                     tmpEvent.SetParam("killer", param);
 
                                     break;
+
                                 case CommonEventTrigger.PlayerInteract:
                                     //Interactee as a parameter
                                     tmpEvent.SetParam("triggered", param);
@@ -5488,7 +5542,9 @@ namespace Intersect.Server.Entities
             {
                 if (evt.Value.MapId == mapId)
                 {
-                    if (evt.Value.PageInstance != null && evt.Value.PageInstance.MapId == mapId && evt.Value.BaseEvent.Id == eventId)
+                    if (evt.Value.PageInstance != null &&
+                        evt.Value.PageInstance.MapId == mapId &&
+                        evt.Value.BaseEvent.Id == eventId)
                     {
                         var x = evt.Value.PageInstance.GlobalClone?.X ?? evt.Value.PageInstance.X;
                         var y = evt.Value.PageInstance.GlobalClone?.Y ?? evt.Value.PageInstance.Y;
@@ -5560,8 +5616,7 @@ namespace Intersect.Server.Entities
 
         [JsonIgnore, NotMapped] public Client Client;
 
-        [JsonIgnore, NotMapped]
-        public UserRights Power => Client?.Power ?? UserRights.None;
+        [JsonIgnore, NotMapped] public UserRights Power => Client?.Power ?? UserRights.None;
 
         [JsonIgnore, NotMapped] private bool mSentMap;
 
@@ -5576,8 +5631,7 @@ namespace Intersect.Server.Entities
 
         #region Trading
 
-        [JsonProperty(nameof(Trading))]
-        private Guid JsonTradingId => Trading.Counterparty?.Id ?? Guid.Empty;
+        [JsonProperty(nameof(Trading))] private Guid JsonTradingId => Trading.Counterparty?.Id ?? Guid.Empty;
 
         [JsonIgnore, NotMapped] public Trading Trading;
 
@@ -5627,11 +5681,9 @@ namespace Intersect.Server.Entities
 
         #region Bag/Shops/etc
 
-        [JsonProperty(nameof(InBag))]
-        private bool JsonInBag => InBag != null;
+        [JsonProperty(nameof(InBag))] private bool JsonInBag => InBag != null;
 
-        [JsonProperty(nameof(InShop))]
-        private bool JsonInShop => InShop != null;
+        [JsonProperty(nameof(InShop))] private bool JsonInShop => InShop != null;
 
         [JsonIgnore, NotMapped] public Bag InBag;
 
@@ -5653,7 +5705,5 @@ namespace Intersect.Server.Entities
         [JsonIgnore] public Dictionary<Guid, long> ItemCooldowns = new Dictionary<Guid, long>();
 
         #endregion
-
     }
-
 }

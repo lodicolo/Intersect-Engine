@@ -454,6 +454,7 @@
     <Compile Include="Database\PlayerData\Api\RefreshToken.cs" />
     <Compile Include="Database\PlayerData\Ban.cs" />
     <Compile Include="Database\PlayerData\IPlayerContext.cs" />
+    <Compile Include="Database\PlayerData\Group.cs" />
     <Compile Include="Database\PlayerData\Players\Bag.cs" />
     <Compile Include="Database\PlayerData\Players\BagSlot.cs" />
     <Compile Include="Database\PlayerData\Players\BankSlot.cs" />
@@ -478,6 +479,7 @@
     <Compile Include="Database\PlayerData\User.cs" />
     <Compile Include="Database\PlayerData\PlayerContext.cs" />
     <Compile Include="Entities\Events\Event.cs" />
+    <Compile Include="Entities\Player.Membership.cs" />
     <Compile Include="Entities\Projectile.cs" />
     <Compile Include="Entities\ProjectileSpawn.cs" />
     <Compile Include="Entities\Resource.cs" />
