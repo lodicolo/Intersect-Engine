@@ -1,15 +1,13 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using JetBrains.Annotations;
-
 namespace Intersect.Utilities
 {
-
     public static class ValueUtils
     {
-
         public static void Swap<T>(ref T a, ref T b)
         {
             var temp = a;
@@ -19,7 +17,7 @@ namespace Intersect.Utilities
 
         public static bool SetDefault<T>(bool condition, out T value)
         {
-            value = default(T);
+            value = default;
 
             return condition;
         }
@@ -39,7 +37,7 @@ namespace Intersect.Utilities
         /// <returns>the aggregate hash code</returns>
         public static int ComputeHashCode<TValue>([CanBeNull] IEnumerable<TValue> values) =>
             values?.Aggregate(
-                0, (current, value) => unchecked(current * (int) 0xA5555529 + (value?.GetHashCode() ?? 0))
+                0, (current, value) => unchecked(current * (int)0xA5555529 + (value?.GetHashCode() ?? 0))
             ) ??
             0;
 
@@ -94,7 +92,5 @@ namespace Intersect.Utilities
 
             return comparison;
         }
-
     }
-
 }

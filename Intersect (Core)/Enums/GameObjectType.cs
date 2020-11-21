@@ -16,6 +16,9 @@ namespace Intersect.Enums
         [GameObjectInfo(typeof(ClassBase), "classes")]
         Class,
 
+        [GameObjectInfo(typeof(GroupTypeDescriptor), "groups")]
+        Group,
+
         [GameObjectInfo(typeof(ItemBase), "items")]
         Item,
 

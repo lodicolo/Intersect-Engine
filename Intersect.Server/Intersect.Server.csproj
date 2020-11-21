@@ -510,6 +510,10 @@
     <Compile Include="Migrations\Logging\20201119230003_AddUserActivityHistory.designer.cs">
       <DependentUpon>20201119230003_AddUserActivityHistory.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20201120021143_AddGroupMembership.cs" />
+    <Compile Include="Migrations\20201120021143_AddGroupMembership.designer.cs">
+      <DependentUpon>20201120021143_AddGroupMembership.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Game\20201120021004_AddGroupTypeDescriptor.cs" />
     <Compile Include="Migrations\Game\20201120021004_AddGroupTypeDescriptor.designer.cs">
       <DependentUpon>20201120021004_AddGroupTypeDescriptor.cs</DependentUpon>

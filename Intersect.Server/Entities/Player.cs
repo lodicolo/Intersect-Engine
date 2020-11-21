@@ -262,8 +262,6 @@ namespace Intersect.Server.Entities
             CraftingTableId = Guid.Empty;
             CraftId = Guid.Empty;
             CraftTimer = 0;
-            PartyRequester = null;
-            PartyRequests.Clear();
             FriendRequester = null;
             FriendRequests.Clear();
             InBag = null;
@@ -5644,24 +5642,6 @@ namespace Intersect.Server.Entities
         [NotMapped, JsonIgnore] public Guid CraftId = Guid.Empty;
 
         [NotMapped, JsonIgnore] public long CraftTimer = 0;
-
-        #endregion
-
-        #region Parties
-
-        private List<Guid> JsonPartyIds => Party.Select(partyMember => partyMember?.Id ?? Guid.Empty).ToList();
-
-        private Guid JsonPartyRequesterId => PartyRequester?.Id ?? Guid.Empty;
-
-        private Dictionary<Guid, long> JsonPartyRequests => PartyRequests.ToDictionary(
-            pair => pair.Key?.Id ?? Guid.Empty, pair => pair.Value
-        );
-
-        [JsonIgnore, NotMapped] public List<Player> Party = new List<Player>();
-
-        [JsonIgnore, NotMapped] public Player PartyRequester;
-
-        [JsonIgnore, NotMapped] public Dictionary<Player, long> PartyRequests = new Dictionary<Player, long>();
 
         #endregion
 
