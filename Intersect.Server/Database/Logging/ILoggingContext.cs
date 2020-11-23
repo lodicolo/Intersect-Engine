@@ -2,11 +2,9 @@
 
 using Microsoft.EntityFrameworkCore;
 
-using System;
-
 namespace Intersect.Server.Database.Logging
 {
-    public interface ILoggingContext : IDbContext, IDisposable
+    public interface ILoggingContext : IDbContext
     {
         DbSet<RequestLog> RequestLogs { get; }
 

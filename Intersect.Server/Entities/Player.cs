@@ -9,7 +9,7 @@ using Intersect.Logging;
 using Intersect.Network;
 using Intersect.Network.Packets.Server;
 using Intersect.Server.Database;
-using Intersect.Server.Database.PlayerData;
+using Intersect.Server.Database.PlayerData.Groups;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities.Events;
@@ -105,10 +105,9 @@ namespace Intersect.Server.Entities
 
         [NotMapped, JsonIgnore] public long ClientMoveTimer { get; set; }
 
-        public static Player FindOnline(Guid id)
-        {
-            return OnlinePlayers.ContainsKey(id) ? OnlinePlayers[id] : null;
-        }
+        public static Player FindOnline(Guid id) => TryFindOnline(id, out var player) ? player : default;
+
+        public static bool TryFindOnline(Guid id, out Player player) => OnlinePlayers.TryGetValue(id, out player);
 
         public static Player FindOnline(string charName)
         {
@@ -851,29 +850,18 @@ namespace Intersect.Server.Entities
                     var partyEvent = descriptor.OnDeathPartyEvent;
 
                     // If in party, split the exp.
-                    if (Party != null && Party.Count > 0)
+                    var party = Party;
+                    if (party != null)
                     {
-                        var partyMembersInXpRange = Party.Where(
-                            partyMember => partyMember.InRangeOf(this, Options.Party.SharedXpRange)
+                        var groupLogic = GroupLogic.GetLogic(party);
+                        groupLogic.TryDistributeExperience(
+                            party, this, descriptor.Experience,
+                            memberInExperienceRange => memberInExperienceRange.UpdateQuestKillTasks(entity)
                         );
 
-                        var partyExperience = descriptor.Experience / partyMembersInXpRange.Count();
-                        foreach (var partyMember in partyMembersInXpRange)
+                        if (partyEvent != null && groupLogic is PartyLogic partyLogic)
                         {
-                            partyMember.GiveExperience(partyExperience);
-                            partyMember.UpdateQuestKillTasks(entity);
-                        }
-
-                        if (partyEvent != null)
-                        {
-                            foreach (var partyMember in Party)
-                            {
-                                if (partyMember.InRangeOf(this, Options.Party.NpcDeathCommonEventStartRange) &&
-                                    !(partyMember == this && playerEvent != null))
-                                {
-                                    partyMember.StartCommonEvent(partyEvent);
-                                }
-                            }
+                            partyLogic.TryDispatchPartyEvent(party, this, partyEvent);
                         }
                     }
                     else
@@ -3477,7 +3465,7 @@ namespace Intersect.Server.Entities
 
             if (!FriendRequests.ContainsKey(fromPlayer) || !(FriendRequests[fromPlayer] > Globals.Timing.Milliseconds))
             {
-                if (Trading.Requester == null && PartyRequester == null && FriendRequester == null)
+                if (Trading.Requester == null && FriendRequester == null)
                 {
                     FriendRequester = fromPlayer;
                     PacketSender.SendFriendRequest(this, fromPlayer);
@@ -3544,7 +3532,7 @@ namespace Intersect.Server.Entities
             }
             else
             {
-                if (Trading.Requester == null && PartyRequester == null && FriendRequester == null)
+                if (Trading.Requester == null && FriendRequester == null)
                 {
                     Trading.Requester = fromPlayer;
                     PacketSender.SendTradeRequest(this, fromPlayer);
@@ -3810,166 +3798,6 @@ namespace Intersect.Server.Entities
             Trading.Counterparty = null;
         }
 
-        //Parties
-        public void InviteToParty(Player fromPlayer)
-        {
-            if (Party.Count != 0)
-            {
-                PacketSender.SendChatMsg(fromPlayer, Strings.Parties.inparty.ToString(Name), CustomColors.Alerts.Error);
-
-                return;
-            }
-
-            if (fromPlayer.PartyRequests.ContainsKey(this))
-            {
-                fromPlayer.PartyRequests.Remove(this);
-            }
-
-            if (PartyRequests.ContainsKey(fromPlayer) && PartyRequests[fromPlayer] > Globals.Timing.Milliseconds)
-            {
-                PacketSender.SendChatMsg(fromPlayer, Strings.Parties.alreadydenied, CustomColors.Alerts.Error);
-            }
-            else
-            {
-                if (Trading.Requester == null && PartyRequester == null && FriendRequester == null)
-                {
-                    PartyRequester = fromPlayer;
-                    PacketSender.SendPartyInvite(this, fromPlayer);
-                }
-                else
-                {
-                    PacketSender.SendChatMsg(
-                        fromPlayer, Strings.Parties.busy.ToString(Name), CustomColors.Alerts.Error
-                    );
-                }
-            }
-        }
-
-        public void AddParty(Player target)
-        {
-            //If a new party, make yourself the leader
-            if (Party.Count == 0)
-            {
-                Party.Add(this);
-            }
-            else
-            {
-                if (Party[0] != this)
-                {
-                    PacketSender.SendChatMsg(this, Strings.Parties.leaderinvonly, CustomColors.Alerts.Error);
-
-                    return;
-                }
-
-                //Check for member being already in the party, if so cancel
-                for (var i = 0; i < Party.Count; i++)
-                {
-                    if (Party[i] == target)
-                    {
-                        return;
-                    }
-                }
-            }
-
-            if (Party.Count < 4)
-            {
-                target.LeaveParty();
-                Party.Add(target);
-
-                //Update all members of the party with the new list
-                for (var i = 0; i < Party.Count; i++)
-                {
-                    Party[i].Party = Party;
-                    PacketSender.SendParty(Party[i]);
-                    PacketSender.SendChatMsg(
-                        Party[i], Strings.Parties.joined.ToString(target.Name), CustomColors.Alerts.Accepted
-                    );
-                }
-            }
-            else
-            {
-                PacketSender.SendChatMsg(this, Strings.Parties.limitreached, CustomColors.Alerts.Error);
-            }
-        }
-
-        public void KickParty(Guid target)
-        {
-            if (Party.Count > 0 && Party[0] == this)
-            {
-                if (target != Guid.Empty)
-                {
-                    var oldMember = Party.Where(p => p.Id == target).FirstOrDefault();
-                    if (oldMember != null)
-                    {
-                        oldMember.Party = new List<Player>();
-                        PacketSender.SendParty(oldMember);
-                        PacketSender.SendChatMsg(oldMember, Strings.Parties.kicked, CustomColors.Alerts.Error);
-                        Party.Remove(oldMember);
-
-                        if (Party.Count > 1) //Need atleast 2 party members to function
-                        {
-                            //Update all members of the party with the new list
-                            for (var i = 0; i < Party.Count; i++)
-                            {
-                                Party[i].Party = Party;
-                                PacketSender.SendParty(Party[i]);
-                                PacketSender.SendChatMsg(
-                                    Party[i], Strings.Parties.memberkicked.ToString(oldMember.Name),
-                                    CustomColors.Alerts.Error
-                                );
-                            }
-                        }
-                        else if (Party.Count > 0) //Check if anyone is left on their own
-                        {
-                            var remainder = Party[0];
-                            remainder.Party.Clear();
-                            PacketSender.SendParty(remainder);
-                            PacketSender.SendChatMsg(remainder, Strings.Parties.disbanded, CustomColors.Alerts.Error);
-                        }
-                    }
-                }
-            }
-        }
-
-        public void LeaveParty()
-        {
-            if (Party.Count > 0 && Party.Contains(this))
-            {
-                var oldMember = this;
-                Party.Remove(this);
-
-                if (Party.Count > 1) //Need atleast 2 party members to function
-                {
-                    //Update all members of the party with the new list
-                    for (var i = 0; i < Party.Count; i++)
-                    {
-                        Party[i].Party = Party;
-                        PacketSender.SendParty(Party[i]);
-                        PacketSender.SendChatMsg(
-                            Party[i], Strings.Parties.memberleft.ToString(oldMember.Name), CustomColors.Alerts.Error
-                        );
-                    }
-                }
-                else if (Party.Count > 0) //Check if anyone is left on their own
-                {
-                    var remainder = Party[0];
-                    remainder.Party.Clear();
-                    PacketSender.SendParty(remainder);
-                    PacketSender.SendChatMsg(remainder, Strings.Parties.disbanded, CustomColors.Alerts.Error);
-                }
-
-                PacketSender.SendChatMsg(this, Strings.Parties.left, CustomColors.Alerts.Error);
-            }
-
-            Party = new List<Player>();
-            PacketSender.SendParty(this);
-        }
-
-        public bool InParty(Player member)
-        {
-            return Party.Contains(member);
-        }
-
         public void StartTrade(Player target)
         {
             if (target?.Trading.Counterparty != null)
@@ -4138,10 +3966,7 @@ namespace Intersect.Server.Entities
             }
         }
 
-        public virtual bool IsAllyOf([NotNull] Player otherPlayer)
-        {
-            return base.IsAllyOf(otherPlayer) || this.InParty(otherPlayer);
-        }
+        public virtual bool IsAllyOf([NotNull] Player otherPlayer) => base.IsAllyOf(otherPlayer) || (Party?.IsMember(otherPlayer) ?? false);
 
         public bool CanSpellCast(SpellBase spell, Entity target, bool checkVitalReqs)
         {
@@ -5613,6 +5438,8 @@ namespace Intersect.Server.Entities
         [NotMapped, JsonIgnore] public Guid LastMapEntered = Guid.Empty;
 
         [JsonIgnore, NotMapped] public Client Client;
+
+        [JsonIgnore, NotMapped] public bool IsOnline => Client != null;
 
         [JsonIgnore, NotMapped] public UserRights Power => Client?.Power ?? UserRights.None;
 

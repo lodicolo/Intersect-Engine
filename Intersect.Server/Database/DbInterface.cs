@@ -2002,6 +2002,8 @@ namespace Intersect.Server.Database
 
         private static readonly ContextProvider ContextProvider = new ContextProvider();
 
+        public static IPlayerContext PlayerContext => ContextProvider.Access<IPlayerContext, PlayerContextInterface>();
+
         public static ILoggingContext LoggingContext => ContextProvider.Access<ILoggingContext, LoggingContextInterface>();
 
         private struct IdTrace

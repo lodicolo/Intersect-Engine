@@ -2241,12 +2241,20 @@ namespace Intersect.Server.Entities
 
         protected int GetDistanceTo(Entity target)
         {
-            if (target != null)
+            TryGetDistanceTo(target, out var distance);
+            return distance;
+        }
+
+        protected bool TryGetDistanceTo(Entity target, out int distance)
+        {
+            if (target == null)
             {
-                return GetDistanceTo(target.Map, target.X, target.Y);
+                distance = int.MaxValue;
+                return false;
             }
-            //Something is null.. return a value that is out of range :) 
-            return 9999;
+
+            distance = GetDistanceTo(target.Map, target.X, target.Y);
+            return true;
         }
 
         protected int GetDistanceTo(MapInstance targetMap, int targetX, int targetY)
@@ -2270,21 +2278,7 @@ namespace Intersect.Server.Entities
             return 9999;
         }
 
-        public bool InRangeOf(Entity target, int range)
-        {
-            var dist = GetDistanceTo(target);
-            if (dist == 9999)
-            {
-                return false;
-            }
-
-            if (dist <= range)
-            {
-                return true;
-            }
-
-            return false;
-        }
+        public bool InRangeOf(Entity target, int range) => range < 1 || TryGetDistanceTo(target, out var distance) && distance <= range;
 
         public virtual void NotifySwarm(Entity attacker)
         {

@@ -7,10 +7,15 @@ using JetBrains.Annotations;
 
 namespace Intersect.Localization
 {
-
-    public class LocaleDictionary<TKey, TValue> : Localized, IDictionary<TKey, TValue>
-        where TKey : IComparable<TKey> where TValue : Localized
+    public class LocaleDictionary<TKey, TValue> : Localized, IDictionary<TKey, TValue> where TValue : Localized
     {
+        public static LocaleDictionary<TKey, TValue> Create<UKey>(
+            IEnumerable<KeyValuePair<UKey, TValue>> defaults = null,
+            IEnumerable<KeyValuePair<UKey, TValue>> values = null
+        ) where UKey : TKey => new LocaleDictionary<TKey, TValue>(
+            defaults.Select(pair => new KeyValuePair<TKey, TValue>(pair.Key, pair.Value)),
+            values.Select(pair => new KeyValuePair<TKey, TValue>(pair.Key, pair.Value))
+        );
 
         [NotNull] private readonly IDictionary<TKey, TValue> mDefaults;
 
@@ -155,7 +160,5 @@ namespace Intersect.Localization
         {
             return mValues.Remove(item);
         }
-
     }
-
 }

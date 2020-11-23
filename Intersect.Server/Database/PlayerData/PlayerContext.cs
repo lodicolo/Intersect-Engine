@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Intersect.Config;
 using Intersect.Server.Database.PlayerData.Api;
+using Intersect.Server.Database.PlayerData.Groups;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.SeedData;
 using Intersect.Server.Entities;
@@ -126,7 +127,7 @@ namespace Intersect.Server.Database.PlayerData
             modelBuilder.Entity<GroupMembership>().HasKey(membership => new {membership.GroupId, membership.MemberId});
 
             modelBuilder.Entity<Player>()
-                .HasMany(player => player.GroupMemberships)
+                .HasMany(player => player.Memberships)
                 .WithOne(membership => membership.Member)
                 .HasForeignKey(membership => membership.MemberId)
                 .OnDelete(DeleteBehavior.Cascade);

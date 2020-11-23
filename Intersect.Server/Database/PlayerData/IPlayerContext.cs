@@ -1,4 +1,5 @@
 ﻿using Intersect.Server.Database.PlayerData.Api;
+using Intersect.Server.Database.PlayerData.Groups;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Entities;
 
@@ -15,6 +16,10 @@ namespace Intersect.Server.Database.PlayerData
         DbSet<Ban> Bans { get; set; }
 
         DbSet<RefreshToken> RefreshTokens { get; set; }
+
+        DbSet<Group> Groups { get; set; }
+
+        DbSet<GroupMembership> GroupMemberships { get; set; }
 
         DbSet<Player> Players { get; set; }
 
