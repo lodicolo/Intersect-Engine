@@ -262,8 +262,10 @@
     <Compile Include="Factories\FactoryRegistry.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="GameObjects\Events\VariableMod.cs" />
+    <Compile Include="GameObjects\GroupTypeDescriptor.cs" />
     <Compile Include="GameObjects\Switches and Variables\VariableValue.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Groups\GroupInvite.cs" />
     <Compile Include="IO\ConsoleContext.cs" />
     <Compile Include="IO\ConsoleWriter.cs" />
     <Compile Include="IO\Files\FileSystemHelper.cs" />
@@ -359,10 +361,19 @@
     <Compile Include="Network\Packets\Client\EventResponsePacket.cs" />
     <Compile Include="Network\Packets\Client\ForgetSpellPacket.cs" />
     <Compile Include="Network\Packets\Client\FriendRequestResponsePacket.cs" />
+    <Compile Include="Network\Packets\Client\GroupDisbandPacket.cs" />
+    <Compile Include="Network\Packets\Client\GroupInviteResponsePacket.cs" />
+    <Compile Include="Network\Packets\Client\GroupKickPacket.cs" />
+    <Compile Include="Network\Packets\Client\GroupLeavePacket.cs" />
+    <Compile Include="Network\Packets\Client\GroupPacket.cs" />
+    <Compile Include="Network\Packets\Client\GroupPromotePacket.cs" />
+    <Compile Include="Network\Packets\Client\GroupTargetPacket.cs" />
     <Compile Include="Network\Packets\Client\HotbarSwapPacket.cs" />
     <Compile Include="Network\Packets\Client\HotbarUpdatePacket.cs" />
     <Compile Include="Network\Packets\Client\LoginPacket.cs" />
     <Compile Include="Network\Packets\Client\LogoutPacket.cs" />
+    <Compile Include="Network\Packets\Client\GroupInviteRequestPacket.cs" />
+    <Compile Include="Network\Packets\Server\GroupInvitePacket.cs" />
     <Compile Include="Network\Packets\SlotQuantityPacket.cs" />
     <Compile Include="Network\Packets\Client\SwapBankItemsPacket.cs" />
     <Compile Include="Network\Packets\Client\MovePacket.cs" />
@@ -693,6 +704,9 @@
     <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Network\Packets\Groups\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

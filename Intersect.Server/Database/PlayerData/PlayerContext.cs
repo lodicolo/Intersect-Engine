@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Intersect.Config;
 using Intersect.Server.Database.PlayerData.Api;
+using Intersect.Server.Database.PlayerData.Groups;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.SeedData;
 using Intersect.Server.Entities;
@@ -18,7 +19,6 @@ namespace Intersect.Server.Database.PlayerData
 
     public class PlayerContext : IntersectDbContext<PlayerContext>, IPlayerContext
     {
-
         public PlayerContext() : base(DefaultConnectionStringBuilder)
         {
         }
@@ -36,47 +36,37 @@ namespace Intersect.Server.Database.PlayerData
         public static DbConnectionStringBuilder DefaultConnectionStringBuilder =>
             new SqliteConnectionStringBuilder(@"Data Source=resources/playerdata.db");
 
-        [NotNull]
-        public DbSet<User> Users { get; set; }
+        [NotNull] public DbSet<User> Users { get; set; }
 
-        [NotNull]
-        public DbSet<Mute> Mutes { get; set; }
+        [NotNull] public DbSet<Mute> Mutes { get; set; }
 
-        [NotNull]
-        public DbSet<Ban> Bans { get; set; }
+        [NotNull] public DbSet<Ban> Bans { get; set; }
 
-        [NotNull]
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
+        [NotNull] public DbSet<RefreshToken> RefreshTokens { get; set; }
 
-        [NotNull]
-        public DbSet<Player> Players { get; set; }
+        public DbSet<Group> Groups { get; set; }
 
-        [NotNull]
-        public DbSet<BankSlot> Player_Bank { get; set; }
+        public DbSet<GroupMembership> GroupMemberships { get; set; }
 
-        [NotNull]
-        public DbSet<Friend> Player_Friends { get; set; }
+        [NotNull] public DbSet<Player> Players { get; set; }
 
-        [NotNull]
-        public DbSet<HotbarSlot> Player_Hotbar { get; set; }
+        [NotNull] public DbSet<BankSlot> Player_Bank { get; set; }
 
-        [NotNull]
-        public DbSet<InventorySlot> Player_Items { get; set; }
+        [NotNull] public DbSet<Friend> Player_Friends { get; set; }
 
-        [NotNull]
-        public DbSet<Quest> Player_Quests { get; set; }
+        [NotNull] public DbSet<HotbarSlot> Player_Hotbar { get; set; }
 
-        [NotNull]
-        public DbSet<SpellSlot> Player_Spells { get; set; }
+        [NotNull] public DbSet<InventorySlot> Player_Items { get; set; }
 
-        [NotNull]
-        public DbSet<Variable> Player_Variables { get; set; }
+        [NotNull] public DbSet<Quest> Player_Quests { get; set; }
 
-        [NotNull]
-        public DbSet<Bag> Bags { get; set; }
+        [NotNull] public DbSet<SpellSlot> Player_Spells { get; set; }
 
-        [NotNull]
-        public DbSet<BagSlot> Bag_Items { get; set; }
+        [NotNull] public DbSet<Variable> Player_Variables { get; set; }
+
+        [NotNull] public DbSet<Bag> Bags { get; set; }
+
+        [NotNull] public DbSet<BagSlot> Bag_Items { get; set; }
 
         internal async ValueTask Commit(
             bool commit = false,
@@ -133,6 +123,20 @@ namespace Intersect.Server.Database.PlayerData
             modelBuilder.Entity<InventorySlot>().HasOne(b => b.Bag);
             modelBuilder.Entity<BagSlot>().HasOne(b => b.Bag);
             modelBuilder.Entity<BankSlot>().HasOne(b => b.Bag);
+
+            modelBuilder.Entity<GroupMembership>().HasKey(membership => new {membership.GroupId, membership.MemberId});
+
+            modelBuilder.Entity<Player>()
+                .HasMany(player => player.Memberships)
+                .WithOne(membership => membership.Member)
+                .HasForeignKey(membership => membership.MemberId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Group>()
+                .HasMany(group => group.Memberships)
+                .WithOne(membership => membership.Group)
+                .HasForeignKey(membership => membership.GroupId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public void Seed()
@@ -147,7 +151,5 @@ namespace Intersect.Server.Database.PlayerData
         public override void MigrationsProcessed(string[] migrations)
         {
         }
-
     }
-
 }

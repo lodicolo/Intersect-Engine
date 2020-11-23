@@ -453,7 +453,22 @@
     <Compile Include="Database\MigrationBuilderExtensions.cs" />
     <Compile Include="Database\PlayerData\Api\RefreshToken.cs" />
     <Compile Include="Database\PlayerData\Ban.cs" />
+    <Compile Include="Database\PlayerData\Groups\GroupCreateResult.cs" />
+    <Compile Include="Database\PlayerData\Groups\GroupDisbandResult.cs" />
+    <Compile Include="Database\PlayerData\Groups\GroupInviteAcceptResult.cs" />
+    <Compile Include="Database\PlayerData\Groups\GroupInviteResult.cs" />
+    <Compile Include="Database\PlayerData\Groups\GroupKickResult.cs" />
+    <Compile Include="Database\PlayerData\Groups\GroupLeaveResult.cs" />
+    <Compile Include="Database\PlayerData\Groups\GroupLogic.cs" />
+    <Compile Include="Database\PlayerData\Groups\GroupMemberAddResult.cs" />
+    <Compile Include="Database\PlayerData\Groups\GroupMemberRemoveResult.cs" />
+    <Compile Include="Database\PlayerData\Groups\GroupPromoteResult.cs" />
+    <Compile Include="Database\PlayerData\Groups\Group.Database.cs" />
+    <Compile Include="Database\PlayerData\Groups\IGroupLogic.cs" />
+    <Compile Include="Database\PlayerData\Groups\MissingDataException.cs" />
+    <Compile Include="Database\PlayerData\Groups\PartyLogic.cs" />
     <Compile Include="Database\PlayerData\IPlayerContext.cs" />
+    <Compile Include="Database\PlayerData\Groups\Group.cs" />
     <Compile Include="Database\PlayerData\Players\Bag.cs" />
     <Compile Include="Database\PlayerData\Players\BagSlot.cs" />
     <Compile Include="Database\PlayerData\Players\BankSlot.cs" />
@@ -478,6 +493,7 @@
     <Compile Include="Database\PlayerData\User.cs" />
     <Compile Include="Database\PlayerData\PlayerContext.cs" />
     <Compile Include="Entities\Events\Event.cs" />
+    <Compile Include="Entities\Player.Membership.cs" />
     <Compile Include="Entities\Projectile.cs" />
     <Compile Include="Entities\ProjectileSpawn.cs" />
     <Compile Include="Entities\Resource.cs" />
@@ -507,6 +523,14 @@
     <Compile Include="Migrations\Logging\20201119230003_AddUserActivityHistory.cs" />
     <Compile Include="Migrations\Logging\20201119230003_AddUserActivityHistory.designer.cs">
       <DependentUpon>20201119230003_AddUserActivityHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20201120021143_AddGroupMembership.cs" />
+    <Compile Include="Migrations\20201120021143_AddGroupMembership.designer.cs">
+      <DependentUpon>20201120021143_AddGroupMembership.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Game\20201120021004_AddGroupTypeDescriptor.cs" />
+    <Compile Include="Migrations\Game\20201120021004_AddGroupTypeDescriptor.designer.cs">
+      <DependentUpon>20201120021004_AddGroupTypeDescriptor.cs</DependentUpon>
     </Compile>
     <Compile Include="Networking\Client.cs" />
     <Compile Include="Entities\Npc.cs" />

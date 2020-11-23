@@ -1,11 +1,12 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
 
-using Microsoft.EntityFrameworkCore.Infrastructure;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Intersect.Server.Database
 {
-    public interface IDbContext
+    public interface IDbContext : IDisposable
     {
         DatabaseFacade Database { get; }
 

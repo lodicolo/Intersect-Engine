@@ -38,7 +38,6 @@ namespace Intersect.Utilities
         {
             return IsNone(nullableString) ? null : nullableString;
         }
-
     }
 
 }

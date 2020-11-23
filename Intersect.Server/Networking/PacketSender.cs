@@ -15,6 +15,7 @@ using Intersect.Network;
 using Intersect.Network.Packets.Server;
 using Intersect.Server.Database;
 using Intersect.Server.Database.Logging.Entities;
+using Intersect.Server.Database.PlayerData.Groups;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities;
@@ -662,14 +663,38 @@ namespace Intersect.Server.Networking
             }
         }
 
-        //ChatMsgPacket
-        public static void SendPartyMsg(Player player, string message, Color clr, string target = "")
+        public static void SendGroupMessage(Group group, string message, string target = "")
         {
-            foreach (var p in player.Party)
+            if (group == null)
             {
-                if (p != null)
+                throw new ArgumentNullException(nameof(group));
+            }
+
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            SendGroupMessage(group, message, group.GroupType.ChatColor, target);
+        }
+
+        public static void SendGroupMessage(Group group, string message, Color color, string target = "")
+        {
+            if (group == null)
+            {
+                throw new ArgumentNullException(nameof(group));
+            }
+
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            foreach (var member in group.Members)
+            {
+                if (member != null && member.IsOnline)
                 {
-                    SendChatMsg(p, message, clr, target);
+                    SendChatMsg(member, message, color, target);
                 }
             }
         }

@@ -17,11 +17,13 @@ using Intersect.Network;
 using Intersect.Network.Lidgren;
 using Intersect.Network.Packets;
 using Intersect.Network.Packets.Client;
+using Intersect.Network.Packets.Server;
 using Intersect.Server.Admin.Actions;
 using Intersect.Server.Core;
 using Intersect.Server.Database;
 using Intersect.Server.Database.Logging.Entities;
 using Intersect.Server.Database.PlayerData;
+using Intersect.Server.Database.PlayerData.Groups;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities;
 using Intersect.Server.General;
@@ -31,6 +33,11 @@ using Intersect.Server.Notifications;
 using Intersect.Utilities;
 
 using JetBrains.Annotations;
+
+using ChatMsgPacket = Intersect.Network.Packets.Client.ChatMsgPacket;
+using PartyInvitePacket = Intersect.Network.Packets.Client.PartyInvitePacket;
+using PingPacket = Intersect.Network.Packets.Client.PingPacket;
+using TradeRequestPacket = Intersect.Network.Packets.Client.TradeRequestPacket;
 
 namespace Intersect.Server.Networking
 {
@@ -244,8 +251,11 @@ namespace Intersect.Server.Networking
                 var configurableNaturalUpperMargin = Options.Instance.SecurityOpts.PacketOpts.NaturalUpperMargin;
                 var configurableAllowedSpikePackets = Options.Instance.SecurityOpts.PacketOpts.AllowedSpikePackets;
                 var configurableBaseDesyncForgiveness = Options.Instance.SecurityOpts.PacketOpts.BaseDesyncForegiveness;
-                var configurablePingDesyncForgivenessFactor = Options.Instance.SecurityOpts.PacketOpts.DesyncForgivenessFactor;
-                var configurablePacketDesyncForgivenessInternal = Options.Instance.SecurityOpts.PacketOpts.DesyncForgivenessInterval;
+                var configurablePingDesyncForgivenessFactor =
+                    Options.Instance.SecurityOpts.PacketOpts.DesyncForgivenessFactor;
+
+                var configurablePacketDesyncForgivenessInternal =
+                    Options.Instance.SecurityOpts.PacketOpts.DesyncForgivenessInterval;
 
                 var errorMargin = Math.Max(ping, configurableMininumPing) * configurableErrorMarginFactor;
                 var errorRangeMinimum = ping - errorMargin;
@@ -266,17 +276,19 @@ namespace Intersect.Server.Networking
                 var naturalWithPing = configurableNaturalLowerMargin < deltaWithPing &&
                                       deltaWithPing < configurableNaturalUpperMargin;
 
-
                 var adjustedDesync = Math.Abs(deltaAdjusted);
-                var timeDesync = adjustedDesync > configurableBaseDesyncForgiveness + errorRangeMaximum * configurablePingDesyncForgivenessFactor;
+                var timeDesync = adjustedDesync >
+                                 configurableBaseDesyncForgiveness +
+                                 errorRangeMaximum * configurablePingDesyncForgivenessFactor;
 
                 if (timeDesync && Globals.Timing.MillisecondsUTC > client.LastPacketDesyncForgiven)
                 {
-                    client.LastPacketDesyncForgiven = Globals.Timing.MillisecondsUTC + configurablePacketDesyncForgivenessInternal;
+                    client.LastPacketDesyncForgiven =
+                        Globals.Timing.MillisecondsUTC + configurablePacketDesyncForgivenessInternal;
+
                     PacketSender.SendPing(client, false);
                     timeDesync = false;
                 }
-
 
                 if (Debugger.IsAttached)
                 {
@@ -334,9 +346,13 @@ namespace Intersect.Server.Networking
                 {
                     client.TimedBufferPacketsRemaining = configurableAllowedSpikePackets;
                 }
-                else if (natural && naturalWithPing || naturalWithPing && naturalWithError || naturalWithError && natural)
+                else if (natural && naturalWithPing ||
+                         naturalWithPing && naturalWithError ||
+                         naturalWithError && natural)
                 {
-                    client.TimedBufferPacketsRemaining += (int)Math.Ceiling((configurableAllowedSpikePackets - client.TimedBufferPacketsRemaining) / 2.0);
+                    client.TimedBufferPacketsRemaining += (int) Math.Ceiling(
+                        (configurableAllowedSpikePackets - client.TimedBufferPacketsRemaining) / 2.0
+                    );
                 }
                 else
                 {
@@ -411,7 +427,6 @@ namespace Intersect.Server.Networking
             }
 
             client.ResetTimeout();
-
 
             // Are we at capacity yet, or can this user still log in?
             if (Globals.OnlineList.Count >= Options.MaxLoggedinUsers)
@@ -612,7 +627,8 @@ namespace Intersect.Server.Networking
             }
 
             var clientTime = packet.Adjusted / TimeSpan.TicksPerMillisecond;
-            if (player.ClientMoveTimer <= clientTime && (Options.Instance.PlayerOpts.AllowCombatMovement || player.ClientAttackTimer <= clientTime))
+            if (player.ClientMoveTimer <= clientTime &&
+                (Options.Instance.PlayerOpts.AllowCombatMovement || player.ClientAttackTimer <= clientTime))
             {
                 var canMove = player.CanMove(packet.Dir);
                 if ((canMove == -1 || canMove == -4) && client.Entity.MoveRoute == null)
@@ -623,8 +639,8 @@ namespace Intersect.Server.Networking
                     var currentMs = Globals.Timing.Milliseconds;
                     if (player.MoveTimer > currentMs)
                     {
-                        player.MoveTimer = currentMs + latencyAdjustmentMs + (long)(player.GetMovementTime() * .75f);
-                        player.ClientMoveTimer = clientTime + (long)player.GetMovementTime();
+                        player.MoveTimer = currentMs + latencyAdjustmentMs + (long) (player.GetMovementTime() * .75f);
+                        player.ClientMoveTimer = clientTime + (long) player.GetMovementTime();
                     }
                 }
                 else
@@ -775,15 +791,16 @@ namespace Intersect.Server.Networking
                     return;
                 }
 
-                if (player.InParty(player))
+                var party = player.Party;
+                if (party != null)
                 {
-                    PacketSender.SendPartyMsg(
-                        player, Strings.Chat.party.ToString(player.Name, msg), CustomColors.Chat.PartyChat, player.Name
+                    PacketSender.SendGroupMessage(
+                        party, Strings.Chat.Group.ToString(party.GroupTypeName, player.Name, msg), player.Name
                     );
                 }
                 else
                 {
-                    PacketSender.SendChatMsg(player, Strings.Parties.notinparty, CustomColors.Alerts.Error);
+                    PacketSender.SendChatMsg(player, Strings.Groups.PlayerNotInGroup.ToString(Strings.Groups.Party), CustomColors.Alerts.Error);
                 }
             }
             else if (cmd == Strings.Chat.admincmd)
@@ -956,7 +973,8 @@ namespace Intersect.Server.Networking
             var target = packet.Target;
 
             var clientTime = packet.Adjusted / TimeSpan.TicksPerMillisecond;
-            if (player.ClientAttackTimer > clientTime || (!Options.Instance.PlayerOpts.AllowCombatMovement && player.ClientMoveTimer > clientTime))
+            if (player.ClientAttackTimer > clientTime ||
+                (!Options.Instance.PlayerOpts.AllowCombatMovement && player.ClientMoveTimer > clientTime))
             {
                 return;
             }
@@ -1028,7 +1046,7 @@ namespace Intersect.Server.Networking
 
             PacketSender.SendEntityAttack(player, player.CalculateAttackTime());
 
-            player.ClientAttackTimer = clientTime + (long)player.CalculateAttackTime();
+            player.ClientAttackTimer = clientTime + (long) player.CalculateAttackTime();
 
             //Fire projectile instead if weapon has it
             if (Options.WeaponIndex > -1)
@@ -1104,7 +1122,9 @@ namespace Intersect.Server.Networking
                                 (byte) player.Y, (byte) player.Z, (byte) player.Dir, null
                             );
 
-                        player.AttackTimer = Globals.Timing.Milliseconds + latencyAdjustmentMs + player.CalculateAttackTime();
+                        player.AttackTimer = Globals.Timing.Milliseconds +
+                                             latencyAdjustmentMs +
+                                             player.CalculateAttackTime();
 
                         return;
                     }
@@ -1117,7 +1137,6 @@ namespace Intersect.Server.Networking
                             return;
                         }
 #endif
-
                 }
                 else
                 {
@@ -1436,7 +1455,7 @@ namespace Intersect.Server.Networking
                         // The ownership time has run out, or there's no owner!
                         canTake = true;
                     }
-                    else if (mapItem.Owner == player.Id || player.Party.Any(p => p.Id == mapItem.Owner))
+                    else if (mapItem.Owner == player.Id || player.Party.TryFindMembership(mapItem.Owner, out _))
                     {
                         // The current player is the owner, or one of their party members is.
                         canTake = true;
@@ -1735,65 +1754,345 @@ namespace Intersect.Server.Networking
             player.SwapBankItems(packet.Slot1, packet.Slot2);
         }
 
-        //PartyInvitePacket
-        public void HandlePacket(Client client, Player player, PartyInvitePacket packet)
+        public void HandlePacket(Client client, Player player, GroupInviteRequestPacket packet)
         {
+            if (packet == null)
+            {
+                return;
+            }
+
             if (player == null)
             {
                 return;
             }
 
-            var target = Player.FindOnline(packet.TargetId);
-
-            if (target != null && target.Id != player.Id && player.InRangeOf(target, Options.Party.InviteRange))
+            if (!Group.TryFindGroup(packet.GroupId, out var group))
             {
-                target.InviteToParty(player);
-
+                PacketSender.SendChatMsg(player, Strings.Groups.GroupDoesNotExist, CustomColors.Alerts.Error);
                 return;
             }
 
-            PacketSender.SendChatMsg(player, Strings.Parties.outofrange, CustomColors.Combat.NoTarget);
-        }
+            var descriptor = group.GroupType;
 
-        //PartyInviteResponsePacket
-        public void HandlePacket(Client client, Player player, PartyInviteResponsePacket packet)
-        {
-            if (player == null)
+            if (!Player.TryFindOnline(packet.TargetId, out var targetPlayer))
             {
+                PacketSender.SendChatMsg(
+                    player, Strings.Groups.Offline.ToString(packet.TargetName),
+                    CustomColors.Alerts.Error
+                );
                 return;
             }
 
-            var leader = packet.PartyId;
-            if (player.PartyRequester != null && player.PartyRequester.Id == leader)
-            {
-                if (packet.AcceptingInvite)
-                {
-                    if (player.PartyRequester.IsValidPlayer)
-                    {
-                        player.PartyRequester.AddParty(player);
-                    }
-                }
-                else
-                {
-                    PacketSender.SendChatMsg(
-                        player.PartyRequester, Strings.Parties.declined.ToString(client.Entity.Name),
-                        CustomColors.Alerts.Declined
-                    );
+            var groupLogic = group.Logic;
 
-                    if (player.PartyRequests.ContainsKey(player.PartyRequester))
+            if (!player.InRangeOf(targetPlayer, descriptor.InviteRange))
+            {
+                PacketSender.SendChatMsg(
+                    player, Strings.Groups.OutOfRange.ToString(packet.TargetName, descriptor.Name),
+                    CustomColors.Alerts.Error
+                );
+                return;
+            }
+
+            var inviteResult = groupLogic.Invite(group, player, targetPlayer);
+            string message;
+            switch (inviteResult)
+            {
+                case GroupInviteResult.Success:
+                    message = Strings.Groups.InviteSent.ToString(targetPlayer.Name, descriptor.Name);
+                    if (targetPlayer.TryFindInviteForGroup(packet.GroupId, out var groupInvite))
                     {
-                        player.PartyRequests[player.PartyRequester] =
-                            Globals.Timing.Milliseconds + Options.RequestTimeout;
+                        targetPlayer.Client?.SendPacket(new GroupInvitePacket(groupInvite));
                     }
                     else
                     {
-                        player.PartyRequests.Add(
-                            player.PartyRequester, Globals.Timing.Milliseconds + Options.RequestTimeout
+                        Log.Error($"{targetPlayer.Id} missing group invitation for {packet.GroupId}.");
+                    }
+                    break;
+
+                case GroupInviteResult.InviterNotInGroup:
+                    message = Strings.Groups.PlayerNotInGroup.ToString(descriptor.Name);
+                    break;
+
+                case GroupInviteResult.InviterMissingPermission:
+                    message = Strings.Groups.InsufficientPermissions.ToString(descriptor.Name);
+                    break;
+
+                case GroupInviteResult.InviteeInGroup:
+                    message = Strings.Groups.TargetAlreadyInGroup.ToString(targetPlayer.Name, descriptor.Name);
+                    break;
+
+                case GroupInviteResult.GroupFull:
+                    message = Strings.Groups.GroupIsFull.ToString(descriptor.Name);
+                    break;
+
+                default:
+                    throw new IndexOutOfRangeException($"{nameof(inviteResult)} = {inviteResult.ToString()}");
+            }
+
+            PacketSender.SendChatMsg(
+                player, message,
+                GroupInviteResult.Success == inviteResult ? CustomColors.Alerts.Success : CustomColors.Alerts.Error
+            );
+        }
+
+        public void HandlePacket(Client client, Player player, GroupInviteResponsePacket packet)
+        {
+            if (packet == null)
+            {
+                return;
+            }
+
+            if (player == null)
+            {
+                return;
+            }
+
+            if (!player.TryFindInvite(packet.InviteId, out var groupInvite))
+            {
+                PacketSender.SendChatMsg(player, Strings.Groups.InviteMissing, CustomColors.Alerts.Error);
+                return;
+            }
+
+            if (!Group.TryFindGroup(groupInvite.GroupId, out var group))
+            {
+                PacketSender.SendChatMsg(player, Strings.Groups.GroupDoesNotExist, CustomColors.Alerts.Error);
+                return;
+            }
+
+            var descriptor = group.GroupType;
+            var logic = group.Logic;
+            switch (logic.Accept(groupInvite, player, packet.Accept))
+            {
+                case GroupInviteAcceptResult.Success:
+                    PacketSender.SendGroupMessage(
+                        group, Strings.Groups.PlayerJoined.ToString(player.Name, descriptor.Name),
+                        CustomColors.Alerts.Success
+                    );
+                    // TODO: group update
+                    ();
+                    break;
+
+                case GroupInviteAcceptResult.GroupDoesNotExist:
+                    PacketSender.SendChatMsg(player, Strings.Groups.GroupDoesNotExist, CustomColors.Alerts.Error);
+                    break;
+
+                case GroupInviteAcceptResult.GroupFull:
+                    PacketSender.SendChatMsg(player, Strings.Groups.GroupIsFull.ToString(descriptor.Name), CustomColors.Alerts.Error);
+                    break;
+
+                case GroupInviteAcceptResult.MemberHasConflictingGroup:
+                    PacketSender.SendChatMsg(player, Strings.Groups.AlreadyInAGroup.ToString(descriptor.Name), CustomColors.Alerts.Error);
+                    break;
+
+                case GroupInviteAcceptResult.MemberDeclined:
+                    if (Player.TryFindOnline(groupInvite.FromId, out var fromPlayer))
+                    {
+                        PacketSender.SendChatMsg(
+                            fromPlayer, Strings.Groups.PlayerDeclined.ToString(player.Name, descriptor.Name),
+                            CustomColors.Alerts.Error
                         );
                     }
-                }
+                    break;
 
-                player.PartyRequester = null;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public void HandlePacket(Client client, Player player, GroupKickPacket packet)
+        {
+            if (packet == null)
+            {
+                return;
+            }
+
+            if (player == null)
+            {
+                return;
+            }
+
+            if (!Group.TryFindGroup(packet.GroupId, out var group))
+            {
+                PacketSender.SendChatMsg(player, Strings.Groups.GroupDoesNotExist, CustomColors.Alerts.Error);
+                return;
+            }
+
+            var descriptor = group.GroupType;
+
+            if (!group.TryFindMembership(packet.TargetId, out var targetMembership))
+            {
+                PacketSender.SendChatMsg(
+                    player, Strings.Groups.TargetNotInGroup.ToString(packet.TargetName, descriptor.Name),
+                    CustomColors.Alerts.Error
+                );
+                return;
+            }
+
+            var groupLogic = group.Logic;
+            switch (groupLogic.Kick(group, player, targetMembership))
+            {
+                case GroupKickResult.Success:
+                    ();
+                    break;
+
+                case GroupKickResult.GroupDoesNotExist:
+                    break;
+
+                case GroupKickResult.PlayerDoesNotExist:
+                    break;
+
+                case GroupKickResult.KickerNotInGroup:
+                    break;
+
+                case GroupKickResult.TargetNotInGroup:
+                    break;
+
+                case GroupKickResult.PlayerInsufficientPermissions:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public void HandlePacket(Client client, Player player, GroupPromotePacket packet)
+        {
+            if (packet == null)
+            {
+                return;
+            }
+
+            if (player == null)
+            {
+                return;
+            }
+
+            if (!Group.TryFindGroup(packet.GroupId, out var group))
+            {
+                PacketSender.SendChatMsg(player, Strings.Groups.GroupDoesNotExist, CustomColors.Alerts.Error);
+                return;
+            }
+
+            var descriptor = group.GroupType;
+
+            if (!group.TryFindMembership(packet.TargetId, out var targetMembership))
+            {
+                PacketSender.SendChatMsg(
+                    player, Strings.Groups.TargetNotInGroup.ToString(packet.TargetName, descriptor.Name),
+                    CustomColors.Alerts.Error
+                );
+                return;
+            }
+
+            var groupLogic = group.Logic;
+            switch (groupLogic.Promote(group, player, targetMembership, packet.RoleId))
+            {
+                case GroupPromoteResult.Success:
+                    ();
+                    break;
+
+                case GroupPromoteResult.PromoterNotInGroup:
+                    break;
+
+                case GroupPromoteResult.PromoteeNotInGroup:
+                    break;
+
+                case GroupPromoteResult.PromoterInsufficientPermissions:
+                    break;
+
+                case GroupPromoteResult.PromotionRoleTooManyMembers:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public void HandlePacket(Client client, Player player, GroupDisbandPacket packet)
+        {
+            if (packet == null)
+            {
+                return;
+            }
+
+            if (player == null)
+            {
+                return;
+            }
+
+            if (!Group.TryFindGroup(packet.GroupId, out var group))
+            {
+                PacketSender.SendChatMsg(player, Strings.Groups.GroupDoesNotExist, CustomColors.Alerts.Error);
+                return;
+            }
+
+            var descriptor = group.GroupType;
+            var groupLogic = group.Logic;
+
+            switch (groupLogic.Disband(group, player))
+            {
+                case GroupDisbandResult.Success:
+                    ();
+                    break;
+
+                case GroupDisbandResult.GroupDoesNotExist:
+                    break;
+
+                case GroupDisbandResult.PlayerDoesNotExist:
+                    break;
+
+                case GroupDisbandResult.PlayerNotInGroup:
+                    break;
+
+                case GroupDisbandResult.PlayerInsufficientPermissions:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public void HandlePacket(Client client, Player player, GroupLeavePacket packet)
+        {
+            if (packet == null)
+            {
+                return;
+            }
+
+            if (player == null)
+            {
+                return;
+            }
+
+            if (!Group.TryFindGroup(packet.GroupId, out var group))
+            {
+                PacketSender.SendChatMsg(player, Strings.Groups.GroupDoesNotExist, CustomColors.Alerts.Error);
+                return;
+            }
+
+            var descriptor = group.GroupType;
+            var groupLogic = group.Logic;
+
+            switch (groupLogic.Leave(group, player))
+            {
+                case GroupLeaveResult.Success:
+                    break;
+
+                case GroupLeaveResult.GroupDoesNotExist:
+                    break;
+
+                case GroupLeaveResult.PlayerDoesNotExist:
+                    break;
+
+                case GroupLeaveResult.PlayerNotInGroup:
+                    break;
+
+                case GroupLeaveResult.PlayerIsLastMember:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -2239,7 +2538,6 @@ namespace Intersect.Server.Networking
                 {
                     if (chr.Id == packet.CharacterId)
                     {
-
                         using (var logging = DbInterface.LoggingContext)
                         {
                             logging.UserActivityHistory.Add(
