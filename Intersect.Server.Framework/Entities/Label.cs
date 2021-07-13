@@ -1,12 +1,11 @@
 ﻿using Newtonsoft.Json;
 
-namespace Intersect.Server.Entities
+namespace Intersect.Server.Framework.Entities
 {
-
     public struct Label
     {
-
-        [JsonProperty("Label")] public string Text;
+        [JsonProperty("Label")]
+        public string Text { get; set; }
 
         public Color Color;
 
@@ -15,7 +14,5 @@ namespace Intersect.Server.Entities
             Text = label;
             Color = color;
         }
-
     }
-
 }

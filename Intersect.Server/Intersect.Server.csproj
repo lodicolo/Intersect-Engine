@@ -454,6 +454,7 @@
     <Compile Include="Database\GameData\Migrations\CerasVersionToleranceMigration.cs" />
     <Compile Include="Database\ContextInterface.cs" />
     <Compile Include="Database\IDbContext.cs" />
+    <Compile Include="Database\IItem.cs" />
     <Compile Include="Database\IntersectDbContext.cs" />
     <Compile Include="Database\Logging\Entities\ChatHistory.cs" />
     <Compile Include="Database\Logging\Entities\TradeHistory.cs" />
@@ -465,7 +466,10 @@
     <Compile Include="Database\MigrationBuilderExtensions.cs" />
     <Compile Include="Database\PlayerData\Api\RefreshToken.cs" />
     <Compile Include="Database\PlayerData\Ban.cs" />
+    <Compile Include="Database\PlayerData\IBan.cs" />
+    <Compile Include="Database\PlayerData\IMute.cs" />
     <Compile Include="Database\PlayerData\IPlayerContext.cs" />
+    <Compile Include="Database\PlayerData\IUser.cs" />
     <Compile Include="Database\PlayerData\Players\Bag.cs" />
     <Compile Include="Database\PlayerData\Players\BagSlot.cs" />
     <Compile Include="Database\PlayerData\Players\GuildBankSlot.cs" />
@@ -484,10 +488,11 @@
     <Compile Include="Entities\Combat\Buff.cs" />
     <Compile Include="Entities\Combat\Dash.cs" />
     <Compile Include="Entities\Combat\DoT.cs" />
+    <Compile Include="Entities\Combat\Stat.cs" />
+    <Compile Include="Entities\Combat\Status.cs" />
     <Compile Include="Entities\Events\ConditionHandlerRegistry.cs" />
     <Compile Include="Entities\Events\Conditions.cs" />
     <Compile Include="Entities\Events\VariableCheckHandlerRegistry.cs" />
-    <Compile Include="Entities\Label.cs" />
     <Compile Include="Entities\Player.Database.cs" />
     <Compile Include="Database\Spell.cs" />
     <Compile Include="Database\PlayerData\Players\Switch.cs" />
@@ -501,8 +506,6 @@
     <Compile Include="Entities\Resource.cs" />
     <Compile Include="Entities\Events\EventPageInstance.cs" />
     <Compile Include="Core\Program.cs" />
-    <Compile Include="Entities\Combat\Stat.cs" />
-    <Compile Include="Entities\Combat\Status.cs" />
     <Compile Include="Entities\Trading.cs" />
     <Compile Include="Entities\Events\CommandInstance.cs" />
     <Compile Include="Entities\Events\CommandProcessing.cs" />

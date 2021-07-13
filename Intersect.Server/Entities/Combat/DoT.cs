@@ -1,27 +1,26 @@
-﻿using System;
+﻿using Intersect.Enums;
+using Intersect.GameObjects;
+using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Entities.Combat;
+using Intersect.Utilities;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Intersect.Enums;
-using Intersect.GameObjects;
-using Intersect.Server.General;
-
 namespace Intersect.Server.Entities.Combat
 {
-
-    public partial class DoT
+    public partial class DoT : IDoT
     {
-        public Guid Id = Guid.NewGuid();
-
-        public Entity Attacker;
-
-        public int Count;
+        #region Fields
 
         private long mInterval;
 
-        public SpellBase SpellBase;
+        #endregion Fields
 
-        public DoT(Entity attacker, Guid spellId, Entity target)
+        #region Constructors
+
+        public DoT(IEntity attacker, Guid spellId, IEntity target)
         {
             SpellBase = SpellBase.Get(spellId);
 
@@ -44,9 +43,8 @@ namespace Intersect.Server.Entities.Combat
                     }
                 }
             }
-            
 
-            mInterval = Globals.Timing.Milliseconds + SpellBase.Combat.HotDotInterval;
+            mInterval = Timing.Global.Milliseconds + SpellBase.Combat.HotDotInterval;
             Count = SpellBase.Combat.Duration / SpellBase.Combat.HotDotInterval - 1;
             target.DoT.TryAdd(Id, this);
             target.CachedDots = target.DoT.Values.ToArray();
@@ -54,16 +52,23 @@ namespace Intersect.Server.Entities.Combat
             //Subtract 1 since the first tick always occurs when the spell is cast.
         }
 
-        public Entity Target { get; }
+        #endregion Constructors
 
-        public void Expire()
-        {
-            if (Target != null)
-            {
-                Target.DoT?.TryRemove(Id, out DoT val);
-                Target.CachedDots = Target.DoT?.Values.ToArray() ?? new DoT[0];
-            }
-        }
+        #region Properties
+
+        public IEntity Attacker { get; set; }
+
+        public int Count { get; set; }
+
+        public Guid Id { get; set; } = Guid.NewGuid();
+
+        public SpellBase SpellBase { get; set; }
+
+        public IEntity Target { get; }
+
+        #endregion Properties
+
+        #region Methods
 
         public bool CheckExpired()
         {
@@ -82,6 +87,15 @@ namespace Intersect.Server.Entities.Combat
             return true;
         }
 
+        public void Expire()
+        {
+            if (Target != null)
+            {
+                Target.DoT?.TryRemove(Id, out DoT val);
+                Target.CachedDots = Target.DoT?.Values.ToArray() ?? new DoT[0];
+            }
+        }
+
         public void Tick()
         {
             if (CheckExpired())
@@ -89,7 +103,7 @@ namespace Intersect.Server.Entities.Combat
                 return;
             }
 
-            if (mInterval > Globals.Timing.Milliseconds)
+            if (mInterval > Timing.Global.Milliseconds)
             {
                 return;
             }
@@ -98,8 +112,8 @@ namespace Intersect.Server.Entities.Combat
             var aliveAnimations = new List<KeyValuePair<Guid, sbyte>>();
             if (SpellBase.HitAnimationId != Guid.Empty)
             {
-                deadAnimations.Add(new KeyValuePair<Guid, sbyte>(SpellBase.HitAnimationId, (sbyte) Directions.Up));
-                aliveAnimations.Add(new KeyValuePair<Guid, sbyte>(SpellBase.HitAnimationId, (sbyte) Directions.Up));
+                deadAnimations.Add(new KeyValuePair<Guid, sbyte>(SpellBase.HitAnimationId, (sbyte)Directions.Up));
+                aliveAnimations.Add(new KeyValuePair<Guid, sbyte>(SpellBase.HitAnimationId, (sbyte)Directions.Up));
             }
 
             var damageHealth = SpellBase.Combat.VitalDiff[(int)Vitals.Health];
@@ -107,15 +121,15 @@ namespace Intersect.Server.Entities.Combat
 
             Attacker?.Attack(
                 Target, damageHealth, damageMana,
-                (DamageType) SpellBase.Combat.DamageType, (Stats) SpellBase.Combat.ScalingStat,
+                (DamageType)SpellBase.Combat.DamageType, (Stats)SpellBase.Combat.ScalingStat,
                 SpellBase.Combat.Scaling, SpellBase.Combat.CritChance, SpellBase.Combat.CritMultiplier, deadAnimations,
                 aliveAnimations, false
             );
 
-            mInterval = Globals.Timing.Milliseconds + SpellBase.Combat.HotDotInterval;
+            mInterval = Timing.Global.Milliseconds + SpellBase.Combat.HotDotInterval;
             Count--;
         }
 
+        #endregion Methods
     }
-
 }

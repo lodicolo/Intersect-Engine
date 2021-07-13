@@ -58,7 +58,7 @@ namespace Intersect.Server.Maps
         /// Sets up the Stat Buffs on this map item from a supplied item.
         /// </summary>
         /// <param name="item">The item to take the Stat Buffs from and apply them to this MapItem.</param>
-        public void SetupStatBuffs(Item item)
+        public void SetupStatBuffs(IItem item)
         {
             if (StatBuffs != null && item.StatBuffs != null)
             {

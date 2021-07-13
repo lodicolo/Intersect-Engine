@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,6 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Combat\IBuff.cs" />
+    <Compile Include="Entities\Combat\IDash.cs" />
+    <Compile Include="Entities\Combat\IDoT.cs" />
+    <Compile Include="Entities\Combat\IStat.cs" />
+    <Compile Include="Entities\Combat\IStatus.cs" />
+    <Compile Include="Entities\IEntity.cs" />
+    <Compile Include="Entities\INpc.cs" />
+    <Compile Include="Entities\IPlayer.cs" />
+    <Compile Include="Entities\Label.cs" />
+    <Compile Include="Plugins\Events\Entities\EntitySpawnEventArgs.cs" />
+    <Compile Include="Plugins\Helpers\IEntityHelper.cs" />
     <Compile Include="Plugins\ServerPluginEntry.cs" />
     <Compile Include="Plugins\Helpers\IServerLifecycleHelper.cs" />
     <Compile Include="Plugins\IServerPluginContext.cs" />
@@ -52,6 +66,10 @@
       <Project>{bc304b43-1f2c-4454-9edc-48f47357ca94}</Project>
       <Name>Intersect %28Core%29</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

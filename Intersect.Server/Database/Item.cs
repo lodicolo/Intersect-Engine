@@ -1,20 +1,18 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-
-using Intersect.Enums;
+﻿using Intersect.Enums;
 using Intersect.GameObjects;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Utilities;
 
 using Newtonsoft.Json;
 
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Intersect.Server.Database
 {
-
-    public class Item
+    public class Item : IItem
     {
-
-        [JsonIgnore] [NotMapped] public double DropChance = 100;
+        #region Constructors
 
         public Item()
         {
@@ -44,7 +42,7 @@ namespace Intersect.Server.Database
                 return;
             }
 
-            for (var i = 0; i < (int) Stats.StatCount; i++)
+            for (var i = 0; i < (int)Stats.StatCount; i++)
             {
                 // TODO: What the fuck?
                 StatBuffs[i] = Randomization.Next(-descriptor.StatGrowth, descriptor.StatGrowth + 1);
@@ -53,19 +51,31 @@ namespace Intersect.Server.Database
 
         public Item(Item item) : this(item.ItemId, item.Quantity, item.BagId, item.Bag)
         {
-            for (var i = 0; i < (int) Stats.StatCount; i++)
+            for (var i = 0; i < (int)Stats.StatCount; i++)
             {
                 StatBuffs[i] = item.StatBuffs[i];
             }
 
             DropChance = item.DropChance;
         }
-        
+
+        #endregion Constructors
+
+        #region Properties
+
+        public static Item None => new Item();
+
+        [JsonIgnore]
+        public virtual Bag Bag { get; set; }
+
         // TODO: THIS SHOULD NOT BE A NULLABLE. This needs to be fixed.
         public Guid? BagId { get; set; }
 
         [JsonIgnore]
-        public virtual Bag Bag { get; set; }
+        [NotMapped]
+        public ItemBase Descriptor => ItemBase.Get(ItemId);
+
+        [JsonIgnore] [NotMapped] public double DropChance { get; set; } = 100;
 
         public Guid ItemId { get; set; } = Guid.Empty;
 
@@ -74,22 +84,24 @@ namespace Intersect.Server.Database
 
         public int Quantity { get; set; }
 
+        [NotMapped]
+        public int[] StatBuffs { get; set; } = new int[(int)Stats.StatCount];
+
         [Column("StatBuffs")]
         [JsonIgnore]
         public string StatBuffsJson
         {
-            get => DatabaseUtils.SaveIntArray(StatBuffs, (int) Stats.StatCount);
-            set => StatBuffs = DatabaseUtils.LoadIntArray(value, (int) Stats.StatCount);
+            get => DatabaseUtils.SaveIntArray(StatBuffs, (int)Stats.StatCount);
+            set => StatBuffs = DatabaseUtils.LoadIntArray(value, (int)Stats.StatCount);
         }
 
-        [NotMapped]
-        public int[] StatBuffs { get; set; } = new int[(int) Stats.StatCount];
+        #endregion Properties
 
-        [JsonIgnore]
-        [NotMapped]
-        public ItemBase Descriptor => ItemBase.Get(ItemId);
+        #region Methods
 
-        public static Item None => new Item();
+        public IItem Clone() => new Item(this);
+
+        public string Data() => JsonConvert.SerializeObject(this);
 
         public virtual void Set(Item item)
         {
@@ -97,20 +109,10 @@ namespace Intersect.Server.Database
             Quantity = item.Quantity;
             BagId = item.BagId;
             Bag = item.Bag;
-            for (var i = 0; i < (int) Stats.StatCount; i++)
+            for (var i = 0; i < (int)Stats.StatCount; i++)
             {
                 StatBuffs[i] = item.StatBuffs[i];
             }
-        }
-
-        public string Data()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
-
-        public Item Clone()
-        {
-            return new Item(this);
         }
 
         /// <summary>
@@ -138,6 +140,6 @@ namespace Intersect.Server.Database
             return default != bag;
         }
 
+        #endregion Methods
     }
-
 }

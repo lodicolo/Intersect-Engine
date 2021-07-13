@@ -1,19 +1,11 @@
 ﻿using Intersect.GameObjects;
-using Intersect.Server.General;
+using Intersect.Server.Framework.Entities.Combat;
 
 namespace Intersect.Server.Entities.Combat
 {
-
-    public partial class Buff
+    public partial class Buff : IBuff
     {
-
-        public int FlatStatcount;
-
-        public int PercentageStatcount;
-
-        public long ExpireTime;
-
-        public SpellBase Spell;
+        #region Constructors
 
         public Buff(SpellBase spell, int flatStats, int percentageStats, long expireTime)
         {
@@ -23,6 +15,18 @@ namespace Intersect.Server.Entities.Combat
             ExpireTime = expireTime;
         }
 
-    }
+        #endregion Constructors
 
+        #region Properties
+
+        public long ExpireTime { get; set; }
+
+        public int FlatStatcount { get; set; }
+
+        public int PercentageStatcount { get; set; }
+
+        public SpellBase Spell { get; set; }
+
+        #endregion Properties
+    }
 }

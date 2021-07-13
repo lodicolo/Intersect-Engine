@@ -14,6 +14,7 @@ using Intersect.Server.Database.PlayerData.Players;
 using Microsoft.EntityFrameworkCore;
 
 using Newtonsoft.Json;
+using Intersect.Server.Framework.Entities;
 
 namespace Intersect.Server.Entities
 {
@@ -163,7 +164,7 @@ namespace Intersect.Server.Entities
             return Load(player);
         }
 
-        public static Player Load(Player player)
+        public static Player Load(IPlayer player)
         {
             if (player == null)
             {

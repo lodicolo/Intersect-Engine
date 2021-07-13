@@ -1,18 +1,18 @@
 ﻿using Intersect.GameObjects;
 using Intersect.GameObjects.Events;
+using Intersect.Server.Framework.Entities;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Intersect.Server.Entities.Events
 {
     public static class ConditionHandlerRegistry
     {
-        private delegate bool HandleCondition(Condition condition, Player player, Event eventInstance, QuestBase questBase);
-        private delegate bool HandleConditionBool<TCondition>(TCondition condition, Player player, Event eventInstance, QuestBase questBase) where TCondition : Condition;
+        private delegate bool HandleCondition(Condition condition, IPlayer player, Event eventInstance, QuestBase questBase);
+        private delegate bool HandleConditionBool<TCondition>(TCondition condition, IPlayer player, Event eventInstance, QuestBase questBase) where TCondition : Condition;
         private static Dictionary<Type, HandleCondition> MeetsConditionFunctions = new Dictionary<Type, HandleCondition>();
         private static MethodInfo CreateWeaklyTypedDelegateForMethodInfoInfo;
         private static bool Initialized = false;
@@ -40,7 +40,7 @@ namespace Intersect.Server.Entities.Events
             Initialized = true;
         }
 
-        public static bool CheckCondition(Condition condition, Player player, Event eventInstance, QuestBase questBase)
+        public static bool CheckCondition(Condition condition, IPlayer player, Event eventInstance, QuestBase questBase)
         {
             if (!Initialized)
             {
@@ -68,7 +68,7 @@ namespace Intersect.Server.Entities.Events
                     Delegate.CreateDelegate(typeof(HandleConditionBool<TCondition>), target, methodInfo) as
                         HandleConditionBool<TCondition>;
 
-            return (Condition condition, Player player, Event eventInstance, QuestBase questBase) => stronglyTyped(
+            return (Condition condition, IPlayer player, Event eventInstance, QuestBase questBase) => stronglyTyped(
                 (TCondition)condition, player, eventInstance, questBase
             );
 

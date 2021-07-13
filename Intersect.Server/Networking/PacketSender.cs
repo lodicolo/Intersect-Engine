@@ -19,6 +19,7 @@ using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities;
 using Intersect.Server.Entities.Events;
+using Intersect.Server.Framework.Entities;
 using Intersect.Server.General;
 using Intersect.Server.Localization;
 using Intersect.Server.Maps;
@@ -63,7 +64,7 @@ namespace Intersect.Server.Networking
         }
 
         //EnteringGamePacket
-        public static void SendEnteringGamePacket(Player player)
+        public static void SendEnteringGamePacket(IPlayer player)
         {
             player.SendPacket(new EnteringGamePacket());
         }
@@ -120,7 +121,7 @@ namespace Intersect.Server.Networking
         }
 
         //MapAreaPacket
-        public static void SendAreaPacket(Player player)
+        public static void SendAreaPacket(IPlayer player)
         {
             var client = player.Client;
             if (client == null)
@@ -308,7 +309,7 @@ namespace Intersect.Server.Networking
         }
 
         //MapEntitiesPacket
-        public static MapEntitiesPacket GenerateMapEntitiesPacket(Guid mapId, Player forPlayer = null)
+        public static MapEntitiesPacket GenerateMapEntitiesPacket(Guid mapId, IPlayer forPlayer = null)
         {
             var map = MapInstance.Get(mapId);
             if (map != null)
@@ -336,7 +337,7 @@ namespace Intersect.Server.Networking
         }
 
         //EntityPacket
-        public static void SendEntityDataTo(Player player, Entity en)
+        public static void SendEntityDataTo(IPlayer player, IEntity en)
         {
             if (en == null)
             {
@@ -361,19 +362,19 @@ namespace Intersect.Server.Networking
             }
 
             //If a player, send equipment to all (for paperdolls)
-            if (en.GetType() == typeof(Player))
+            if (en is IPlayer otherPlayer)
             {
-                SendPlayerEquipmentTo(player, (Player) en);
+                SendPlayerEquipmentTo(player, otherPlayer);
             }
 
-            if (en.GetType() == typeof(Npc))
+            if (en is Npc npc)
             {
-                SendNpcAggressionTo(player, (Npc) en);
+                SendNpcAggressionTo(player, npc);
             }
         }
 
         //MapEntitiesPacket
-        public static void SendMapEntitiesTo(Player player, ConcurrentDictionary<Guid, Entity> entities)
+        public static void SendMapEntitiesTo(IPlayer player, ConcurrentDictionary<Guid, Entity> entities)
         {
             var sendEntities = new List<Entity>();
 
@@ -404,7 +405,7 @@ namespace Intersect.Server.Networking
             }
         }
 
-        public static void SendMapEntityEquipmentTo(Player player, List<Entity> entities)
+        public static void SendMapEntityEquipmentTo(IPlayer player, List<Entity> entities)
         {
             for (var i = 0; i < entities.Count; i++)
             {
@@ -420,7 +421,7 @@ namespace Intersect.Server.Networking
         }
 
         //EntityDataPacket
-        public static void SendEntityDataToProximity(Entity en, Player except = null)
+        public static void SendEntityDataToProximity(IEntity en, IPlayer except = null)
         {
             if (en == null)
             {
@@ -460,7 +461,7 @@ namespace Intersect.Server.Networking
         }
 
         //EntityDataPacket
-        public static void SendEntityDataToMap(Entity en, MapInstance map, Player except = null)
+        public static void SendEntityDataToMap(IEntity en, MapInstance map, IPlayer except = null)
         {
             if (en == null)
             {
@@ -497,7 +498,7 @@ namespace Intersect.Server.Networking
         }
 
         //EntityPositionPacket
-        public static void SendEntityPositionTo(Client client, Entity en)
+        public static void SendEntityPositionTo(Client client, IEntity en)
         {
             if (en == null)
             {
@@ -513,7 +514,7 @@ namespace Intersect.Server.Networking
         }
 
         //EntityPositionPacket
-        public static void SendEntityPositionToAll(Entity en)
+        public static void SendEntityPositionToAll(IEntity en)
         {
             if (en == null)
             {
@@ -529,7 +530,7 @@ namespace Intersect.Server.Networking
             );
         }
 
-        public static void SendNpcAggressionToProximity(Npc en)
+        public static void SendNpcAggressionToProximity(INpc en)
         {
             if (en == null)
             {
@@ -548,7 +549,7 @@ namespace Intersect.Server.Networking
         }
 
         //NpcAggressionPacket
-        public static void SendNpcAggressionTo(Player player, Npc npc)
+        public static void SendNpcAggressionTo(IPlayer player, INpc npc)
         {
             if (player == null || npc == null)
             {
@@ -559,25 +560,25 @@ namespace Intersect.Server.Networking
         }
 
         //EntityLeftArea
-        public static void SendEntityLeaveMap(Entity en, Guid leftMap)
+        public static void SendEntityLeaveMap(IEntity en, Guid leftMap)
         {
             SendDataToMap(leftMap, new EntityLeftPacket(en.Id, en.GetEntityType(), en.MapId));
         }
 
         //EntityLeftPacket
-        public static void SendEntityLeave(Entity en)
+        public static void SendEntityLeave(IEntity en)
         {
             SendDataToProximity(en.MapId, new EntityLeftPacket(en.Id, en.GetEntityType(), en.MapId));
         }
 
         //EntityLeavePacket
-        public static void SendEntityLeaveTo(Player player, Entity en)
+        public static void SendEntityLeaveTo(IPlayer player, IEntity en)
         {
             player.SendPacket(new EntityLeftPacket(en.Id, en.GetEntityType(), en.MapId));
         }
 
         //EventLeavePacket
-        public static void SendEntityLeaveTo(Player player, Event evt)
+        public static void SendEntityLeaveTo(IPlayer player, Event evt)
         {
             player.SendPacket(new EntityLeftPacket(evt.Id, EntityTypes.Event, evt.MapId));
         }
@@ -589,7 +590,7 @@ namespace Intersect.Server.Networking
         /// <param name="message">The message to send.</param>
         /// <param name="type">The type of message we are sending.</param>
         /// <param name="target">The sender of this message, should we decide to respond from the client.</param>
-        public static void SendChatMsg(Player player, string message, ChatMessageType type, string target = "")
+        public static void SendChatMsg(IPlayer player, string message, ChatMessageType type, string target = "")
         {
             SendChatMsg(player, message, type, CustomColors.Chat.PlayerMsg, target);
         }
@@ -602,7 +603,7 @@ namespace Intersect.Server.Networking
         /// <param name="type">The type of message we are sending.</param>
         /// <param name="color">The color assigned to this message.</param>
         /// <param name="target">The sender of this message, should we decide to respond from the client.</param>
-        public static void SendChatMsg(Player player, string message, ChatMessageType type, Color color, string target = "")
+        public static void SendChatMsg(IPlayer player, string message, ChatMessageType type, Color color, string target = "")
         {
             if (player == null)
             {
@@ -747,7 +748,7 @@ namespace Intersect.Server.Networking
         /// <param name="message">The message to send.</param>
         /// <param name="color">The color assigned to this message.</param>
         /// <param name="target">The sender of this message, should we decide to respond from the client.</param>
-        public static void SendPartyMsg(Player player, string message, Color color, string target = "")
+        public static void SendPartyMsg(IPlayer player, string message, Color color, string target = "")
         {
             foreach (var p in player.Party)
             {
@@ -765,12 +766,12 @@ namespace Intersect.Server.Networking
         }
 
         //EntityMovePacket
-        public static void SendEntityMove(Entity en, bool correction = false)
+        public static void SendEntityMove(IEntity en, bool correction = false)
         {
             var map = en?.Map;
             if (map != null)
             {
-                if (en is Player && !Options.Instance.Packets.BatchPlayerMovementPackets)
+                if (en is IPlayer && !Options.Instance.Packets.BatchPlayerMovementPackets)
                 {
                     SendDataToProximity(
                         en.MapId,
@@ -785,12 +786,12 @@ namespace Intersect.Server.Networking
         }
 
         //EntityMovePacket
-        public static void SendEntityMoveTo(Player player, Entity en, bool correction = false)
+        public static void SendEntityMoveTo(IPlayer player, IEntity en, bool correction = false)
         {
             var map = en?.Map;
             if (map != null)
             {
-                if (en is Player && !Options.Instance.Packets.BatchPlayerMovementPackets)
+                if (en is IPlayer && !Options.Instance.Packets.BatchPlayerMovementPackets)
                 {
                     player.SendPacket(
                         new EntityMovePacket(
@@ -805,7 +806,7 @@ namespace Intersect.Server.Networking
         }
 
         //EntityVitalsPacket
-        public static EntityVitalsPacket GenerateEntityVitalsPacket(Entity en)
+        public static EntityVitalsPacket GenerateEntityVitalsPacket(IEntity en)
         {
             return new EntityVitalsPacket(
                 en.Id, en.GetEntityType(), en.MapId, en.GetVitals(), en.GetMaxVitals(), en.StatusPackets(),
@@ -814,7 +815,7 @@ namespace Intersect.Server.Networking
         }
 
         //EntityVitalsPacket
-        public static void SendMapEntityVitalUpdate(MapInstance map, Entity[] entities)
+        public static void SendMapEntityVitalUpdate(MapInstance map, IEntity[] entities)
         {
             // Generate a list of vitals to send to our users!
             var data = new List<EntityVitalData>();
@@ -834,7 +835,7 @@ namespace Intersect.Server.Networking
             SendDataToProximity(map.Id, new MapEntityVitalsPacket(map.Id, data.ToArray()));
         }
 
-        public static void SendMapEntityStatusUpdate(MapInstance map, Entity[] entities)
+        public static void SendMapEntityStatusUpdate(MapInstance map, IEntity[] entities)
         {
             // Generate a list of statuses to send to our users!
             var data = new List<EntityStatusData>();
@@ -853,9 +854,9 @@ namespace Intersect.Server.Networking
         }
 
         //EntityStatsPacket
-        public static void SendEntityStats(Entity en)
+        public static void SendEntityStats(IEntity en)
         {
-            if (en == null || en is EventPageInstance || en is Projectile || en is Resource)
+            if (en == default || en is EventPageInstance || en is Projectile || en is Resource)
             {
                 return;
             }
@@ -864,7 +865,7 @@ namespace Intersect.Server.Networking
         }
 
         //EntityVitalsPacket
-        public static void SendEntityVitalsTo(Client client, Entity en)
+        public static void SendEntityVitalsTo(Client client, IEntity en)
         {
             if (en == null || en is EventPageInstance || en is Projectile)
             {
@@ -875,7 +876,7 @@ namespace Intersect.Server.Networking
         }
 
         //EntityStatsPacket
-        public static EntityStatsPacket GenerateEntityStatsPacket(Entity en)
+        public static EntityStatsPacket GenerateEntityStatsPacket(IEntity en)
         {
             var stats = new int[(int) Stats.StatCount];
             for (var i = 0; i < (int) Stats.StatCount; i++)
@@ -887,13 +888,13 @@ namespace Intersect.Server.Networking
         }
 
         //EntityStatsPacket
-        public static void SendEntityStatsTo(Client client, Entity en)
+        public static void SendEntityStatsTo(Client client, IEntity en)
         {
             client.Send(GenerateEntityStatsPacket(en), TransmissionMode.Any);
         }
 
         //EntityDirectionPacket
-        public static void SendEntityDir(Entity en)
+        public static void SendEntityDir(IEntity en)
         {
             SendDataToProximity(
                 en.MapId, new EntityDirectionPacket(en.Id, en.GetEntityType(), en.MapId, (byte) en.Dir), null, TransmissionMode.Any
@@ -901,32 +902,32 @@ namespace Intersect.Server.Networking
         }
 
         //EntityAttackPacket
-        public static void SendEntityAttack(Entity en, int attackTime)
+        public static void SendEntityAttack(IEntity en, int attackTime)
         {
             SendDataToProximity(en.MapId, new EntityAttackPacket(en.Id, en.GetEntityType(), en.MapId, attackTime), null, TransmissionMode.Any);
         }
 
         //EntityDiePacket
-        public static void SendEntityDie(Entity en)
+        public static void SendEntityDie(IEntity en)
         {
             SendDataToProximity(en.MapId, new EntityDiePacket(en.Id, en.GetEntityType(), en.MapId));
         }
 
         //EntityDirectionPacket
-        public static void SendEntityDirTo(Player player, Entity en)
+        public static void SendEntityDirTo(IPlayer player, IEntity en)
         {
             player.SendPacket(new EntityDirectionPacket(en.Id, en.GetEntityType(), en.MapId, (byte) en.Dir), TransmissionMode.Any);
         }
 
         //EventDialogPacket
-        public static void SendEventDialog(Player player, string prompt, string face, Guid eventId)
+        public static void SendEventDialog(IPlayer player, string prompt, string face, Guid eventId)
         {
             player.SendPacket(new EventDialogPacket(eventId, prompt, face, 0, null));
         }
 
         //EventDialogPacket
         public static void SendEventDialog(
-            Player player,
+            IPlayer player,
             string prompt,
             string opt1,
             string opt2,
@@ -940,7 +941,7 @@ namespace Intersect.Server.Networking
         }
 
         public static void SendInputVariableDialog(
-            Player player,
+            IPlayer player,
             string title,
             string prompt,
             VariableDataTypes type,
@@ -969,7 +970,7 @@ namespace Intersect.Server.Networking
         }
 
         //MapItemsPacket
-        public static MapItemsPacket GenerateMapItemsPacket(Player player, Guid mapId)
+        public static MapItemsPacket GenerateMapItemsPacket(IPlayer player, Guid mapId)
         {
             var map = MapInstance.Get(mapId);
 
@@ -988,7 +989,7 @@ namespace Intersect.Server.Networking
         }
 
         //MapItemsPacket
-        public static void SendMapItems(Player player, Guid mapId)
+        public static void SendMapItems(IPlayer player, Guid mapId)
         {
             player.SendPacket(GenerateMapItemsPacket(player, mapId));
         }
@@ -1074,7 +1075,7 @@ namespace Intersect.Server.Networking
 
 
         //InventoryPacket
-        public static void SendInventory(Player player)
+        public static void SendInventory(IPlayer player)
         {
             if (player == null)
             {
@@ -1094,7 +1095,7 @@ namespace Intersect.Server.Networking
         }
 
         //InventoryUpdatePacket
-        public static void SendInventoryItemUpdate(Player player, int slot)
+        public static void SendInventoryItemUpdate(IPlayer player, int slot)
         {
             if (player == null)
             {
@@ -1110,7 +1111,7 @@ namespace Intersect.Server.Networking
         }
 
         //SpellsPacket
-        public static void SendPlayerSpells(Player player)
+        public static void SendPlayerSpells(IPlayer player)
         {
             if (player == null)
             {
@@ -1127,7 +1128,7 @@ namespace Intersect.Server.Networking
         }
 
         //SpellUpdatePacket
-        public static void SendPlayerSpellUpdate(Player player, int slot)
+        public static void SendPlayerSpellUpdate(IPlayer player, int slot)
         {
             if (player == null)
             {
@@ -1138,7 +1139,7 @@ namespace Intersect.Server.Networking
         }
 
         //EquipmentPacket
-        public static EquipmentPacket GenerateEquipmentPacket(Player forPlayer, Player en)
+        public static EquipmentPacket GenerateEquipmentPacket(IPlayer forPlayer, IPlayer en)
         {
             if (forPlayer != null && forPlayer == en)
             {
@@ -1166,26 +1167,26 @@ namespace Intersect.Server.Networking
         }
 
         //EquipmentPacket
-        public static void SendPlayerEquipmentTo(Player forPlayer, Player en)
+        public static void SendPlayerEquipmentTo(IPlayer forPlayer, IPlayer en)
         {
             forPlayer.SendPacket(GenerateEquipmentPacket(forPlayer, en), TransmissionMode.Any);
         }
 
         //EquipmentPacket
-        public static void SendPlayerEquipmentToProximity(Player en)
+        public static void SendPlayerEquipmentToProximity(IPlayer en)
         {
             SendDataToProximity(en.MapId, GenerateEquipmentPacket(null, en), null, TransmissionMode.Any);
             SendPlayerEquipmentTo(en, en);
         }
 
         //StatPointsPacket
-        public static void SendPointsTo(Player player)
+        public static void SendPointsTo(IPlayer player)
         {
             player.SendPacket(new StatPointsPacket(player.StatPoints), TransmissionMode.Any);
         }
 
         //HotbarPacket
-        public static void SendHotbarSlots(Player player)
+        public static void SendHotbarSlots(IPlayer player)
         {
             var hotbarData = new string[Options.MaxHotbar];
             for (var i = 0; i < Options.MaxHotbar; i++)
@@ -1340,13 +1341,13 @@ namespace Intersect.Server.Networking
         }
 
         //SpellCastPacket
-        public static void SendEntityCastTime(Entity en, Guid spellId)
+        public static void SendEntityCastTime(IEntity en, Guid spellId)
         {
             SendDataToProximity(en.MapId, new SpellCastPacket(en.Id, spellId), null, TransmissionMode.Any);
         }
 
         //CancelCastPacket
-        public static void SendEntityCancelCast(Entity en)
+        public static void SendEntityCancelCast(IEntity en)
         {
             if (en == null || en is EventPageInstance || en is Projectile)
             {
@@ -1357,7 +1358,7 @@ namespace Intersect.Server.Networking
         }
 
         //SpellCooldownPacket
-        public static void SendSpellCooldown(Player player, Guid spellId)
+        public static void SendSpellCooldown(IPlayer player, Guid spellId)
         {
             if (player.SpellCooldowns.ContainsKey(spellId))
             {
@@ -1367,7 +1368,7 @@ namespace Intersect.Server.Networking
             }
         }
 
-        public static void SendSpellCooldowns(Player player)
+        public static void SendSpellCooldowns(IPlayer player)
         {
             if (player.SpellCooldowns.Count > 0)
             {
@@ -1382,7 +1383,7 @@ namespace Intersect.Server.Networking
         }
 
         //ItemCooldownPacket
-        public static void SendItemCooldown(Player player, Guid itemId)
+        public static void SendItemCooldown(IPlayer player, Guid itemId)
         {
             if (player.ItemCooldowns.ContainsKey(itemId))
             {
@@ -1392,7 +1393,7 @@ namespace Intersect.Server.Networking
             }
         }
 
-        public static void SendItemCooldowns(Player player)
+        public static void SendItemCooldowns(IPlayer player)
         {
             if (player.ItemCooldowns.Count > 0)
             {
@@ -1407,7 +1408,7 @@ namespace Intersect.Server.Networking
         }
 
         //ExperiencePacket
-        public static void SendExperience(Player player)
+        public static void SendExperience(IPlayer player)
         {
             player.SendPacket(new ExperiencePacket(player.Exp, player.ExperienceToNextLevel), TransmissionMode.Any);
         }
@@ -1438,55 +1439,55 @@ namespace Intersect.Server.Networking
         }
 
         //HoldPlayerPacket
-        public static void SendHoldPlayer(Player player, Guid eventId, Guid mapId)
+        public static void SendHoldPlayer(IPlayer player, Guid eventId, Guid mapId)
         {
             player.SendPacket(new HoldPlayerPacket(eventId, mapId, false));
         }
 
         //HoldPlayerPacket
-        public static void SendReleasePlayer(Player player, Guid eventId)
+        public static void SendReleasePlayer(IPlayer player, Guid eventId)
         {
             player.SendPacket(new HoldPlayerPacket(eventId, Guid.Empty, true));
         }
 
         //PlayMusicPacket
-        public static void SendPlayMusic(Player player, string bgm)
+        public static void SendPlayMusic(IPlayer player, string bgm)
         {
             player.SendPacket(new PlayMusicPacket(bgm));
         }
 
         //StopMusicPacket
-        public static void SendFadeMusic(Player player)
+        public static void SendFadeMusic(IPlayer player)
         {
             player.SendPacket(new StopMusicPacket());
         }
 
         //PlaySoundPacket
-        public static void SendPlaySound(Player player, string sound)
+        public static void SendPlaySound(IPlayer player, string sound)
         {
             player.SendPacket(new PlaySoundPacket(sound));
         }
 
         //StopSoundPacket
-        public static void SendStopSounds(Player player)
+        public static void SendStopSounds(IPlayer player)
         {
             player.SendPacket(new StopSoundsPacket());
         }
 
         //ShowPicturePacket
-        public static void SendShowPicture(Player player, string picture, int size, bool clickable, int hideTime, Guid eventId)
+        public static void SendShowPicture(IPlayer player, string picture, int size, bool clickable, int hideTime, Guid eventId)
         {
             player.SendPacket(new ShowPicturePacket(picture, size, clickable, hideTime, eventId));
         }
 
         //HidePicturePacket
-        public static void SendHidePicture(Player player)
+        public static void SendHidePicture(IPlayer player)
         {
             player.SendPacket(new HidePicturePacket());
         }
 
         //ShopPacket
-        public static void SendOpenShop(Player player, ShopBase shop)
+        public static void SendOpenShop(IPlayer player, ShopBase shop)
         {
             if (shop == null)
             {
@@ -1497,13 +1498,13 @@ namespace Intersect.Server.Networking
         }
 
         //ShopPacket
-        public static void SendCloseShop(Player player)
+        public static void SendCloseShop(IPlayer player)
         {
             player.SendPacket(new ShopPacket(null, true));
         }
 
         //CraftingTablePacket
-        public static void SendOpenCraftingTable(Player player, CraftingTableBase table)
+        public static void SendOpenCraftingTable(IPlayer player, CraftingTableBase table)
         {
             if (table != null)
             {
@@ -1512,7 +1513,7 @@ namespace Intersect.Server.Networking
         }
 
         //CraftingTablePacket
-        public static void SendCloseCraftingTable(Player player)
+        public static void SendCloseCraftingTable(IPlayer player)
         {
             player.SendPacket(new CraftingTablePacket(null, true));
         }
@@ -1710,7 +1711,7 @@ namespace Intersect.Server.Networking
         }
 
         //EntityDashPacket
-        public static void SendEntityDash(Entity en, Guid endMapId, byte endX, byte endY, int dashTime, sbyte direction)
+        public static void SendEntityDash(IEntity en, Guid endMapId, byte endX, byte endY, int dashTime, sbyte direction)
         {
             SendDataToProximity(en.MapId, new EntityDashPacket(en.Id, endMapId, endX, endY, dashTime, direction));
         }
@@ -1726,7 +1727,7 @@ namespace Intersect.Server.Networking
         }
 
         //ActionMsgPacket
-        public static void SendActionMsg(Entity en, string message, Color color)
+        public static void SendActionMsg(IEntity en, string message, Color color)
         {
             var map = en?.Map;
             if (map == null)
@@ -1785,7 +1786,7 @@ namespace Intersect.Server.Networking
         }
 
         //PartyPacket
-        public static void SendParty(Player player)
+        public static void SendParty(IPlayer player)
         {
             var memberPackets = new PartyMemberPacket[player.Party.Count];
             for (var i = 0; i < player.Party.Count; i++)
@@ -1800,7 +1801,7 @@ namespace Intersect.Server.Networking
         }
 
         //PartyUpdatePacket
-        public static void SendPartyUpdateTo(Player player, Player member)
+        public static void SendPartyUpdateTo(IPlayer player, IPlayer member)
         {
             var partyIndex = -1;
             for (var i = 0; i < player.Party.Count; i++)
@@ -1825,7 +1826,7 @@ namespace Intersect.Server.Networking
         }
 
         //PartyInvitePacket
-        public static void SendPartyInvite(Player player, Player leader)
+        public static void SendPartyInvite(IPlayer player, IPlayer leader)
         {
             player.SendPacket(new PartyInvitePacket(leader.Name, leader.Id));
         }
@@ -1837,13 +1838,13 @@ namespace Intersect.Server.Networking
         }
 
         //QuestOfferPacket
-        public static void SendQuestOffer(Player player, Guid questId)
+        public static void SendQuestOffer(IPlayer player, Guid questId)
         {
             player.SendPacket(new QuestOfferPacket(questId));
         }
 
         //QuestProgressPacket
-        public static void SendQuestsProgress(Player player)
+        public static void SendQuestsProgress(IPlayer player)
         {
             var dict = new Dictionary<Guid, string>();
             foreach (var quest in player.Quests)
@@ -1865,13 +1866,13 @@ namespace Intersect.Server.Networking
         }
 
         //TradePacket
-        public static void StartTrade(Player player, Player target)
+        public static void StartTrade(IPlayer player, IPlayer target)
         {
             player.SendPacket(new TradePacket(target.Name));
         }
 
         //TradeUpdatePacket
-        public static void SendTradeUpdate(Player player, Player trader, int slot)
+        public static void SendTradeUpdate(IPlayer player, IPlayer trader, int slot)
         {
             if (trader.Trading.Offer[slot] != null &&
                 trader.Trading.Offer[slot].ItemId != Guid.Empty &&
@@ -1891,31 +1892,31 @@ namespace Intersect.Server.Networking
         }
 
         //TradePacket
-        public static void SendTradeClose(Player player)
+        public static void SendTradeClose(IPlayer player)
         {
             player.SendPacket(new TradePacket(null));
         }
 
         //TradeRequestPacket
-        public static void SendTradeRequest(Player player, Player partner)
+        public static void SendTradeRequest(IPlayer player, IPlayer partner)
         {
             player.SendPacket(new TradeRequestPacket(partner.Id, partner.Name));
         }
 
         //PlayerDeathPacket
-        public static void SendPlayerDeath(Player en)
+        public static void SendPlayerDeath(IPlayer en)
         {
             SendDataToProximity(en.MapId, new PlayerDeathPacket(en.Id));
         }
 
         //EntityZDimensionPacket
-        public static void UpdateEntityZDimension(Entity en, byte z)
+        public static void UpdateEntityZDimension(IEntity en, byte z)
         {
             SendDataToProximity(en.MapId, new EntityZDimensionPacket(en.Id, z));
         }
 
         //BagPacket
-        public static void SendOpenBag(Player player, int slots, Bag bag)
+        public static void SendOpenBag(IPlayer player, int slots, Bag bag)
         {
             player.SendPacket(new BagPacket(slots, false));
             for (var i = 0; i < slots; i++)
@@ -1925,7 +1926,7 @@ namespace Intersect.Server.Networking
         }
 
         //BagUpdatePacket
-        public static void SendBagUpdate(Player player, int slot, Item item)
+        public static void SendBagUpdate(IPlayer player, int slot, Item item)
         {
             if (item != null && item.ItemId != Guid.Empty && item.Quantity > 0)
             {
@@ -1938,19 +1939,19 @@ namespace Intersect.Server.Networking
         }
 
         //BagPacket
-        public static void SendCloseBag(Player player)
+        public static void SendCloseBag(IPlayer player)
         {
             player.SendPacket(new BagPacket(0, true));
         }
 
         //MoveRoutePacket
-        public static void SendMoveRouteToggle(Player player, bool routeOn)
+        public static void SendMoveRouteToggle(IPlayer player, bool routeOn)
         {
             player.SendPacket(new MoveRoutePacket(routeOn));
         }
 
         //FriendsPacket
-        public static void SendFriends(Player player)
+        public static void SendFriends(IPlayer player)
         {
             if (player == null)
             {
@@ -1977,7 +1978,7 @@ namespace Intersect.Server.Networking
         }
 
         //FriendRequestPacket
-        public static void SendFriendRequest(Player player, Player partner)
+        public static void SendFriendRequest(IPlayer player, IPlayer partner)
         {
             player.SendPacket(new FriendRequestPacket(partner.Id, partner.Name));
         }
@@ -1989,13 +1990,13 @@ namespace Intersect.Server.Networking
         }
 
         //TargetOverridePacket
-        public static void SetPlayerTarget(Player player, Guid targetId)
+        public static void SetPlayerTarget(IPlayer player, Guid targetId)
         {
             player.SendPacket(new TargetOverridePacket(targetId));
         }
 
         //GuildMsgPacket
-        public static void SendGuildMsg(Player player, string message, Color clr, string target = "")
+        public static void SendGuildMsg(IPlayer player, string message, Color clr, string target = "")
         {
             foreach (var p in player.Guild.FindOnlineMembers())
             {
@@ -2010,7 +2011,7 @@ namespace Intersect.Server.Networking
         /// Send a player their guild member list.
         /// </summary>
         /// <param name="player"></param>
-        public static void SendGuild(Player player)
+        public static void SendGuild(IPlayer player)
         {
             if (player == null || player.Guild == null)
             {
@@ -2029,12 +2030,12 @@ namespace Intersect.Server.Networking
         }
 
         //GuildRequestPacket
-        public static void SendGuildInvite(Player player, Player from)
+        public static void SendGuildInvite(IPlayer player, IPlayer from)
         {
             player.SendPacket(new GuildInvitePacket(from.Name, from.Guild.Name));
         }
 
-        public static void SendDataToMap(Guid mapId, IPacket packet, Player except = null, TransmissionMode mode = TransmissionMode.All)
+        public static void SendDataToMap(Guid mapId, IPacket packet, IPlayer except = null, TransmissionMode mode = TransmissionMode.All)
         {
             if (!MapInstance.Lookup.Keys.Contains(mapId))
             {
@@ -2051,7 +2052,7 @@ namespace Intersect.Server.Networking
             }
         }
 
-        public static bool SendDataToProximity(Guid mapId, IPacket packet, Player except = null, TransmissionMode mode = TransmissionMode.All)
+        public static bool SendDataToProximity(Guid mapId, IPacket packet, IPlayer except = null, TransmissionMode mode = TransmissionMode.All)
         {
             var map = MapInstance.Get(mapId);
             if (map == null)

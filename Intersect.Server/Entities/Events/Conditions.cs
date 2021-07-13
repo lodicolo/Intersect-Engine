@@ -1,28 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using Intersect.Enums;
+﻿using Intersect.Enums;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Conditions;
 using Intersect.GameObjects.Events;
 using Intersect.GameObjects.Switches_and_Variables;
+using Intersect.Server.Framework.Entities;
 using Intersect.Server.General;
 using Intersect.Server.Maps;
+
+using System;
 
 namespace Intersect.Server.Entities.Events
 {
     public static partial class Conditions
     {
-        public static bool CanSpawnPage(EventPage page, Player player, Event activeInstance)
+        public static bool CanSpawnPage(EventPage page, IPlayer player, Event activeInstance)
         {
             return MeetsConditionLists(page.ConditionLists, player, activeInstance);
         }
 
         public static bool MeetsConditionLists(
             ConditionLists lists,
-            Player player,
+            IPlayer player,
             Event eventInstance,
             bool singleList = true,
             QuestBase questBase = null
@@ -68,7 +66,7 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsConditionList(
             ConditionList list,
-            Player player,
+            IPlayer player,
             Event eventInstance,
             QuestBase questBase
         )
@@ -90,7 +88,7 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             Condition condition,
-            Player player,
+            IPlayer player,
             Event eventInstance,
             QuestBase questBase
         )

@@ -3,6 +3,7 @@ using System.IO;
 
 using Intersect.Enums;
 using Intersect.Server.Entities;
+using Intersect.Server.Framework.Entities;
 using Intersect.Server.Localization;
 using Intersect.Utilities;
 
@@ -57,8 +58,8 @@ namespace Intersect.Server.General
             Stats scalingStat,
             int scaling,
             double critMultiplier,
-            Entity attacker,
-            Entity victim
+            IEntity attacker,
+            IEntity victim
         )
         {
             if (mFormulas == null)

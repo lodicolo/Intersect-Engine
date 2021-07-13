@@ -16,6 +16,7 @@ using Intersect.Server.Classes.Maps;
 using Intersect.Server.Database;
 using Intersect.Server.Entities;
 using Intersect.Server.Entities.Events;
+using Intersect.Server.Framework.Entities;
 using Intersect.Server.General;
 using Intersect.Server.Networking;
 using Intersect.Utilities;
@@ -296,7 +297,7 @@ namespace Intersect.Server.Maps
         /// <param name="y">The vertical location of this item.</param>
         /// <param name="item">The <see cref="Item"/> to spawn on the map.</param>
         /// <param name="amount">The amount of times to spawn this item to the map. Set to the <see cref="Item"/> quantity, overwrites quantity if stackable!</param>
-        public void SpawnItem(int x, int y, Item item, int amount) => SpawnItem(x, y, item, amount, Guid.Empty);
+        public void SpawnItem(int x, int y, IItem item, int amount) => SpawnItem(x, y, item, amount, Guid.Empty);
 
         /// <summary>
         /// Spawn an item to this map instance.
@@ -306,7 +307,7 @@ namespace Intersect.Server.Maps
         /// <param name="item">The <see cref="Item"/> to spawn on the map.</param>
         /// <param name="amount">The amount of times to spawn this item to the map. Set to the <see cref="Item"/> quantity, overwrites quantity if stackable!</param>
         /// <param name="owner">The player Id that will be the temporary owner of this item.</param>
-        public void SpawnItem(int x, int y, Item item, int amount, Guid owner, bool sendUpdate = true)
+        public void SpawnItem(int x, int y, IItem item, int amount, Guid owner, bool sendUpdate = true)
         {
             if (item == null)
             {
@@ -793,7 +794,7 @@ namespace Intersect.Server.Maps
 
         //Spawn a projectile
         public void SpawnMapProjectile(
-            Entity owner,
+            IEntity owner,
             ProjectileBase projectile,
             SpellBase parentSpell,
             ItemBase parentItem,
@@ -802,7 +803,7 @@ namespace Intersect.Server.Maps
             byte y,
             byte z,
             byte direction,
-            Entity target
+            IEntity target
         )
         {
             var proj = new Projectile(owner, parentSpell, parentItem, projectile, Id, x, y, z, direction, target);
