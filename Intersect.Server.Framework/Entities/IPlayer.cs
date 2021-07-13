@@ -4,6 +4,7 @@ using Intersect.GameObjects.Events;
 using Intersect.GameObjects.Switches_and_Variables;
 using Intersect.Network;
 using Intersect.Network.Packets.Server;
+using Intersect.Server.Framework.Database.PlayerData.Players;
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Intersect.Server.Framework.Entities
     {
         #region Properties
 
-        List<BankSlot> Bank { get; set; }
+        List<IBankSlot> Bank { get; set; }
 
         Dictionary<Guid, string> CachedFriends { get; set; }
 
@@ -30,7 +31,7 @@ namespace Intersect.Server.Framework.Entities
 
         DateTime? CreationDate { get; set; }
 
-        Guild DbGuild { get; set; }
+        IGuild DbGuild { get; set; }
 
         int[] Equipment { get; set; }
 
@@ -44,9 +45,9 @@ namespace Intersect.Server.Framework.Entities
 
         Gender Gender { get; set; }
 
-        Guild Guild { get; set; }
+        IGuild Guild { get; set; }
 
-        Tuple<IPlayer, Guild> GuildInvite { get; set; }
+        Tuple<IPlayer, IGuild> GuildInvite { get; set; }
 
         DateTime GuildJoinDate { get; set; }
 
@@ -168,13 +169,13 @@ namespace Intersect.Server.Framework.Entities
 
         int FindInventoryItemQuantity(Guid itemId);
 
-        InventorySlot FindInventoryItemSlot(Guid itemId, int quantity = 1);
+        IInventorySlot FindInventoryItemSlot(Guid itemId, int quantity = 1);
 
-        List<InventorySlot> FindInventoryItemSlots(Guid itemId, int quantity = 1);
+        List<IInventorySlot> FindInventoryItemSlots(Guid itemId, int quantity = 1);
 
-        InventorySlot FindOpenInventorySlot();
+        IInventorySlot FindOpenInventorySlot();
 
-        List<InventorySlot> FindOpenInventorySlots();
+        List<IInventorySlot> FindOpenInventorySlots();
 
         Quest FindQuest(Guid questId);
 

@@ -1,10 +1,10 @@
-﻿using Intersect.Server.Database.PlayerData.Security;
+﻿using Intersect.Server.Framework.Database.PlayerData.Security;
 using Intersect.Server.Framework.Entities;
 
 using System;
 using System.Collections.Generic;
 
-namespace Intersect.Server.Database.PlayerData
+namespace Intersect.Server.Framework.Database.PlayerData
 {
     public interface IUser
     {
@@ -30,7 +30,7 @@ namespace Intersect.Server.Database.PlayerData
 
         ulong PlayTimeSeconds { get; set; }
 
-        UserRights Power { get; set; }
+        IUserRights Power { get; set; }
 
         string PowerJson { get; set; }
 

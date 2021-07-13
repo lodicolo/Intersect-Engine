@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Intersect.Server.Database.Logging.Entities
 {
-    public class GuildHistory
+    public class GuildHistory : IGuildHistory
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; private set; }
@@ -46,22 +46,6 @@ namespace Intersect.Server.Database.Logging.Entities
         }
 
         /// <summary>
-        /// Defines all different types of logged guild actions.
-        /// </summary>
-        public enum GuildActivityType
-        {
-            Created,
-            Disbanded,
-            Joined,
-            Left,
-            Kicked,
-            Promoted,
-            Demoted,
-            Transfer,
-            Rename
-        }
-
-        /// <summary>
         /// Logs guild activity
         /// </summary>
         /// <param name="guildId">The player to which to send a message.</param>
@@ -73,8 +57,7 @@ namespace Intersect.Server.Database.Logging.Entities
         {
             if (Options.Instance.Logging.GuildActivity)
             {
-                DbInterface.Pool.QueueWorkItem(new Action<GuildHistory>(Log), new GuildHistory
-                {
+                DbInterface.Pool.QueueWorkItem(new Action<GuildHistory>(Log), new GuildHistory {
                     GuildId = guildId,
                     TimeStamp = DateTime.UtcNow,
                     UserId = player?.Client?.User?.Id ?? Guid.Empty,

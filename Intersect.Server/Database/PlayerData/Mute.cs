@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Intersect.Logging;
+using Intersect.Server.Framework.Database.PlayerData;
 using Intersect.Server.Localization;
 using Intersect.Server.Networking;
 

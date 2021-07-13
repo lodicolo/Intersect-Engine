@@ -1,15 +1,14 @@
 ﻿using Intersect.GameObjects;
-using Intersect.Server.Database.PlayerData.Players;
-
+using Intersect.Server.Framework.Database.PlayerData.Players;
 using System;
 
-namespace Intersect.Server.Database
+namespace Intersect.Server.Framework.Database
 {
     public interface IItem
     {
         #region Properties
 
-        Bag Bag { get; set; }
+        IBag Bag { get; set; }
 
         Guid? BagId { get; set; }
 
@@ -35,9 +34,9 @@ namespace Intersect.Server.Database
 
         string Data();
 
-        void Set(Item item);
+        void Set(IItem item);
 
-        bool TryGetBag(out Bag bag);
+        bool TryGetBag(out IBag bag);
 
         #endregion Methods
     }

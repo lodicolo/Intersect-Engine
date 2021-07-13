@@ -454,9 +454,9 @@
     <Compile Include="Database\GameData\Migrations\CerasVersionToleranceMigration.cs" />
     <Compile Include="Database\ContextInterface.cs" />
     <Compile Include="Database\IDbContext.cs" />
-    <Compile Include="Database\IItem.cs" />
     <Compile Include="Database\IntersectDbContext.cs" />
     <Compile Include="Database\Logging\Entities\ChatHistory.cs" />
+    <Compile Include="Database\Logging\Entities\IGuildHistory.cs" />
     <Compile Include="Database\Logging\Entities\TradeHistory.cs" />
     <Compile Include="Database\Logging\Entities\GuildHistory.cs" />
     <Compile Include="Database\Logging\Entities\UserActivityHistory.cs" />
@@ -466,10 +466,7 @@
     <Compile Include="Database\MigrationBuilderExtensions.cs" />
     <Compile Include="Database\PlayerData\Api\RefreshToken.cs" />
     <Compile Include="Database\PlayerData\Ban.cs" />
-    <Compile Include="Database\PlayerData\IBan.cs" />
-    <Compile Include="Database\PlayerData\IMute.cs" />
     <Compile Include="Database\PlayerData\IPlayerContext.cs" />
-    <Compile Include="Database\PlayerData\IUser.cs" />
     <Compile Include="Database\PlayerData\Players\Bag.cs" />
     <Compile Include="Database\PlayerData\Players\BagSlot.cs" />
     <Compile Include="Database\PlayerData\Players\GuildBankSlot.cs" />
@@ -479,11 +476,10 @@
     <Compile Include="Database\PlayerData\Players\HotbarSlot.cs" />
     <Compile Include="Database\PlayerData\Players\InventorySlot.cs" />
     <Compile Include="Database\Item.cs" />
-    <Compile Include="Database\PlayerData\Players\IPlayerOwned.cs" />
-    <Compile Include="Database\PlayerData\Players\ISlot.cs" />
     <Compile Include="Database\PlayerData\Players\Quest.cs" />
     <Compile Include="Database\PlayerData\Players\SlotHelper.cs" />
     <Compile Include="Database\PlayerData\Players\SpellSlot.cs" />
+    <Compile Include="Database\PlayerData\Security\ApiRoles.cs" />
     <Compile Include="Entities\BankInterface.cs" />
     <Compile Include="Entities\Combat\Buff.cs" />
     <Compile Include="Entities\Combat\Dash.cs" />

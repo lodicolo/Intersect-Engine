@@ -1,4 +1,4 @@
-﻿namespace Intersect.Server.Database.PlayerData.Players
+﻿namespace Intersect.Server.Framework.Database.PlayerData.Players
 {
 
     public interface ISlot

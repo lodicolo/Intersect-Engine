@@ -5,6 +5,7 @@ using System.Linq;
 
 using Intersect.GameObjects;
 using Intersect.Logging;
+using Intersect.Server.Framework.Database.PlayerData.Players;
 using Microsoft.EntityFrameworkCore;
 
 using Newtonsoft.Json;
@@ -15,7 +16,7 @@ using Newtonsoft.Json;
 namespace Intersect.Server.Database.PlayerData.Players
 {
 
-    public class Bag
+    public class Bag : IBag
     {
 
         public Bag()
@@ -36,21 +37,20 @@ namespace Intersect.Server.Database.PlayerData.Players
 
         public int SlotCount { get; private set; }
 
-        public virtual List<BagSlot> Slots { get; set; } = new List<BagSlot>();
+        public virtual List<IBagSlot> Slots { get; set; } = new List<IBagSlot>();
 
         public void ValidateSlots(bool checkItemExistence = true)
         {
             if (Slots == null)
             {
-                Slots = new List<BagSlot>(SlotCount);
+                Slots = new List<IBagSlot>(SlotCount);
             }
 
             var slots = Slots
                 .Where(bagSlot => bagSlot != null)
                 .OrderBy(bagSlot => bagSlot.Slot)
                 .Select(
-                    bagSlot =>
-                    {
+                    bagSlot => {
                         if (checkItemExistence && (bagSlot.ItemId == Guid.Empty || bagSlot.Descriptor == null))
                         {
                             bagSlot.Set(new Item());
@@ -110,7 +110,7 @@ namespace Intersect.Server.Database.PlayerData.Players
             }
         }
 
-        public void Save ()
+        public void Save()
         {
             try
             {

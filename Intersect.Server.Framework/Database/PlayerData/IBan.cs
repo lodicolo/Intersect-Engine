@@ -1,10 +1,12 @@
 ﻿using System;
 
-namespace Intersect.Server.Database.PlayerData
+namespace Intersect.Server.Framework.Database.PlayerData
 {
-    public interface IMute
+    public interface IBan
     {
         #region Properties
+
+        string Banner { get; }
 
         DateTime EndTime { get; set; }
 
@@ -12,15 +14,11 @@ namespace Intersect.Server.Database.PlayerData
 
         bool IsExpired { get; }
 
-        bool IsIp { get; }
-
-        string Muter { get; }
-
         string Reason { get; }
 
         DateTime StartTime { get; }
 
-        User User { get; }
+        IUser User { get; }
 
         Guid UserId { get; }
 

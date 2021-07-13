@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 using Intersect.Enums;
 using Intersect.Server.Entities;
+using Intersect.Server.Framework.Database.PlayerData.Players;
 using Intersect.Utilities;
 
 using Newtonsoft.Json;

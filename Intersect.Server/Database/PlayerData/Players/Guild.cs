@@ -21,13 +21,14 @@ using Intersect.Utilities;
 using Intersect.Server.Localization;
 using Intersect.Server.Database.Logging.Entities;
 using static Intersect.Server.Database.Logging.Entities.GuildHistory;
+using Intersect.Server.Framework.Database.PlayerData.Players;
 
 namespace Intersect.Server.Database.PlayerData.Players
 {
     /// <summary>
     /// A class containing the definition of each guild, alongside the methods to use them.
     /// </summary>
-    public class Guild
+    public class Guild : IGuild
     {
 
         public static ConcurrentDictionary<Guid, Guild> Guilds = new ConcurrentDictionary<Guid, Guild>();
@@ -99,8 +100,7 @@ namespace Intersect.Server.Database.PlayerData.Players
             {
                 using (var context = DbInterface.CreatePlayerContext(readOnly: false))
                 {
-                    var guild = new Guild()
-                    {
+                    var guild = new Guild() {
                         Name = name,
                         FoundingDate = DateTime.UtcNow
                     };

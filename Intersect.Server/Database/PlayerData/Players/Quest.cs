@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 using Intersect.Server.Entities;
-
+using Intersect.Server.Framework.Database.PlayerData.Players;
 using Newtonsoft.Json;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Local

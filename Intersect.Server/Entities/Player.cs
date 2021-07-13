@@ -24,7 +24,9 @@ using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities.Combat;
 using Intersect.Server.Entities.Events;
+using Intersect.Server.Framework.Database.PlayerData.Players;
 using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Entities.Combat;
 using Intersect.Server.General;
 using Intersect.Server.Localization;
 using Intersect.Server.Maps;
@@ -762,7 +764,7 @@ namespace Intersect.Server.Entities
             DoT.Clear();
             CachedDots = new DoT[0];
             Statuses.Clear();
-            CachedStatuses = new Status[0];
+            CachedStatuses = new IStatus[0];
 
             CombatTimer = 0;
 
@@ -1966,9 +1968,9 @@ namespace Intersect.Server.Entities
         /// Retrieves a list of open inventory slots for this player.
         /// </summary>
         /// <returns>A list of <see cref="InventorySlot"/></returns>
-        public List<InventorySlot> FindOpenInventorySlots()
+        public List<IInventorySlot> FindOpenInventorySlots()
         {
-            var slots = new List<InventorySlot>();
+            var slots = new List<IInventorySlot>();
             for (var i = 0; i < Options.MaxInvItems; i++)
             {
                 var inventorySlot = Items[i];
@@ -1985,7 +1987,7 @@ namespace Intersect.Server.Entities
         /// Finds the first open inventory slot this player has.
         /// </summary>
         /// <returns>An <see cref="InventorySlot"/> instance, or null if none are found.</returns>
-        public InventorySlot FindOpenInventorySlot() => FindOpenInventorySlots().FirstOrDefault();
+        public IInventorySlot FindOpenInventorySlot() => FindOpenInventorySlots().FirstOrDefault();
 
         /// <summary>
         /// Swap items between <paramref name="fromSlotIndex"/> and <paramref name="toSlotIndex"/>.
@@ -2534,7 +2536,7 @@ namespace Intersect.Server.Entities
         /// <param name="itemId">The item Id to look for.</param>
         /// <param name="quantity">The quantity of the item to look for.</param>
         /// <returns>An <see cref="InventorySlot"/> that contains the item, or null if none are found.</returns>
-        public InventorySlot FindInventoryItemSlot(Guid itemId, int quantity = 1) => FindInventoryItemSlots(itemId, quantity).FirstOrDefault();
+        public IInventorySlot FindInventoryItemSlot(Guid itemId, int quantity = 1) => FindInventoryItemSlots(itemId, quantity).FirstOrDefault();
 
         /// <summary>
         /// Finds all inventory slots matching the desired item and quantity.
@@ -2542,9 +2544,9 @@ namespace Intersect.Server.Entities
         /// <param name="itemId">The item Id to look for.</param>
         /// <param name="quantity">The quantity of the item to look for.</param>
         /// <returns>A list of <see cref="InventorySlot"/> containing the requested item.</returns>
-        public List<InventorySlot> FindInventoryItemSlots(Guid itemId, int quantity = 1)
+        public List<IInventorySlot> FindInventoryItemSlots(Guid itemId, int quantity = 1)
         {
-            var slots = new List<InventorySlot>();
+            var slots = new List<IInventorySlot>();
             if (Items == null)
             {
                 return slots;

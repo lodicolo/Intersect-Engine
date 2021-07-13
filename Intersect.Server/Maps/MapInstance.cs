@@ -16,6 +16,7 @@ using Intersect.Server.Classes.Maps;
 using Intersect.Server.Database;
 using Intersect.Server.Entities;
 using Intersect.Server.Entities.Events;
+using Intersect.Server.Framework.Database;
 using Intersect.Server.Framework.Entities;
 using Intersect.Server.General;
 using Intersect.Server.Networking;

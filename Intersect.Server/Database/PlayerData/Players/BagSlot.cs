@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using Intersect.Server.Framework.Database.PlayerData.Players;
 using Newtonsoft.Json;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Local
@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Intersect.Server.Database.PlayerData.Players
 {
 
-    public class BagSlot : Item, ISlot
+    public class BagSlot : Item, IBagSlot
     {
 
         public BagSlot()
@@ -28,7 +28,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         public Guid ParentBagId { get; private set; }
 
         [JsonIgnore]
-        public virtual Bag ParentBag { get; private set; }
+        public virtual IBag ParentBag { get; private set; }
 
         public int Slot { get; private set; }
 

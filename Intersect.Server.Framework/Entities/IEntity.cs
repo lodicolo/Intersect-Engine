@@ -2,6 +2,7 @@
 using Intersect.GameObjects;
 using Intersect.GameObjects.Events;
 using Intersect.Network.Packets.Server;
+using Intersect.Server.Framework.Database.PlayerData.Players;
 using Intersect.Server.Framework.Entities.Combat;
 
 using System;
@@ -62,7 +63,7 @@ namespace Intersect.Server.Framework.Entities
 
         bool IsDisposed { get; }
 
-        List<InventorySlot> Items { get; set; }
+        List<IInventorySlot> Items { get; set; }
 
         string JsonColor { get; set; }
 

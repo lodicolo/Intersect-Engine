@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Intersect.Server.Framework.Database.PlayerData.Players;
+using System;
 using System.Collections.Generic;
 
 namespace Intersect.Server.Database.PlayerData.Players

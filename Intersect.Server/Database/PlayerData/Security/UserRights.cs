@@ -5,13 +5,13 @@ using System.Linq;
 using System.Reflection;
 
 using Intersect.Enums;
-
+using Intersect.Server.Framework.Database.PlayerData.Security;
 using Newtonsoft.Json;
 
 namespace Intersect.Server.Database.PlayerData.Security
 {
 
-    public class UserRights
+    public class UserRights : IUserRights
     {
 
         private static readonly Type ApiRolesType = typeof(ApiRoles);
@@ -42,7 +42,7 @@ namespace Intersect.Server.Database.PlayerData.Security
 
         public bool Api { get; set; }
 
-        public ApiRoles ApiRoles { get; set; } = new ApiRoles();
+        public IApiRoles ApiRoles { get; set; } = new ApiRoles();
 
         [JsonIgnore]
         public bool IsModerator => Ban || Mute || Kick;
@@ -52,15 +52,13 @@ namespace Intersect.Server.Database.PlayerData.Security
 
         public static UserRights None => new UserRights();
 
-        public static UserRights Moderation => new UserRights
-        {
+        public static UserRights Moderation => new UserRights {
             Ban = true,
             Kick = true,
             Mute = true
         };
 
-        public static UserRights Admin => new UserRights
-        {
+        public static UserRights Admin => new UserRights {
             Editor = true,
             Ban = true,
             Kick = true,
@@ -111,14 +109,14 @@ namespace Intersect.Server.Database.PlayerData.Security
         internal ImmutableList<string> EnumeratePermissions(bool permitted = true)
         {
             var userRights = UserRightsPermissions
-                                 .Where(property => permitted == (bool) (property?.GetValue(this, null) ?? false))
+                                 .Where(property => permitted == (bool)(property?.GetValue(this, null) ?? false))
                                  .Select(property => property?.Name)
                                  .ToList() ??
                              throw new InvalidOperationException();
 
             var apiRoles = ApiRolesPermissions
                                .Where(
-                                   property => permitted == (bool) (property?.GetValue(this.ApiRoles, null) ?? false)
+                                   property => permitted == (bool)(property?.GetValue(this.ApiRoles, null) ?? false)
                                )
                                .Select(property => property?.Name)
                                .ToList() ??
@@ -151,15 +149,6 @@ namespace Intersect.Server.Database.PlayerData.Security
                     throw new ArgumentOutOfRangeException(nameof(access), access, null);
             }
         }
-
-    }
-
-    public class ApiRoles
-    {
-
-        public bool UserQuery { get; set; }
-
-        public bool UserManage { get; set; }
 
     }
 
