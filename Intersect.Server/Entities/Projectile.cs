@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Intersect.Enums;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Maps;
 using Intersect.Network.Packets.Server;
 using Intersect.Server.Entities.Combat;
+using Intersect.Server.Framework.Entities;
 using Intersect.Server.General;
 using Intersect.Server.Maps;
-using Intersect.Server.Networking;
 
 namespace Intersect.Server.Entities
 {
 
-    public partial class Projectile : Entity
+    public partial class Projectile : Entity, IProjectile
     {
 
-        public ProjectileBase Base;
+        public ProjectileBase Base { get; set; }
 
-        public bool HasGrappled;
+        public bool HasGrappled { get; set; }
 
-        public ItemBase Item;
+        public ItemBase Item { get; set; }
 
         private int mQuantity;
 
@@ -33,14 +32,14 @@ namespace Intersect.Server.Entities
 
         private int mTotalSpawns;
 
-        public Entity Owner;
+        public IEntity Owner { get; set; }
 
         // Individual Spawns
-        public ProjectileSpawn[] Spawns;
+        public IProjectileSpawn[] Spawns { get; set; }
 
-        public SpellBase Spell;
+        public SpellBase Spell { get; set; }
 
-        public Entity Target;
+        public IEntity Target { get; set; }
 
         public Projectile(
             Entity owner,
@@ -86,7 +85,7 @@ namespace Intersect.Server.Entities
             }
 
             mTotalSpawns *= Base.Quantity;
-            Spawns = new ProjectileSpawn[mTotalSpawns];
+            Spawns = new IProjectileSpawn[mTotalSpawns];
         }
 
         private void AddProjectileSpawns(List<KeyValuePair<Guid, int>> spawnDeaths)
@@ -101,8 +100,8 @@ namespace Intersect.Server.Entities
                         {
                             var s = new ProjectileSpawn(
                                 FindProjectileRotationDir(Dir, d),
-                                (byte) (X + FindProjectileRotationX(Dir, x - 2, y - 2)),
-                                (byte) (Y + FindProjectileRotationY(Dir, x - 2, y - 2)), (byte) Z, MapId, Base, this
+                                (byte)(X + FindProjectileRotationX(Dir, x - 2, y - 2)),
+                                (byte)(Y + FindProjectileRotationY(Dir, x - 2, y - 2)), (byte)Z, MapId, Base, this
                             );
 
                             Spawns[mSpawnedAmount] = s;
@@ -333,7 +332,7 @@ namespace Intersect.Server.Entities
             }
         }
 
-        public bool CheckForCollision(ProjectileSpawn spawn)
+        public bool CheckForCollision(IProjectileSpawn spawn)
         {
             var killSpawn = MoveFragment(spawn, false);
 
@@ -348,9 +347,9 @@ namespace Intersect.Server.Entities
                 {
                     if (attribute != null && attribute.Type == MapAttributes.ZDimension)
                     {
-                        if (((MapZDimensionAttribute) attribute).GatewayTo > 0)
+                        if (((MapZDimensionAttribute)attribute).GatewayTo > 0)
                         {
-                            spawn.Z = (byte) (((MapZDimensionAttribute) attribute).GatewayTo - 1);
+                            spawn.Z = (byte)(((MapZDimensionAttribute)attribute).GatewayTo - 1);
                         }
                     }
                 }
@@ -370,7 +369,7 @@ namespace Intersect.Server.Entities
                         {
                             Owner.Dir = spawn.Dir;
                             new Dash(
-                                Owner, spawn.Distance, (byte) Owner.Dir, Base.IgnoreMapBlocks,
+                                Owner, spawn.Distance, (byte)Owner.Dir, Base.IgnoreMapBlocks,
                                 Base.IgnoreActiveResources, Base.IgnoreExhaustedResources, Base.IgnoreZDimension
                             );
                         }
@@ -406,7 +405,7 @@ namespace Intersect.Server.Entities
                     else
                     {
                         if (z == entities.Count - 1)
-                        {       
+                        {
                             if (spawn.Distance >= Base.Range)
                             {
                                 killSpawn = true;
@@ -419,7 +418,7 @@ namespace Intersect.Server.Entities
             return killSpawn;
         }
 
-        public bool MoveFragment(ProjectileSpawn spawn, bool move = true)
+        public bool MoveFragment(IProjectileSpawn spawn, bool move = true)
         {
             float newx = spawn.X;
             float newy = spawn.Y;
@@ -495,7 +494,7 @@ namespace Intersect.Server.Entities
             return killSpawn;
         }
 
-        public override void Die(bool dropItems = true, Entity killer = null)
+        public override void Die(bool dropItems = true, IEntity killer = null)
         {
             for (var i = 0; i < Spawns.Length; i++)
             {
@@ -505,7 +504,7 @@ namespace Intersect.Server.Entities
             MapInstance.Get(MapId).RemoveProjectile(this);
         }
 
-        public override EntityPacket EntityPacket(EntityPacket packet = null, Player forPlayer = null)
+        public override EntityPacket EntityPacket(EntityPacket packet = null, IPlayer forPlayer = null)
         {
             if (packet == null)
             {
@@ -514,9 +513,9 @@ namespace Intersect.Server.Entities
 
             packet = base.EntityPacket(packet, forPlayer);
 
-            var pkt = (ProjectileEntityPacket) packet;
+            var pkt = (ProjectileEntityPacket)packet;
             pkt.ProjectileId = Base.Id;
-            pkt.ProjectileDirection = (byte) Dir;
+            pkt.ProjectileDirection = (byte)Dir;
             pkt.TargetId = Target?.Id ?? Guid.Empty;
             pkt.OwnerId = Owner?.Id ?? Guid.Empty;
 

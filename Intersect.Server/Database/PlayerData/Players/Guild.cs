@@ -22,6 +22,7 @@ using Intersect.Server.Localization;
 using Intersect.Server.Database.Logging.Entities;
 using static Intersect.Server.Database.Logging.Entities.GuildHistory;
 using Intersect.Server.Framework.Database.PlayerData.Players;
+using Intersect.Server.Framework.Entities;
 
 namespace Intersect.Server.Database.PlayerData.Players
 {
@@ -58,7 +59,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// Guild bank slots
         /// </summary>
         [JsonIgnore]
-        public virtual List<GuildBankSlot> Bank { get; set; } = new List<GuildBankSlot>();
+        public virtual List<IGuildBankSlot> Bank { get; set; } = new List<IGuildBankSlot>();
 
         /// <summary>
         /// Sets the number of bank slots alotted to this guild. Banks lots can only expand.
@@ -90,9 +91,9 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// <summary>
         /// Create a new Guild instance.
         /// </summary>
-        /// <param name="creator">The <see cref="Player"/> that created the guild.</param>
+        /// <param name="creator">The <see cref="IPlayer"/> that created the guild.</param>
         /// <param name="name">The Name of the guild.</param>
-        public static Guild CreateGuild(Player creator, string name)
+        public static Guild CreateGuild(IPlayer creator, string name)
         {
             name = name.Trim();
 
@@ -183,9 +184,9 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// Find all online members of this guild.
         /// </summary>
         /// <returns>A list of online players.</returns>
-        public List<Player> FindOnlineMembers()
+        public List<IPlayer> FindOnlineMembers()
         {
-            var online = new List<Player>();
+            var online = new List<IPlayer>();
             foreach (var member in Members)
             {
                 var plyr = Player.FindOnline(member.Key);
@@ -211,7 +212,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// <param name="player">The player to join into the guild.</param>
         /// <param name="rank">Integer index of the rank to give this new member.</param>
         /// <param name="initiator">The player who initiated this change (null if done by the api or some other method).</param>
-        public void AddMember(Player player, int rank, Player initiator = null)
+        public void AddMember(IPlayer player, int rank, IPlayer initiator = null)
         {
             if (player != null && !Members.Any(m => m.Key == player.Id))
             {
@@ -251,7 +252,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// </summary>
         /// <param name="player">The player to remove from the guild.</param>
         /// <param name="initiator">The player who initiated this change (null if done by the api or some other method).</param>
-        public void RemoveMember(Player player, Player initiator = null, GuildActivityType action = GuildActivityType.Left)
+        public void RemoveMember(IPlayer player, IPlayer initiator = null, GuildActivityType action = GuildActivityType.Left)
         {
             if (player != null)
             {
@@ -308,7 +309,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// <param name="id">The player to set the rank for.</param>
         /// <param name="rank">The integer index of the rank to assign.</param>
         /// <param name="initiator">The player who initiated this change (null if done by the api or some other method).</param>
-        public void SetPlayerRank(Guid id, int rank, Player initiator = null) => SetPlayerRank(Player.Find(id), rank, initiator);
+        public void SetPlayerRank(Guid id, int rank, IPlayer initiator = null) => SetPlayerRank(Player.Find(id), rank, initiator);
 
         /// <summary>
         /// Sets a player's guild rank.
@@ -316,7 +317,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// <param name="player">The player to set the rank for.</param>
         /// <param name="rank">The integer index of the rank to assign.</param>
         /// <param name="initiator">The player who initiated this change (null if done by the api or some other method).</param>
-        public void SetPlayerRank(Player player, int rank, Player initiator = null)
+        public void SetPlayerRank(IPlayer player, int rank, IPlayer initiator = null)
         {
             using (var context = DbInterface.CreatePlayerContext(readOnly: false))
             {
@@ -368,7 +369,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// </summary>
         /// <param name="player">The player to search for.</param>
         /// <returns>Returns the integer index of the rank of a player within this guild.</returns>
-        public int GetPlayerRank(Player player) => player.GuildRank;
+        public int GetPlayerRank(IPlayer player) => player.GuildRank;
 
         /// <summary>
         /// Check whether a specified player is a member of this guild.
@@ -382,7 +383,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// </summary>
         /// <param name="player">The player to check against.</param>
         /// <returns>Whether or not this player is a member of this guild</returns>
-        public bool IsMember(Player player)
+        public bool IsMember(IPlayer player)
         {
             return Members.ContainsKey(player?.Id ?? Guid.Empty);
         }
@@ -443,9 +444,9 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// <summary>
         /// Completely removes a guild from the game.
         /// </summary>
-        /// <param name="guild">The <see cref="Guild"/> to delete.</param>
+        /// <param name="guild">The <see cref="IGuild"/> to delete.</param>
         /// <param name="initiator">The player who initiated this change (null if done by the api or some other method).</param>
-        public static void DeleteGuild(Guild guild, Player initiator = null)
+        public static void DeleteGuild(IGuild guild, IPlayer initiator = null)
         {
             // Remove our members cleanly before deleting this from our database.
             using (var context = DbInterface.CreatePlayerContext(readOnly: false))
@@ -476,7 +477,7 @@ namespace Intersect.Server.Database.PlayerData.Players
                     member.GuildRank = 0;
                 }
 
-                context.Guilds.Remove(guild);
+                context.Guilds.Remove((Guild) guild);
 
                 Guilds.TryRemove(guild.Id, out Guild removed);
 
@@ -491,9 +492,9 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// <summary>
         /// Transfers guild ownership to another member
         /// </summary>
-        /// <param name="newOwnerId">The new owner.</param>
+        /// <param name="newOwner">The new owner.</param>
         /// <param name="initiator">The player who initiated this change (null if done by the api or some other method).</param>
-        public bool TransferOwnership(Player newOwner, Player initiator = null)
+        public bool TransferOwnership(IPlayer newOwner, IPlayer initiator = null)
         {
             if (newOwner != null)
             {
@@ -598,7 +599,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         public object Lock => mLock;
 
 
-        public static void DetachGuildFromDbContext(PlayerContext context, Guild guild)
+        public static void DetachGuildFromDbContext(PlayerContext context, IGuild guild)
         {
             context.Entry(guild).State = EntityState.Detached;
 
@@ -645,7 +646,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// </summary>
         /// <param name="name"></param>
         /// <param name="initiator">The player who initiated this change (null if done by the api or some other method).</param>
-        public bool Rename(string name, Player initiator = null)
+        public bool Rename(string name, IPlayer initiator = null)
         {
             if (GuildExists(name) || !FieldChecking.IsValidGuildName(name, Strings.Regex.guildname))
             {

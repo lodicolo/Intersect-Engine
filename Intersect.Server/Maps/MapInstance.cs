@@ -18,6 +18,7 @@ using Intersect.Server.Entities;
 using Intersect.Server.Entities.Events;
 using Intersect.Server.Framework.Database;
 using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Maps;
 using Intersect.Server.General;
 using Intersect.Server.Networking;
 using Intersect.Utilities;
@@ -27,16 +28,17 @@ using Newtonsoft.Json;
 namespace Intersect.Server.Maps
 {
 
-    public partial class MapInstance : MapBase
+    public partial class MapInstance : MapBase, IMapInstance
     {
 
         private static MapInstances sLookup;
 
-        [NotMapped] private readonly ConcurrentDictionary<Guid,Entity> mEntities = new ConcurrentDictionary<Guid, Entity>();
+        [NotMapped] private readonly ConcurrentDictionary<Guid, Entity> mEntities = new ConcurrentDictionary<Guid, Entity>();
 
         private Entity[] mCachedEntities = new Entity[0];
 
-        [JsonIgnore] [NotMapped]
+        [JsonIgnore]
+        [NotMapped]
         public ConcurrentDictionary<EventBase, Event> GlobalEventInstances = new ConcurrentDictionary<EventBase, Event>();
 
         [JsonIgnore] [NotMapped] public ConcurrentDictionary<Guid, MapItemSpawn> ItemRespawns = new ConcurrentDictionary<Guid, MapItemSpawn>();
@@ -67,10 +69,12 @@ namespace Intersect.Server.Maps
 
         private ConcurrentDictionary<Guid, Player> mPlayers = new ConcurrentDictionary<Guid, Player>();
 
-        [JsonIgnore] [NotMapped]
+        [JsonIgnore]
+        [NotMapped]
         public ConcurrentDictionary<NpcSpawn, MapNpcSpawn> NpcSpawnInstances = new ConcurrentDictionary<NpcSpawn, MapNpcSpawn>();
 
-        [JsonIgnore] [NotMapped]
+        [JsonIgnore]
+        [NotMapped]
         public ConcurrentDictionary<ResourceSpawn, MapResourceSpawn> ResourceSpawnInstances = new ConcurrentDictionary<ResourceSpawn, MapResourceSpawn>();
 
         //Temporary Values
@@ -224,7 +228,7 @@ namespace Intersect.Server.Maps
                     {
                         if (Attributes[x, y].Type == MapAttributes.Blocked ||
                             Attributes[x, y].Type == MapAttributes.GrappleStone ||
-                            Attributes[x,y].Type == MapAttributes.Animation && ((MapAnimationAttribute)Attributes[x,y]).IsBlock) 
+                            Attributes[x, y].Type == MapAttributes.Animation && ((MapAnimationAttribute)Attributes[x, y]).IsBlock)
                         {
                             blocks.Add(new BytePoint(x, y));
                             npcBlocks.Add(new BytePoint(x, y));
@@ -344,8 +348,7 @@ namespace Intersect.Server.Maps
                     }
                 }
 
-                var mapItem = new MapItem(item.ItemId, amount + existingCount, x, y, item.BagId, item.Bag)
-                {
+                var mapItem = new MapItem(item.ItemId, amount + existingCount, x, y, item.BagId, item.Bag) {
                     DespawnTime = Timing.Global.Milliseconds + Options.Loot.ItemDespawnTime,
                     Owner = owner,
                     OwnershipTime = Timing.Global.Milliseconds + Options.Loot.ItemOwnershipTime,
@@ -391,12 +394,12 @@ namespace Intersect.Server.Maps
                 }
                 PacketSender.SendMapItemsToProximity(Id);
             }
-            
+
         }
 
         private void SpawnAttributeItem(int x, int y)
         {
-            var item = ItemBase.Get(((MapItemAttribute) Attributes[x, y]).ItemId);
+            var item = ItemBase.Get(((MapItemAttribute)Attributes[x, y]).ItemId);
             if (item != null)
             {
                 var mapItem = new MapItem(item.Id, ((MapItemAttribute)Attributes[x, y]).Quantity, x, y);
@@ -449,8 +452,7 @@ namespace Intersect.Server.Maps
                 {
                     if (respawn)
                     {
-                        var spawn = new MapItemSpawn()
-                        {
+                        var spawn = new MapItemSpawn() {
                             AttributeSpawnX = item.X,
                             AttributeSpawnY = item.Y,
                             RespawnTime = Globals.Timing.Milliseconds + Options.Map.ItemAttributeRespawnTime
@@ -541,12 +543,11 @@ namespace Intersect.Server.Maps
         // Resources
         private void SpawnAttributeResource(byte x, byte y)
         {
-            var tempResource = new ResourceSpawn()
-            {
-                ResourceId = ((MapResourceAttribute) Attributes[x, y]).ResourceId,
+            var tempResource = new ResourceSpawn() {
+                ResourceId = ((MapResourceAttribute)Attributes[x, y]).ResourceId,
                 X = x,
                 Y = y,
-                Z = ((MapResourceAttribute) Attributes[x, y]).SpawnLevel
+                Z = ((MapResourceAttribute)Attributes[x, y]).SpawnLevel
             };
 
             ResourceSpawns.TryAdd(tempResource.Id, tempResource);
@@ -650,7 +651,7 @@ namespace Intersect.Server.Maps
 
                 if (Spawns[i].Direction != NpcSpawnDirection.Random)
                 {
-                    dir = (byte) (Spawns[i].Direction - 1);
+                    dir = (byte)(Spawns[i].Direction - 1);
                 }
                 else
                 {
@@ -659,7 +660,7 @@ namespace Intersect.Server.Maps
 
                 if (Spawns[i].X >= 0 && Spawns[i].Y >= 0)
                 {
-                    npcSpawnInstance.Entity = SpawnNpc((byte) Spawns[i].X, (byte) Spawns[i].Y, dir, Spawns[i].NpcId);
+                    npcSpawnInstance.Entity = SpawnNpc((byte)Spawns[i].X, (byte)Spawns[i].Y, dir, Spawns[i].NpcId);
                 }
                 else
                 {
@@ -667,7 +668,7 @@ namespace Intersect.Server.Maps
                     {
                         x = (byte)Randomization.Next(0, Options.MapWidth);
                         y = (byte)Randomization.Next(0, Options.MapHeight);
-                        if (Attributes[x, y] == null || Attributes[x, y].Type == (int) MapAttributes.Walkable)
+                        if (Attributes[x, y] == null || Attributes[x, y].Type == (int)MapAttributes.Walkable)
                         {
                             break;
                         }
@@ -715,8 +716,7 @@ namespace Intersect.Server.Maps
             var npcBase = NpcBase.Get(npcId);
             if (npcBase != null)
             {
-                var npc = new Npc(npcBase, despawnable)
-                {
+                var npc = new Npc(npcBase, despawnable) {
                     MapId = Id,
                     X = tileX,
                     Y = tileY,
@@ -832,7 +832,7 @@ namespace Intersect.Server.Maps
         public void SpawnTrap(Entity owner, SpellBase parentSpell, byte x, byte y, byte z)
         {
             var trap = new MapTrapInstance(owner, parentSpell, Id, x, y, z);
-            MapTraps.TryAdd(trap.Id,trap);
+            MapTraps.TryAdd(trap.Id, trap);
             MapTrapsCached = MapTraps.Values.ToArray();
         }
 
@@ -962,7 +962,7 @@ namespace Intersect.Server.Maps
 
                     // Check to see if we need to send any entity vital and status updates for this entity.
                     if (en.Value.VitalsUpdated)
-                    { 
+                    {
                         vitalUpdates.Add(en.Value);
 
                         // Send a party update if we're a player with a party.
@@ -1006,7 +1006,7 @@ namespace Intersect.Server.Maps
                             if (npcSpawnInstance.RespawnTime == -1)
                             {
                                 npcSpawnInstance.RespawnTime = Globals.Timing.Milliseconds +
-                                                               ((Npc) npcSpawnInstance.Entity).Base.SpawnDuration -
+                                                               ((Npc)npcSpawnInstance.Entity).Base.SpawnDuration -
                                                                (Globals.Timing.Milliseconds - LastUpdateTime);
                             }
                             else if (npcSpawnInstance.RespawnTime < Globals.Timing.Milliseconds)
@@ -1064,7 +1064,7 @@ namespace Intersect.Server.Maps
                 var evts = GlobalEventInstances.Values.ToList();
                 for (var i = 0; i < evts.Count; i++)
                 {
-                        //Only do movement processing on the first page.
+                    //Only do movement processing on the first page.
                     //This is because global events need to keep all of their pages at the same tile
                     //Think about a global event moving randomly that needed to turn into a warewolf and back (separate pages)
                     //If they were in different tiles the transition would make the event jump
@@ -1220,22 +1220,22 @@ namespace Intersect.Server.Maps
 
         public void ClearConnections(int side = -1)
         {
-            if (side == -1 || side == (int) Directions.Up)
+            if (side == -1 || side == (int)Directions.Up)
             {
                 Up = Guid.Empty;
             }
 
-            if (side == -1 || side == (int) Directions.Down)
+            if (side == -1 || side == (int)Directions.Down)
             {
                 Down = Guid.Empty;
             }
 
-            if (side == -1 || side == (int) Directions.Left)
+            if (side == -1 || side == (int)Directions.Left)
             {
                 Left = Guid.Empty;
             }
 
-            if (side == -1 || side == (int) Directions.Right)
+            if (side == -1 || side == (int)Directions.Right)
             {
                 Right = Guid.Empty;
             }
@@ -1254,7 +1254,7 @@ namespace Intersect.Server.Maps
 
             //Check if tile is a blocked attribute
             if (Attributes[x, y] != null && (Attributes[x, y].Type == MapAttributes.Blocked ||
-                Attributes[x,y].Type == MapAttributes.Animation && ((MapAnimationAttribute)Attributes[x,y]).IsBlock))
+                Attributes[x, y].Type == MapAttributes.Animation && ((MapAnimationAttribute)Attributes[x, y]).IsBlock))
             {
                 return true;
             }
@@ -1328,7 +1328,7 @@ namespace Intersect.Server.Maps
                 }
                 TileData = LZ4.PickleString(JsonConvert.SerializeObject(Layers, Formatting.None, mJsonSerializerSettings));
                 Layers = null;
-                
+
             }
         }
 

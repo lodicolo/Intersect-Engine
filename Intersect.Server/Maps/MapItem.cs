@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using Intersect.Server.Database;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Framework.Database;
+using Intersect.Server.Framework.Maps;
 using Newtonsoft.Json;
 
 namespace Intersect.Server.Maps
 {
 
-    public partial class MapItem : Item
+    public partial class MapItem : Item, IMapItem
     {
 
         [JsonIgnore] public int AttributeSpawnX = -1;
@@ -19,7 +19,7 @@ namespace Intersect.Server.Maps
 
         public int X { get; private set; }
 
-        public int Y { get; private set; } 
+        public int Y { get; private set; }
 
         [JsonIgnore] public int TileIndex => Y * Options.MapWidth + X;
 

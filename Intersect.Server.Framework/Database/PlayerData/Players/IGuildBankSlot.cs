@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Intersect.Server.Framework.Database.PlayerData.Players;
+using System;
 
 namespace Intersect.Server.Database.PlayerData.Players
 {
     public interface IGuildBankSlot
     {
-        Guild Guild { get; }
+        IGuild Guild { get; }
         Guid GuildId { get; }
         Guid Id { get; }
         int Slot { get; }

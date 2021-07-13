@@ -4,7 +4,8 @@ using Intersect.GameObjects.Events;
 using Intersect.Network.Packets.Server;
 using Intersect.Server.Framework.Database.PlayerData.Players;
 using Intersect.Server.Framework.Entities.Combat;
-
+using Intersect.Server.Framework.Entities.Events;
+using Intersect.Server.Framework.Maps;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -69,7 +70,7 @@ namespace Intersect.Server.Framework.Entities
 
         int Level { get; set; }
 
-        MapInstance Map { get; }
+        IMapInstance Map { get; }
 
         Guid MapId { get; set; }
 
@@ -77,7 +78,7 @@ namespace Intersect.Server.Framework.Entities
 
         EventMoveRoute MoveRoute { get; set; }
 
-        EventPageInstance MoveRouteSetter { get; set; }
+        IEventPageInstance MoveRouteSetter { get; set; }
 
         long MoveTimer { get; set; }
 
@@ -153,11 +154,11 @@ namespace Intersect.Server.Framework.Entities
 
         int GetDirectionTo(IEntity target);
 
-        int GetDistanceBetween(MapInstance mapA, MapInstance mapB, int xTileA, int xTileB, int yTileA, int yTileB);
+        int GetDistanceBetween(IMapInstance mapA, IMapInstance mapB, int xTileA, int xTileB, int yTileA, int yTileB);
 
         int GetDistanceTo(IEntity target);
 
-        int GetDistanceTo(MapInstance targetMap, int targetX, int targetY);
+        int GetDistanceTo(IMapInstance targetMap, int targetX, int targetY);
 
         EntityTypes GetEntityType();
 

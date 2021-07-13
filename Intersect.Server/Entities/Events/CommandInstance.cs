@@ -1,56 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using Intersect.Enums;
 using Intersect.GameObjects.Events.Commands;
+using Intersect.Server.Framework.Entities.Events;
 
 namespace Intersect.Server.Entities.Events
 {
 
-    public partial class CommandInstance
+    public partial class CommandInstance : ICommandInstance
     {
-
-        public enum EventResponse
-        {
-
-            None = 0,
-
-            Dialogue,
-
-            Shop,
-
-            Bank,
-
-            Crafting,
-
-            Quest,
-
-            Timer,
-
-            Picture
-
-        }
-
         public Guid[]
-            BranchIds = null; //Potential Branches for Commands that require responses such as ShowingOptions or Offering a Quest
+            BranchIds
+        { get; set; } = null; //Potential Branches for Commands that require responses such as ShowingOptions or Offering a Quest
 
-        public EventCommand Command;
+        public EventCommand Command { get; set; }
 
         private int commandIndex;
 
-        public List<EventCommand> CommandList;
+        public List<EventCommand> CommandList { get; set; }
 
-        public Guid CommandListId;
+        public Guid CommandListId { get; set; }
 
-        public GameObjects.Events.EventPage Page;
+        public GameObjects.Events.EventPage Page { get; set; }
 
-        public EventResponse WaitingForResponse = EventResponse.None;
+        public EventResponse WaitingForResponse { get; set; } = EventResponse.None;
 
-        public Guid WaitingForRoute;
+        public Guid WaitingForRoute { get; set; }
 
-        public Guid WaitingForRouteMap;
+        public Guid WaitingForRouteMap { get; set; }
 
-        public EventCommand WaitingOnCommand = null;
+        public EventCommand WaitingOnCommand { get; set; } = null;
 
         public CommandInstance(GameObjects.Events.EventPage page, int listIndex = 0)
         {

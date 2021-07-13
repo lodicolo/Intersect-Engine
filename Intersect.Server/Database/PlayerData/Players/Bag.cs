@@ -87,7 +87,7 @@ namespace Intersect.Server.Database.PlayerData.Players
             Slots = slots;
         }
 
-        public static Bag GetBag(Guid id)
+        public static IBag GetBag(Guid id)
         {
             try
             {

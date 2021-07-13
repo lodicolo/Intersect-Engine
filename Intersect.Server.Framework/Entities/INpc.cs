@@ -1,7 +1,7 @@
 ﻿using Intersect.Enums;
 using Intersect.GameObjects;
 using Intersect.Network.Packets.Server;
-
+using Intersect.Server.Framework.Maps;
 using System;
 using System.Collections.Concurrent;
 
@@ -14,7 +14,7 @@ namespace Intersect.Server.Framework.Entities
         /// <summary>
         /// The map on which this NPC was "aggro'd" and started chasing a target.
         /// </summary>
-        MapInstance AggroCenterMap { get; set; }
+        IMapInstance AggroCenterMap { get; set; }
 
         /// <summary>
         /// The X value on which this NPC was "aggro'd" and started chasing a target.

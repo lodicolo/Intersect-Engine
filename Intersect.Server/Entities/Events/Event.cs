@@ -5,55 +5,56 @@ using Intersect.Enums;
 using Intersect.GameObjects.Events;
 using Intersect.GameObjects.Events.Commands;
 using Intersect.Logging;
+using Intersect.Server.Framework.Entities.Events;
+using Intersect.Server.Framework.Maps;
 using Intersect.Server.General;
 using Intersect.Server.Localization;
-using Intersect.Server.Maps;
 using Intersect.Server.Networking;
 
 namespace Intersect.Server.Entities.Events
 {
 
-    public partial class Event
+    public partial class Event : IEvent
     {
 
-        public EventBase BaseEvent;
+        public EventBase BaseEvent { get; set; }
 
-        public Stack<CommandInstance> CallStack = new Stack<CommandInstance>();
+        public Stack<CommandInstance> CallStack { get; set; } = new Stack<CommandInstance>();
 
-        public bool Global;
+        public bool Global { get; set; }
 
-        public EventPageInstance[] GlobalPageInstance;
+        public EventPageInstance[] GlobalPageInstance { get; set; }
 
-        public bool HoldingPlayer;
+        public bool HoldingPlayer { get; set; }
 
-        public Guid Id;
+        public Guid Id { get; set; }
 
-        public Guid MapId;
+        public Guid MapId { get; set; }
 
-        public MapInstance MapInstance;
+        public IMapInstance MapInstance { get; set; }
 
         private Dictionary<string, string> mParams = new Dictionary<string, string>();
 
-        public int PageIndex;
+        public int PageIndex { get; set; }
 
-        public EventPageInstance PageInstance;
+        public EventPageInstance PageInstance { get; set; }
 
-        public Player Player;
+        public Player Player { get; set; }
 
         //Special conditions
-        public bool PlayerHasDied;
+        public bool PlayerHasDied { get; set; }
 
-        public int SpawnX;
+        public int SpawnX { get; set; }
 
-        public int SpawnY;
+        public int SpawnY { get; set; }
 
-        public long WaitTimer;
+        public long WaitTimer { get; set; }
 
-        public int X;
+        public int X { get; set; }
 
-        public int Y;
+        public int Y { get; set; }
 
-        public Event(Guid instanceId, MapInstance map, Player player, EventBase baseEvent)
+        public Event(Guid instanceId, IMapInstance map, Player player, EventBase baseEvent)
         {
             Id = instanceId;
             MapId = map?.Id ?? Guid.Empty;
@@ -65,7 +66,7 @@ namespace Intersect.Server.Entities.Events
             Y = baseEvent.SpawnY;
         }
 
-        public Event(Guid instanceId, EventBase baseEvent, MapInstance map) //Global constructor
+        public Event(Guid instanceId, EventBase baseEvent, IMapInstance map) //Global constructor
         {
             Id = instanceId;
             Global = true;
@@ -74,7 +75,7 @@ namespace Intersect.Server.Entities.Events
             BaseEvent = baseEvent;
             SelfSwitch = new bool[4];
             GlobalPageInstance = new EventPageInstance[BaseEvent.Pages.Count];
-            X = (byte) baseEvent.SpawnX;
+            X = (byte)baseEvent.SpawnX;
             Y = baseEvent.SpawnY;
             for (var i = 0; i < BaseEvent.Pages.Count; i++)
             {
@@ -84,7 +85,7 @@ namespace Intersect.Server.Entities.Events
 
         public bool[] SelfSwitch { get; set; }
 
-        public void Update(long timeMs, MapInstance map)
+        public void Update(long timeMs, IMapInstance map)
         {
             var sendLeave = false;
             var originalPageInstance = PageInstance;
@@ -148,7 +149,7 @@ namespace Intersect.Server.Entities.Events
                         }
 
                         if (curStack.WaitingForResponse == CommandInstance.EventResponse.Quest &&
-                            !Player.QuestOffers.Contains(((StartQuestCommand) curStack.WaitingOnCommand).QuestId))
+                            !Player.QuestOffers.Contains(((StartQuestCommand)curStack.WaitingOnCommand).QuestId))
                         {
                             curStack.WaitingForResponse = CommandInstance.EventResponse.None;
                         }
@@ -251,11 +252,11 @@ namespace Intersect.Server.Entities.Events
                             }
                             else
                             {
-                                Log.Error(Strings.Events.watchdogkill.ToString(map.Name, BaseEvent.Name));
+                                Log.Error(Strings.Events.watchdogkill.ToString(MapId, BaseEvent.Name));
                                 if (Player.Power.IsModerator)
                                 {
                                     PacketSender.SendChatMsg(
-                                        Player, Strings.Events.watchdogkill.ToString(map.Name, BaseEvent.Name),
+                                        Player, Strings.Events.watchdogkill.ToString(MapId, BaseEvent.Name),
                                         ChatMessageType.Error, Color.Red
                                     );
                                 }
@@ -282,7 +283,7 @@ namespace Intersect.Server.Entities.Events
                     {
                         if (Global)
                         {
-                            var globalEvent = MapInstance.Get(MapId).GetGlobalEventInstance(BaseEvent);
+                            var globalEvent = Maps.MapInstance.Get(MapId).GetGlobalEventInstance(BaseEvent);
                             if (globalEvent != null)
                             {
                                 PageInstance = new EventPageInstance(
@@ -328,7 +329,7 @@ namespace Intersect.Server.Entities.Events
 
             prams.Add("evtName", BaseEvent.Name);
 
-            var map = MapInstance.Get(BaseEvent.MapId);
+            var map = Maps.MapInstance.Get(BaseEvent.MapId);
             if (map != null)
             {
                 prams.Add("evtMap", map.Name);

@@ -4,34 +4,35 @@ using System.Collections.Generic;
 using Intersect.GameObjects;
 using Intersect.Server.Entities.Combat;
 using Intersect.Server.Entities.Events;
+using Intersect.Server.Framework.Entities;
 using Intersect.Server.General;
 using Intersect.Server.Networking;
 
 namespace Intersect.Server.Entities
 {
 
-    public partial class ProjectileSpawn
+    public partial class ProjectileSpawn : IProjectileSpawn
     {
 
-        public byte Dir;
+        public byte Dir { get; set; }
 
-        public int Distance;
+        public int Distance { get; set; }
 
-        public Guid MapId;
+        public Guid MapId { get; set; }
 
-        public Projectile Parent;
+        public IProjectile Parent { get; set; }
 
-        public ProjectileBase ProjectileBase;
+        public ProjectileBase ProjectileBase { get; set; }
 
-        public long TransmittionTimer = Globals.Timing.Milliseconds;
+        public long TransmittionTimer { get; set; } = Globals.Timing.Milliseconds;
 
-        public float X;
+        public float X { get; set; }
 
-        public float Y;
+        public float Y { get; set; }
 
-        public byte Z;
+        public byte Z { get; set; }
 
-        public bool Dead;
+        public bool Dead { get; set; }
 
         private List<Guid> mEntitiesCollided = new List<Guid>();
 
@@ -53,7 +54,7 @@ namespace Intersect.Server.Entities
             ProjectileBase = projectileBase;
             Parent = parent;
             TransmittionTimer = Globals.Timing.Milliseconds +
-                                (long) ((float) ProjectileBase.Speed / (float) ProjectileBase.Range);
+                                (long)((float)ProjectileBase.Speed / (float)ProjectileBase.Range);
         }
 
         public bool IsAtLocation(Guid mapId, int x, int y, int z)
@@ -61,7 +62,7 @@ namespace Intersect.Server.Entities
             return MapId == mapId && X == x && Y == y && Z == z;
         }
 
-        public bool HitEntity(Entity en)
+        public bool HitEntity(IEntity en)
         {
             var targetEntity = en;
             if (targetEntity is EventPageInstance) return false;
@@ -70,11 +71,11 @@ namespace Intersect.Server.Entities
 
             if (Parent.Spell != null && Parent.Spell.Combat != null)
             {
-                scalingStat = (Enums.Stats) Parent.Spell.Combat.ScalingStat;
+                scalingStat = (Enums.Stats)Parent.Spell.Combat.ScalingStat;
             }
             if (Parent.Item != null)
             {
-                scalingStat = (Enums.Stats) Parent.Item.ScalingStat;
+                scalingStat = (Enums.Stats)Parent.Item.ScalingStat;
             }
 
             if (targetEntity != null && targetEntity != Parent.Owner)
@@ -105,7 +106,7 @@ namespace Intersect.Server.Entities
                             Parent.HasGrappled = true;
                             Parent.Owner.Dir = Dir;
                             new Dash(
-                                Parent.Owner, Distance, (byte) Parent.Owner.Dir, Parent.Base.IgnoreMapBlocks,
+                                Parent.Owner, Distance, (byte)Parent.Owner.Dir, Parent.Base.IgnoreMapBlocks,
                                 Parent.Base.IgnoreActiveResources, Parent.Base.IgnoreExhaustedResources,
                                 Parent.Base.IgnoreZDimension
                             );
@@ -119,10 +120,10 @@ namespace Intersect.Server.Entities
                 }
                 else if (targetEntity.GetType() == typeof(Resource))
                 {
-                    if (((Resource) targetEntity).IsDead() && !ProjectileBase.IgnoreExhaustedResources ||
-                        !((Resource) targetEntity).IsDead() && !ProjectileBase.IgnoreActiveResources)
+                    if (((Resource)targetEntity).IsDead() && !ProjectileBase.IgnoreExhaustedResources ||
+                        !((Resource)targetEntity).IsDead() && !ProjectileBase.IgnoreActiveResources)
                     {
-                        if (Parent.Owner.GetType() == typeof(Player) && !((Resource) targetEntity).IsDead())
+                        if (Parent.Owner.GetType() == typeof(Player) && !((Resource)targetEntity).IsDead())
                         {
                             Parent.Owner.TryAttack(targetEntity, Parent.Base, Parent.Spell, Parent.Item, Dir);
                             if (Dir <= 3 && Parent.Base.GrappleHook && !Parent.HasGrappled
@@ -131,7 +132,7 @@ namespace Intersect.Server.Entities
                                 Parent.HasGrappled = true;
                                 Parent.Owner.Dir = Dir;
                                 new Dash(
-                                    Parent.Owner, Distance, (byte) Parent.Owner.Dir, Parent.Base.IgnoreMapBlocks,
+                                    Parent.Owner, Distance, (byte)Parent.Owner.Dir, Parent.Base.IgnoreMapBlocks,
                                     Parent.Base.IgnoreActiveResources, Parent.Base.IgnoreExhaustedResources,
                                     Parent.Base.IgnoreZDimension
                                 );
@@ -154,7 +155,7 @@ namespace Intersect.Server.Entities
                             Parent.HasGrappled = true;
                             Parent.Owner.Dir = Dir;
                             new Dash(
-                                Parent.Owner, Distance, (byte) Parent.Owner.Dir, Parent.Base.IgnoreMapBlocks,
+                                Parent.Owner, Distance, (byte)Parent.Owner.Dir, Parent.Base.IgnoreMapBlocks,
                                 Parent.Base.IgnoreActiveResources, Parent.Base.IgnoreExhaustedResources,
                                 Parent.Base.IgnoreZDimension
                             );

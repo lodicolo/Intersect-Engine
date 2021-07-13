@@ -1,15 +1,16 @@
 ﻿using System;
 
 using Intersect.GameObjects;
-using Intersect.Server.Entities;
 using Intersect.Server.Entities.Events;
+using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Maps;
 using Intersect.Server.General;
 using Intersect.Server.Maps;
 
 namespace Intersect.Server.Classes.Maps
 {
 
-    public partial class MapTrapInstance
+    public partial class MapTrapInstance : IMapTrapInstance
     {
         public Guid Id { get; } = Guid.NewGuid();
 
@@ -17,7 +18,7 @@ namespace Intersect.Server.Classes.Maps
 
         public Guid MapId;
 
-        public Entity Owner;
+        public IEntity Owner;
 
         public SpellBase ParentSpell;
 
@@ -29,7 +30,7 @@ namespace Intersect.Server.Classes.Maps
 
         public byte Z;
 
-        public MapTrapInstance(Entity owner, SpellBase parentSpell, Guid mapId, byte x, byte y, byte z)
+        public MapTrapInstance(IEntity owner, SpellBase parentSpell, Guid mapId, byte x, byte y, byte z)
         {
             Owner = owner;
             ParentSpell = parentSpell;
@@ -40,16 +41,16 @@ namespace Intersect.Server.Classes.Maps
             Z = z;
         }
 
-        public void CheckEntityHasDetonatedTrap(Entity entity)
+        public void CheckEntityHasDetonatedTrap(IEntity entity)
         {
             if (!Triggered)
             {
                 if (entity.MapId == MapId && entity.X == X && entity.Y == Y && entity.Z == Z)
                 {
-                    if (entity.GetType() == typeof(Player) && Owner.GetType() == typeof(Player))
+                    if (entity.GetType() == typeof(IPlayer) && Owner.GetType() == typeof(IPlayer))
                     {
                         //Don't detonate on yourself and party members on non-friendly spells!
-                        if (Owner == entity || ((Player) Owner).InParty((Player) entity))
+                        if (Owner == entity || ((IPlayer)Owner).InParty((IPlayer)entity))
                         {
                             if (!ParentSpell.Combat.Friendly)
                             {
