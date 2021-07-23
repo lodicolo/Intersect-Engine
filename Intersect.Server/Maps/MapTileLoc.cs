@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Intersect.Server.Framework.Maps;
+using System;
 
 namespace Intersect.Server.Maps
 {
-    public struct MapTileLoc
+    public struct MapTileLoc : IMapTileLoc
     {
-        public readonly Guid MapId;
-        public readonly int X;
-        public readonly int Y;
+        public Guid MapId { get; }
+        public int X { get; }
+        public int Y { get; }
 
-        public MapTileLoc(Guid id, int x, int y)
+    public MapTileLoc(Guid id, int x, int y)
         {
             MapId = id;
             X = x;

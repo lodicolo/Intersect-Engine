@@ -216,7 +216,7 @@ namespace Intersect.Server.Framework.Entities.Combat
 
         public void RemoveStatus()
         {
-            mEntity.Statuses.TryRemove(Spell, out Status val);
+            mEntity.Statuses.TryRemove(Spell, out IStatus val);
             mEntity.CachedStatuses = mEntity.Statuses.Values.ToArray();
 
             // if this was a taunt status being removed, we have to scan for a new target!

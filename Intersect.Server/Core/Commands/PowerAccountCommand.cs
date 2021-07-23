@@ -4,6 +4,7 @@ using Intersect.Server.Core.CommandParsing.Arguments;
 using Intersect.Server.Database;
 using Intersect.Server.Database.PlayerData;
 using Intersect.Server.Database.PlayerData.Security;
+using Intersect.Server.Framework.Database.PlayerData;
 using Intersect.Server.Localization;
 
 namespace Intersect.Server.Core.Commands
@@ -21,7 +22,7 @@ namespace Intersect.Server.Core.Commands
 
         private VariableArgument<Access> Power => FindArgumentOrThrow<VariableArgument<Access>>();
 
-        protected override void HandleTarget(ServerContext context, ParserResult result, User target)
+        protected override void HandleTarget(ServerContext context, ParserResult result, IUser target)
         {
             var power = result.Find(Power);
             if (DbInterface.SetPlayerPower(target, power.AsUserRights()))

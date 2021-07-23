@@ -10,34 +10,27 @@ namespace Intersect.Server.Framework.Database.PlayerData
     {
         #region Properties
 
-        IBan Ban { get; set; }
-
+        string Email { get; set; }
         Guid Id { get; }
-
-        IBan IpBan { get; set; }
-
-        IMute IpMute { get; set; }
-
-        bool IsBanned { get; }
-
-        bool IsMuted { get; }
-
+        string LastIp { get; set; }
         DateTime? LoginTime { get; set; }
-
-        IMute Mute { get; set; }
-
+        string Name { get; set; }
+        string Password { get; set; }
+        string Salt { get; set; }
+        string PasswordResetCode { get; set; }
+        DateTime? PasswordResetTime { get; set; }
         List<IPlayer> Players { get; set; }
-
+        IBan Ban { get; set; }
+        IBan IpBan { get; set; }
+        IMute IpMute { get; set; }
+        bool IsBanned { get; }
+        bool IsMuted { get; }
+        IMute Mute { get; set; }
         ulong PlayTimeSeconds { get; set; }
-
         IUserRights Power { get; set; }
-
         string PowerJson { get; set; }
-
         DateTime? RegistrationDate { get; set; }
-
         IBan UserBan { get; set; }
-
         IMute UserMute { get; set; }
 
         #endregion Properties
@@ -53,6 +46,12 @@ namespace Intersect.Server.Framework.Database.PlayerData
         void Save(bool force = false);
 
         void TryLogout();
+
+        bool TryChangePassword(string oldPassword, string newPassword);
+
+        bool TrySetPassword(string passwordHash);
+
+        bool IsPasswordValid(string passwordHash);
 
         #endregion Methods
     }

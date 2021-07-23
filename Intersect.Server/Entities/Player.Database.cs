@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Intersect.Logging;
-using Intersect.Server.Core;
 using Intersect.Server.Database;
 using Intersect.Server.Database.PlayerData;
 using Intersect.Server.General;
 using Intersect.Server.Networking;
 using Intersect.Server.Web.RestApi.Payloads;
-using Intersect.Server.Database.PlayerData.Players;
 
 using Microsoft.EntityFrameworkCore;
 
 using Newtonsoft.Json;
 using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Database.PlayerData;
+using Intersect.Server.Framework.Networking;
 
 namespace Intersect.Server.Entities
 {
@@ -28,7 +28,7 @@ namespace Intersect.Server.Entities
         public Guid UserId { get; private set; }
 
         [JsonIgnore]
-        public virtual User User { get; private set; }
+        public virtual IUser User { get; private set; }
 
         [NotMapped, JsonIgnore]
         public long SaveTimer { get; set; } = Globals.Timing.Milliseconds + Options.Instance.Processing.PlayerSaveInterval;
@@ -39,11 +39,11 @@ namespace Intersect.Server.Entities
 
         #region Lookup
 
-        public static Tuple<Client, Player> Fetch(LookupKey lookupKey)
+        public static Tuple<IClient, IPlayer> Fetch(LookupKey lookupKey)
         {
             if (!lookupKey.HasName && !lookupKey.HasId)
             {
-                return new Tuple<Client, Player>(null, null);
+                return new Tuple<IClient, IPlayer>(null, null);
             }
 
             // HasName checks if null or empty
@@ -51,21 +51,21 @@ namespace Intersect.Server.Entities
             return lookupKey.HasId ? Fetch(lookupKey.Id) : Fetch(lookupKey.Name);
         }
 
-        public static Tuple<Client, Player> Fetch(string playerName)
+        public static Tuple<IClient, IPlayer> Fetch(string playerName)
         {
             var client = Globals.Clients.Find(queryClient => Entity.CompareName(playerName, queryClient?.Entity?.Name));
 
-            return new Tuple<Client, Player>(client, client?.Entity ?? Player.Find(playerName));
+            return new Tuple<IClient, IPlayer>(client, client?.Entity ?? Player.Find(playerName));
         }
 
-        public static Tuple<Client, Player> Fetch(Guid playerId)
+        public static Tuple<IClient, IPlayer> Fetch(Guid playerId)
         {
             var client = Globals.Clients.Find(queryClient => playerId == queryClient?.Entity?.Id);
 
-            return new Tuple<Client, Player>(client, client?.Entity ?? Player.Find(playerId));
+            return new Tuple<IClient, IPlayer>(client, client?.Entity ?? Player.Find(playerId));
         }
 
-        public static Player Find(Guid playerId)
+        public static IPlayer Find(Guid playerId)
         {
             if (playerId == Guid.Empty)
             {
@@ -92,7 +92,7 @@ namespace Intersect.Server.Entities
             }
         }
 
-        public static Player Find(string playerName)
+        public static IPlayer Find(string playerName)
         {
             if (string.IsNullOrWhiteSpace(playerName))
             {
@@ -150,21 +150,21 @@ namespace Intersect.Server.Entities
 
         #region Loading
 
-        public static Player Load(Guid playerId)
+        public static IPlayer Load(Guid playerId)
         {
             var player = Find(playerId);
 
             return Load(player);
         }
 
-        public static Player Load(string playerName)
+        public static IPlayer Load(string playerName)
         {
             var player = Find(playerName);
 
             return Load(player);
         }
 
-        public static Player Load(IPlayer player)
+        public static IPlayer Load(IPlayer player)
         {
             if (player == null)
             {
@@ -203,7 +203,7 @@ namespace Intersect.Server.Entities
             }
         }
 
-        public void AddFriend(Player friend)
+        public void AddFriend(IPlayer friend)
         {
             if (friend == null || friend == this)
             {
@@ -278,7 +278,7 @@ namespace Intersect.Server.Entities
                 var guildId = context.Players.Where(p => p.Id == Id && p.DbGuild.Id != null && p.DbGuild.Id != Guid.Empty).Select(p => p.DbGuild.Id).FirstOrDefault();
                 if (guildId != default)
                 {
-                    Guild = Guild.LoadGuild(guildId);
+                    Guild = Database.PlayerData.Players.Guild.LoadGuild(guildId);
                 }
             }
 

@@ -3,11 +3,12 @@ using Intersect.Server.Core.CommandParsing;
 using Intersect.Server.Core.CommandParsing.Arguments;
 using Intersect.Server.Database;
 using Intersect.Server.Database.PlayerData;
+using Intersect.Server.Framework.Database.PlayerData;
 
 namespace Intersect.Server.Core.Commands
 {
 
-    internal abstract class TargetUserCommand : TargettedCommand<User>
+    internal abstract class TargetUserCommand : TargettedCommand<IUser>
     {
 
         protected TargetUserCommand(
@@ -18,7 +19,7 @@ namespace Intersect.Server.Core.Commands
         {
         }
 
-        protected override User FindTarget(ServerContext context, ParserResult result, string targetName)
+        protected override IUser FindTarget(ServerContext context, ParserResult result, string targetName)
         {
             return string.IsNullOrWhiteSpace(targetName) ? null : User.Find(targetName);
         }

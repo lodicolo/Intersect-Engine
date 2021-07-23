@@ -12,6 +12,8 @@ using Intersect.Server.Database.PlayerData;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Entities;
 using Intersect.Server.Extensions;
+using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Networking;
 using Intersect.Server.General;
 using Intersect.Server.Localization;
 using Intersect.Server.Networking;
@@ -153,7 +155,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
 
         [Route("online")]
         [HttpGet]
-        public DataPage<Player> Online(
+        public DataPage<IPlayer> Online(
             [FromUri] int page = 0,
             [FromUri] int pageSize = 0,
             [FromUri] int limit = PAGE_SIZE_MAX,
@@ -167,7 +169,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
             limit = Math.Max(Math.Min(limit, pageSize), 1);
 
             var sort = Sort.From(sortBy, sortDirection);
-            IEnumerable<Player> enumerable = Globals.OnlineList ?? new List<Player>();
+            IEnumerable<IPlayer> enumerable = Globals.OnlineList ?? new List<IPlayer>();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -190,14 +192,14 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
                     break;
             }
 
-            var values = enumerable.Skip(page * pageSize).ToList() ?? new List<Player>();
+            var values = enumerable.Skip(page * pageSize).ToList() ?? new List<IPlayer>();
 
             if (limit != pageSize)
             {
                 values = values.Take(limit).ToList();
             }
 
-            return new DataPage<Player>
+            return new DataPage<IPlayer>
             {
                 Total = total,
                 Page = page,
@@ -882,7 +884,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
                 );
             }
 
-            Tuple<Client, Player> fetchResult;
+            Tuple<IClient, IPlayer> fetchResult;
             fetchResult = Player.Fetch(lookupKey);
 
             return DoAdminActionOnPlayer(
@@ -897,7 +899,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
         }
 
         private object DoAdminActionOnPlayer(
-            Func<Tuple<Client, Player>> fetch,
+            Func<Tuple<IClient, IPlayer>> fetch,
             Func<HttpResponseMessage> onError,
             AdminActions adminAction,
             AdminActionParameters actionParameters

@@ -34,9 +34,9 @@ namespace Intersect.Server.Framework.Database
 
         string Data();
 
-        void Set(IItem item);
-
         bool TryGetBag(out IBag bag);
+
+        void Set(IItem item);
 
         #endregion Methods
     }

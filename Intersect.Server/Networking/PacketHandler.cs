@@ -19,6 +19,9 @@ using Intersect.Server.Database.PlayerData;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities;
+using Intersect.Server.Framework.Database.PlayerData.Players;
+using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Maps;
 using Intersect.Server.General;
 using Intersect.Server.Localization;
 using Intersect.Server.Maps;
@@ -1556,7 +1559,7 @@ namespace Intersect.Server.Networking
                 return;
             }
 
-            var giveItems = new Dictionary<MapInstance, List<MapItem>>();
+            var giveItems = new Dictionary<IMapInstance, List<IMapItem>>();
             // Are we trying to pick up everything on this location or one specific item?
             if (packet.UniqueId == Guid.Empty)
             {
@@ -1566,7 +1569,7 @@ namespace Intersect.Server.Networking
                     var tempMap = itemMap.Key;
                     if (!giveItems.ContainsKey(itemMap.Key))
                     {
-                        giveItems.Add(tempMap, new List<MapItem>());
+                        giveItems.Add(tempMap, new List<IMapItem>());
                     }
 
                     foreach(var itemLoc in itemMap.Value)
@@ -1578,14 +1581,14 @@ namespace Intersect.Server.Networking
             else
             {
                 // One specific item.
-                giveItems.Add(map, new List<MapItem>() { map.FindItem(packet.UniqueId) });
+                giveItems.Add(map, new List<IMapItem>() { map.FindItem(packet.UniqueId) });
             }
 
             // Go through each item we're trying to give our player and see if we can do so.
             foreach (var itemMap in giveItems)
             {
                 var tempMap = itemMap.Key;
-                var toRemove = new List<MapItem>();
+                var toRemove = new List<IMapItem>();
                 foreach (var mapItem in itemMap.Value)
                 {
                     if (mapItem == null)
@@ -1676,7 +1679,7 @@ namespace Intersect.Server.Networking
                 return;
             }
 
-            Entity target = null;
+            IEntity target = null;
             if (packet.TargetId != Guid.Empty)
             {
                 foreach (var map in player.Map.GetSurroundingMaps(true))
@@ -2620,7 +2623,7 @@ namespace Intersect.Server.Networking
                         {
                             // Thank god, we can FINALLY get started!
                             // Set our invite and send our players the relevant messages.
-                            target.GuildInvite = new Tuple<Player, Guild>(player, player.Guild);
+                            target.GuildInvite = new Tuple<IPlayer, IGuild>(player, player.Guild);
 
                             PacketSender.SendChatMsg(player, Strings.Guilds.InviteSent.ToString(target.Name, player.Guild.Name), ChatMessageType.Guild, CustomColors.Alerts.Info);
 
@@ -2651,7 +2654,7 @@ namespace Intersect.Server.Networking
                             mem.StartCommonEventsWithTrigger(CommonEventTrigger.GuildMemberKicked, guild.Name, member.Name);
                         }
 
-                        guild.RemoveMember(Player.Find(packet.Id), player, GuildHistory.GuildActivityType.Kicked);
+                        guild.RemoveMember(Player.Find(packet.Id), player, GuildActivityType.Kicked);
                     }
                     else
                     {
@@ -2851,7 +2854,7 @@ namespace Intersect.Server.Networking
                 member.StartCommonEventsWithTrigger(CommonEventTrigger.GuildMemberLeft, guild.Name, player.Name);
             }
 
-            guild.RemoveMember(player, null, GuildHistory.GuildActivityType.Left);
+            guild.RemoveMember(player, null, GuildActivityType.Left);
 
             // Send the newly updated player information to their surroundings.
             PacketSender.SendEntityDataToProximity(player);
@@ -3012,7 +3015,7 @@ namespace Intersect.Server.Networking
             DbInterface.SaveGameObject(map);
 
             map.Initialize();
-            var players = new List<Player>();
+            var players = new List<IPlayer>();
             foreach (var surrMap in map.GetSurroundingMaps(true))
             {
                 players.AddRange(surrMap.GetPlayersOnMap().ToArray());
@@ -3040,8 +3043,8 @@ namespace Intersect.Server.Networking
             {
                 ServerContext.Instance.LogicService.LogicPool.WaitForIdle();
                 var newMapId = Guid.Empty;
-                MapInstance newMap = null;
-                var tmpMap = new MapInstance(true);
+                IMapInstance newMap = null;
+                IMapInstance tmpMap = new MapInstance(true);
                 if (!packet.AttachedToMap)
                 {
                     var destType = (int)packet.MapListParentType;
@@ -3460,7 +3463,7 @@ namespace Intersect.Server.Networking
 
                         if (canLink)
                         {
-                            var updatedMaps = new HashSet<MapInstance>();
+                            var updatedMaps = new HashSet<IMapInstance>();
                             for (var x = -1; x < adjacentGrid.Width + 1; x++)
                             {
                                 for (var y = -1; y < adjacentGrid.Height + 1; y++)

@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Intersect.Server.Database.PlayerData.Players
 {
 
-    public class GuildBankSlot : Item, ISlot, IGuildBankSlot
+    public class GuildBankSlot : Item, IGuildBankSlot
     {
 
         public GuildBankSlot()
@@ -28,7 +28,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         public Guid GuildId { get; private set; }
 
         [JsonIgnore]
-        public virtual Guild Guild { get; private set; }
+        public virtual IGuild Guild { get; private set; }
 
         public int Slot { get; private set; }
 

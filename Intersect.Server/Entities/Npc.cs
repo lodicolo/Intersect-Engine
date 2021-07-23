@@ -7,8 +7,10 @@ using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Entities.Combat;
 using Intersect.Server.Entities.Events;
 using Intersect.Server.Entities.Pathfinding;
+using Intersect.Server.Framework.Database.PlayerData.Players;
 using Intersect.Server.Framework.Entities;
 using Intersect.Server.Framework.Entities.Combat;
+using Intersect.Server.Framework.Maps;
 using Intersect.Server.General;
 using Intersect.Server.Maps;
 using Intersect.Server.Networking;
@@ -51,7 +53,7 @@ namespace Intersect.Server.Entities
         /// <summary>
         /// The map on which this NPC was "aggro'd" and started chasing a target.
         /// </summary>
-        public MapInstance AggroCenterMap { get; set; }
+        public IMapInstance AggroCenterMap { get; set; }
 
         /// <summary>
         /// The X value on which this NPC was "aggro'd" and started chasing a target.

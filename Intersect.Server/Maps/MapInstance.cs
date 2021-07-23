@@ -18,6 +18,7 @@ using Intersect.Server.Entities;
 using Intersect.Server.Entities.Events;
 using Intersect.Server.Framework.Database;
 using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Entities.Events;
 using Intersect.Server.Framework.Maps;
 using Intersect.Server.General;
 using Intersect.Server.Networking;
@@ -33,41 +34,41 @@ namespace Intersect.Server.Maps
 
         private static MapInstances sLookup;
 
-        [NotMapped] private readonly ConcurrentDictionary<Guid, Entity> mEntities = new ConcurrentDictionary<Guid, Entity>();
+        [NotMapped] private readonly ConcurrentDictionary<Guid, IEntity> mEntities = new ConcurrentDictionary<Guid, IEntity>();
 
-        private Entity[] mCachedEntities = new Entity[0];
+        private IEntity[] mCachedEntities = new IEntity[0];
 
         [JsonIgnore]
         [NotMapped]
-        public ConcurrentDictionary<EventBase, Event> GlobalEventInstances = new ConcurrentDictionary<EventBase, Event>();
+        public ConcurrentDictionary<EventBase, IEvent> GlobalEventInstances { get; set; } = new ConcurrentDictionary<EventBase, IEvent>();
 
-        [JsonIgnore] [NotMapped] public ConcurrentDictionary<Guid, MapItemSpawn> ItemRespawns = new ConcurrentDictionary<Guid, MapItemSpawn>();
+        [JsonIgnore] [NotMapped] public ConcurrentDictionary<Guid, IMapItemSpawn> ItemRespawns { get; set; } = new ConcurrentDictionary<Guid, IMapItemSpawn>();
 
-        [JsonIgnore] [NotMapped] public long LastUpdateTime = -1;
+        [JsonIgnore] [NotMapped] public long LastUpdateTime { get; set; } = -1;
 
-        [JsonIgnore] [NotMapped] public long UpdateQueueStart = -1;
+        [JsonIgnore] [NotMapped] public long UpdateQueueStart { get; set; } = -1;
 
-        [JsonIgnore] [NotMapped] public long LastProjectileUpdateTime = -1;
+        [JsonIgnore] [NotMapped] public long LastProjectileUpdateTime { get; set; } = -1;
 
         //Location of Map in the current grid
-        [JsonIgnore] [NotMapped] public int MapGrid;
+        [JsonIgnore] [NotMapped] public int MapGrid { get; set; }
 
-        [JsonIgnore] [NotMapped] public int MapGridX = -1;
+        [JsonIgnore] [NotMapped] public int MapGridX { get; set; } = -1;
 
-        [JsonIgnore] [NotMapped] public int MapGridY = -1;
+        [JsonIgnore] [NotMapped] public int MapGridY { get; set; } = -1;
 
         //Traps
-        [JsonIgnore] [NotMapped] public ConcurrentDictionary<Guid, MapTrapInstance> MapTraps = new ConcurrentDictionary<Guid, MapTrapInstance>();
+        [JsonIgnore] [NotMapped] public ConcurrentDictionary<Guid, IMapTrapInstance> MapTraps { get; set; } = new ConcurrentDictionary<Guid, IMapTrapInstance>();
 
         [JsonIgnore]
         [NotMapped]
-        public MapTrapInstance[] MapTrapsCached = new MapTrapInstance[0];
+        public IMapTrapInstance[] MapTrapsCached { get; set; } = new IMapTrapInstance[0];
 
         [NotMapped] private BytePoint[] mMapBlocks = Array.Empty<BytePoint>();
 
         private BytePoint[] mNpcMapBlocks = Array.Empty<BytePoint>();
 
-        private ConcurrentDictionary<Guid, Player> mPlayers = new ConcurrentDictionary<Guid, Player>();
+        private ConcurrentDictionary<Guid, IPlayer> mPlayers = new ConcurrentDictionary<Guid, IPlayer>();
 
         [JsonIgnore]
         [NotMapped]
@@ -80,8 +81,8 @@ namespace Intersect.Server.Maps
         //Temporary Values
         private Guid[] mSurroundingMapIds = new Guid[0];
         private Guid[] mSurroundingMapsIdsWithSelf = new Guid[0];
-        private MapInstance[] mSurroundingMaps = new MapInstance[0];
-        private MapInstance[] mSurroundingMapsWithSelf = new MapInstance[0];
+        private IMapInstance[] mSurroundingMaps = new MapInstance[0];
+        private IMapInstance[] mSurroundingMapsWithSelf = new MapInstance[0];
         private MapEntityMovements mEntityMovements = new MapEntityMovements();
         private MapActionMessages mActionMessages = new MapActionMessages();
         private MapAnimations mMapAnimations = new MapAnimations();
@@ -106,7 +107,7 @@ namespace Intersect.Server.Maps
 
         [JsonIgnore]
         [NotMapped]
-        public MapInstance[] SurroundingMaps
+        public IMapInstance[] SurroundingMaps
         {
             get => mSurroundingMaps;
 
@@ -115,7 +116,7 @@ namespace Intersect.Server.Maps
                 lock (GetMapLock())
                 {
                     mSurroundingMaps = value;
-                    var surroundingMapsWithSelf = new List<MapInstance>(value);
+                    var surroundingMapsWithSelf = new List<IMapInstance>(value);
                     surroundingMapsWithSelf.Add(this);
                     mSurroundingMapsWithSelf = surroundingMapsWithSelf.ToArray();
                 }
@@ -149,20 +150,20 @@ namespace Intersect.Server.Maps
 
         [JsonIgnore]
         [NotMapped]
-        public ConcurrentDictionary<Guid, MapItem>[] TileItems { get; } = new ConcurrentDictionary<Guid, MapItem>[Options.Instance.MapOpts.Width * Options.Instance.MapOpts.Height];
+        public ConcurrentDictionary<Guid, IMapItem>[] TileItems { get; } = new ConcurrentDictionary<Guid, IMapItem>[Options.Instance.MapOpts.Width * Options.Instance.MapOpts.Height];
 
         [JsonIgnore]
         [NotMapped]
-        public ConcurrentDictionary<Guid, MapItem> AllMapItems { get; } = new ConcurrentDictionary<Guid, MapItem>();
+        public ConcurrentDictionary<Guid, IMapItem> AllMapItems { get; } = new ConcurrentDictionary<Guid, IMapItem>();
 
         //Projectiles
         [JsonIgnore]
         [NotMapped]
-        public ConcurrentDictionary<Guid, Projectile> MapProjectiles { get; } = new ConcurrentDictionary<Guid, Projectile>();
+        public ConcurrentDictionary<Guid, IProjectile> MapProjectiles { get; } = new ConcurrentDictionary<Guid, IProjectile>();
 
         [JsonIgnore]
         [NotMapped]
-        public Projectile[] MapProjectilesCached = new Projectile[0];
+        public IProjectile[] MapProjectilesCached { get; set; } = new IProjectile[0];
 
         [NotMapped]
         [JsonIgnore]
@@ -283,14 +284,14 @@ namespace Intersect.Server.Maps
         /// </summary>
         /// <param name="x">The X location of this item.</param>
         /// <param name="y">The Y location of this item.</param>
-        /// <param name="item">The <see cref="MapItem"/> to add to the map.</param>
-        private void AddItem(MapItem item)
+        /// <param name="item">The <see cref="IMapItem"/> to add to the map.</param>
+        private void AddItem(IMapItem item)
         {
             AllMapItems.TryAdd(item.UniqueId, item);
 
             if (TileItems[item.TileIndex] == null)
             {
-                TileItems[item.TileIndex] = new ConcurrentDictionary<Guid, MapItem>();
+                TileItems[item.TileIndex] = new ConcurrentDictionary<Guid, IMapItem>();
             }
             TileItems[item.TileIndex]?.TryAdd(item.UniqueId, item);
         }
@@ -337,7 +338,7 @@ namespace Intersect.Server.Maps
                 // Does this item already exist on this tile? If so, get its value so we can simply consolidate the stack.
                 var existingCount = 0;
                 var existingItems = FindItemsAt(y * Options.MapWidth + x);
-                var toRemove = new List<MapItem>();
+                var toRemove = new List<IMapItem>();
                 foreach (var exItem in existingItems)
                 {
                     // If the Id and Owner matches, get its quantity and remove the item so we don't get multiple stacks.
@@ -420,9 +421,9 @@ namespace Intersect.Server.Maps
         /// </summary>
         /// <param name="uniqueId">The Unique Id of the Map Item to look for.</param>
         /// <returns>Returns a <see cref="MapItem"/> if one is found with the desired Unique Id.</returns>
-        public MapItem FindItem(Guid uniqueId)
+        public IMapItem FindItem(Guid uniqueId)
         {
-            if (AllMapItems.TryGetValue(uniqueId, out MapItem item))
+            if (AllMapItems.TryGetValue(uniqueId, out IMapItem item))
             {
                 return item;
             }
@@ -434,16 +435,16 @@ namespace Intersect.Server.Maps
         /// </summary>
         /// <param name="tileIndex">The integer value representation of the tile.</param>
         /// <returns>Returns a <see cref="ICollection"/> of <see cref="MapItem"/></returns>
-        public ICollection<MapItem> FindItemsAt(int tileIndex)
+        public ICollection<IMapItem> FindItemsAt(int tileIndex)
         {
             if (tileIndex < 0 || tileIndex >= Options.MapWidth * Options.MapHeight || TileItems[tileIndex] == null)
             {
-                return Array.Empty<MapItem>();
+                return Array.Empty<IMapItem>();
             }
             return TileItems[tileIndex].Values;
         }
 
-        public void RemoveItem(MapItem item, bool respawn = true)
+        public void RemoveItem(IMapItem item, bool respawn = true)
         {
             if (item != null)
             {
@@ -462,8 +463,8 @@ namespace Intersect.Server.Maps
                 }
 
                 var oldOwner = item.Owner;
-                AllMapItems.TryRemove(item.UniqueId, out MapItem removed);
-                TileItems[item.TileIndex]?.TryRemove(item.UniqueId, out MapItem tileRemoved);
+                AllMapItems.TryRemove(item.UniqueId, out IMapItem removed);
+                TileItems[item.TileIndex]?.TryRemove(item.UniqueId, out IMapItem tileRemoved);
                 if (TileItems[item.TileIndex]?.IsEmpty ?? false)
                 {
                     TileItems[item.TileIndex] = null;
@@ -711,7 +712,7 @@ namespace Intersect.Server.Maps
             }
         }
 
-        public Entity SpawnNpc(byte tileX, byte tileY, byte dir, Guid npcId, bool despawnable = false)
+        public IEntity SpawnNpc(byte tileX, byte tileY, byte dir, Guid npcId, bool despawnable = false)
         {
             var npcBase = NpcBase.Get(npcId);
             if (npcBase != null)
@@ -750,7 +751,7 @@ namespace Intersect.Server.Maps
         {
             //Kill global events on map (make sure processing stops for online players)
             //Gonna rely on GC for now
-            var players = new List<Player>();
+            var players = new List<IPlayer>();
             foreach (var map in GetSurroundingMaps(true))
             {
                 players.AddRange(map.GetPlayersOnMap().ToArray());
@@ -767,7 +768,7 @@ namespace Intersect.Server.Maps
             GlobalEventInstances.Clear();
         }
 
-        public Event GetGlobalEventInstance(EventBase baseEvent)
+        public IEvent GetGlobalEventInstance(EventBase baseEvent)
         {
             if (GlobalEventInstances.ContainsKey(baseEvent))
             {
@@ -777,7 +778,7 @@ namespace Intersect.Server.Maps
             return null;
         }
 
-        public bool FindEvent(EventBase baseEvent, EventPageInstance globalClone)
+        public bool FindEvent(EventBase baseEvent, IEventPageInstance globalClone)
         {
             if (GlobalEventInstances.ContainsKey(baseEvent))
             {
@@ -829,7 +830,7 @@ namespace Intersect.Server.Maps
             MapProjectilesCached = new Projectile[0];
         }
 
-        public void SpawnTrap(Entity owner, SpellBase parentSpell, byte x, byte y, byte z)
+        public void SpawnTrap(IEntity owner, SpellBase parentSpell, byte x, byte y, byte z)
         {
             var trap = new MapTrapInstance(owner, parentSpell, Id, x, y, z);
             MapTraps.TryAdd(trap.Id, trap);
@@ -843,7 +844,7 @@ namespace Intersect.Server.Maps
         }
 
         //Entity Processing
-        public void AddEntity(Entity en)
+        public void AddEntity(IEntity en)
         {
             if (en != null && !en.IsDead())
             {
@@ -859,7 +860,7 @@ namespace Intersect.Server.Maps
             }
         }
 
-        public void RemoveEntity(Entity en)
+        public void RemoveEntity(IEntity en)
         {
             mEntities.TryRemove(en.Id, out var result);
             if (mPlayers.ContainsKey(en.Id))
@@ -869,19 +870,19 @@ namespace Intersect.Server.Maps
             mCachedEntities = mEntities.Values.ToArray();
         }
 
-        public void RemoveProjectile(Projectile en)
+        public void RemoveProjectile(IProjectile en)
         {
-            MapProjectiles.TryRemove(en.Id, out Projectile removed);
+            MapProjectiles.TryRemove(en.Id, out IProjectile removed);
             MapProjectilesCached = MapProjectiles.Values.ToArray();
         }
 
-        public void RemoveTrap(MapTrapInstance trap)
+        public void RemoveTrap(IMapTrapInstance trap)
         {
-            MapTraps.TryRemove(trap.Id, out MapTrapInstance removed);
+            MapTraps.TryRemove(trap.Id, out IMapTrapInstance removed);
             MapTrapsCached = MapTraps.Values.ToArray();
         }
 
-        public void ClearEntityTargetsOf(Entity en)
+        public void ClearEntityTargetsOf(IEntity en)
         {
             foreach (var entity in mEntities)
             {
@@ -926,13 +927,13 @@ namespace Intersect.Server.Maps
                     if (itemRespawn.RespawnTime < timeMs)
                     {
                         SpawnAttributeItem(itemRespawn.AttributeSpawnX, itemRespawn.AttributeSpawnY);
-                        ItemRespawns.TryRemove(itemRespawn.Id, out MapItemSpawn spawn);
+                        ItemRespawns.TryRemove(itemRespawn.Id, out IMapItemSpawn spawn);
                     }
                 }
 
                 // Keep a list of all entities with changed vitals and statusses.
-                var vitalUpdates = new List<Entity>();
-                var statusUpdates = new List<Entity>();
+                var vitalUpdates = new List<IEntity>();
+                var statusUpdates = new List<IEntity>();
 
                 //Process All Entites
                 foreach (var en in mEntities)
@@ -1090,7 +1091,7 @@ namespace Intersect.Server.Maps
                 }
 
                 //Send Batched Movement Packet
-                var nearbyPlayers = new HashSet<Player>();
+                var nearbyPlayers = new HashSet<IPlayer>();
                 foreach (var map in surrMaps)
                 {
                     foreach (var plyr in map.GetPlayersOnMap())
@@ -1132,7 +1133,7 @@ namespace Intersect.Server.Maps
             LastProjectileUpdateTime = timeMs;
         }
 
-        public MapInstance[] GetSurroundingMaps(bool includingSelf = false)
+        public IMapInstance[] GetSurroundingMaps(bool includingSelf = false)
         {
             return includingSelf ? mSurroundingMapsWithSelf : mSurroundingMaps;
         }
@@ -1142,15 +1143,15 @@ namespace Intersect.Server.Maps
             return includingSelf ? mSurroundingMapsIdsWithSelf : mSurroundingMapIds;
         }
 
-        public ConcurrentDictionary<Guid, Entity> GetLocalEntities()
+        public ConcurrentDictionary<Guid, IEntity> GetLocalEntities()
         {
             return mEntities;
         }
 
-        public List<Entity> GetEntities(bool includeSurroundingMaps = false)
+        public List<IEntity> GetEntities(bool includeSurroundingMaps = false)
         {
 
-            var entities = new List<Entity>();
+            var entities = new List<IEntity>();
 
             foreach (var en in mEntities)
                 entities.Add(en.Value);
@@ -1167,12 +1168,12 @@ namespace Intersect.Server.Maps
             return entities;
         }
 
-        public Entity[] GetCachedEntities()
+        public IEntity[] GetCachedEntities()
         {
             return mCachedEntities;
         }
 
-        public ICollection<Player> GetPlayersOnMap()
+        public ICollection<IPlayer> GetPlayersOnMap()
         {
             return mPlayers.Values;
         }
@@ -1182,7 +1183,7 @@ namespace Intersect.Server.Maps
             return !mPlayers.IsEmpty;
         }
 
-        public void PlayerEnteredMap(Player player)
+        public void PlayerEnteredMap(IPlayer player)
         {
             //Send Entity Info to Everyone and Everyone to the Entity
             SendMapEntitiesTo(player);
@@ -1206,7 +1207,7 @@ namespace Intersect.Server.Maps
             PacketSender.SendEntityDataToProximity(player, player);
         }
 
-        public void SendMapEntitiesTo(Player player)
+        public void SendMapEntitiesTo(IPlayer player)
         {
             if (player != null)
             {
@@ -1309,7 +1310,7 @@ namespace Intersect.Server.Maps
             SpawnMapResources();
         }
 
-        public static MapInstance Get(Guid id)
+        public static IMapInstance Get(Guid id)
         {
             return MapInstance.Lookup.Get<MapInstance>(id);
         }
@@ -1337,16 +1338,16 @@ namespace Intersect.Server.Maps
             Lookup?.Delete(this);
         }
 
-        public Dictionary<MapInstance, List<int>> FindSurroundingTiles(Point location, int distance)
+        public Dictionary<IMapInstance, List<int>> FindSurroundingTiles(Point location, int distance)
         {
             // Loop through all locations surrounding us to get valid tiles.
-            var locations = new Dictionary<MapInstance, List<int>>();
+            var locations = new Dictionary<IMapInstance, List<int>>();
             for (var x = 0 - distance; x <= distance; x++)
             {
                 for (var y = 0 - distance; y <= distance; y++)
                 {
                     // Use these to keep track of our translation.
-                    var currentMap = this;
+                    IMapInstance currentMap = this;
                     var currentX = location.X + x;
                     var currentY = location.Y + y;
 
@@ -1441,7 +1442,7 @@ namespace Intersect.Server.Maps
         }
 
         #region"Packet Batching"
-        public void AddBatchedMovement(Entity en, bool correction, Player forPlayer)
+        public void AddBatchedMovement(IEntity en, bool correction, IPlayer forPlayer)
         {
             mEntityMovements.Add(en, correction, forPlayer);
         }

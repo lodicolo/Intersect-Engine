@@ -4,6 +4,7 @@ using System.Linq;
 
 using Intersect.GameObjects;
 using Intersect.Server.Entities;
+using Intersect.Server.Framework.Entities;
 using Intersect.Server.Maps;
 using Intersect.Server.Networking;
 using Intersect.Utilities;
@@ -26,7 +27,7 @@ namespace Intersect.Server.General
 
         [Obsolete] public static Timing Timing => Timing.Global;
 
-        public static List<Player> OnlineList => Clients.FindAll(client => client?.Entity != null)
+        public static List<IPlayer> OnlineList => Clients.FindAll(client => client?.Entity != null)
             .Select(client => client.Entity)
             .ToList();
 

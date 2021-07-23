@@ -11,6 +11,9 @@ using Intersect.Server.Database;
 using Intersect.Server.Database.PlayerData;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities;
+using Intersect.Server.Framework.Database.PlayerData;
+using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Networking;
 using Intersect.Server.Localization;
 using Intersect.Server.Networking;
 using Intersect.Server.Notifications;
@@ -82,7 +85,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
 
         [Route("{userId:guid}")]
         [HttpGet]
-        public User UserById(Guid userId)
+        public IUser UserById(Guid userId)
         {
             if (userId == Guid.Empty)
             {
@@ -276,7 +279,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
         [Route("{userName}/players")]
         [HttpGet]
         [ConfigurableAuthorize, OverrideAuthorization]
-        public List<Player> PlayersByUserName(string userName)
+        public List<IPlayer> PlayersByUserName(string userName)
         {
             if (string.IsNullOrWhiteSpace(userName))
             {
@@ -289,7 +292,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
         [Route("{userId:guid}/players")]
         [HttpGet]
         [ConfigurableAuthorize, OverrideAuthorization]
-        public List<Player> PlayersByUserId(Guid userId)
+        public List<IPlayer> PlayersByUserId(Guid userId)
         {
             if (userId == Guid.Empty)
             {
@@ -302,7 +305,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
         [Route("{userName}/players/{playerName}")]
         [HttpGet]
         [ConfigurableAuthorize, OverrideAuthorization]
-        public Player PlayerByNameForUserByName(string userName, string playerName)
+        public IPlayer PlayerByNameForUserByName(string userName, string playerName)
         {
             if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(playerName))
             {
@@ -316,7 +319,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
         [Route("{userId:guid}/players/{playerId:guid}")]
         [HttpGet]
         [ConfigurableAuthorize, OverrideAuthorization]
-        public Player PlayerByIdForUserById(Guid userId, Guid playerId)
+        public IPlayer PlayerByIdForUserById(Guid userId, Guid playerId)
         {
             if (userId == Guid.Empty || playerId == Guid.Empty)
             {
@@ -329,7 +332,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
         [Route("{userId:guid}/players/{index:int}")]
         [HttpGet]
         [ConfigurableAuthorize, OverrideAuthorization]
-        public Player PlayerByIndexForUserById(Guid userId, int index)
+        public IPlayer PlayerByIndexForUserById(Guid userId, int index)
         {
             if (userId == Guid.Empty || index < 0)
             {
@@ -751,7 +754,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $@"Invalid user id '{userId}'.");
             }
 
-            Tuple<Client, User> fetchResult;
+            Tuple<IClient, IUser> fetchResult;
             fetchResult = Database.PlayerData.User.Fetch(userId);
 
             return DoAdminActionOnUser(
@@ -779,7 +782,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $@"Invalid user name '{userName}'.");
             }
 
-            Tuple<Client, User> fetchResult;
+            Tuple<IClient, IUser> fetchResult;
             fetchResult = Database.PlayerData.User.Fetch(userName);
 
             return DoAdminActionOnUser(
@@ -790,7 +793,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
         }
 
         private object DoAdminActionOnUser(
-            Func<Tuple<Client, User>> fetch,
+            Func<Tuple<IClient, IUser>> fetch,
             Func<HttpResponseMessage> onError,
             AdminActions adminAction,
             AdminActionParameters actionParameters

@@ -5,7 +5,7 @@ using Intersect.Server.Framework.Maps;
 
 namespace Intersect.Server.Framework.Entities.Events
 {
-    public interface IEventPageInstance
+    public interface IEventPageInstance : IEntity
     {
         EventBase BaseEvent { get; set; }
         bool DisablePreview { get; set; }
@@ -20,6 +20,7 @@ namespace Intersect.Server.Framework.Entities.Events
         IPlayer Player { get; set; }
         int Speed { get; set; }
         EventTrigger Trigger { get; set; }
+        IMapInstance Map { get; }
 
         int CanMove(int moveDir);
         EntityPacket EntityPacket(EntityPacket packet = null, IPlayer forPlayer = null);

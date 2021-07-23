@@ -147,7 +147,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static Guild LoadGuild(Guid id)
+        public static IGuild LoadGuild(Guid id)
         {
             if (!Guilds.TryGetValue(id, out Guild found))
             {

@@ -2,31 +2,31 @@
 using Intersect.GameObjects;
 using Intersect.Network.Packets.Server;
 using Intersect.Server.Database;
-using Intersect.Server.Database.PlayerData.Players;
+using Intersect.Server.Framework.Database;
+using Intersect.Server.Framework.Database.PlayerData.Players;
+using Intersect.Server.Framework.Entities;
 using Intersect.Server.Localization;
 using Intersect.Server.Networking;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Intersect.Server.Entities
 {
-    public class BankInterface
+    public class BankInterface : IBankInterface
     {
-        private Player mPlayer;
+        private IPlayer mPlayer;
 
-        private IList<Item> mBank;
+        private IList<IItem> mBank;
 
-        private Guild mGuild;
+        private IGuild mGuild;
 
         private object mLock;
 
         private int mMaxSlots;
 
-        public BankInterface(Player player, IList<Item> bank, object bankLock, Guild guild, int maxSlots)
+        public BankInterface(IPlayer player, IList<IItem> bank, object bankLock, IGuild guild, int maxSlots)
         {
             mPlayer = player;
             mBank = bank;
@@ -181,7 +181,7 @@ namespace Intersect.Server.Entities
         /// </summary>
         /// <param name="item">The <see cref="Item"/> to check for.</param>
         /// <returns>Returns whether or not the bank instance can store this item.</returns>
-        public bool CanStoreItem(Item item)
+        public bool CanStoreItem(IItem item)
         {
             if (item.Descriptor != null)
             {
@@ -342,7 +342,7 @@ namespace Intersect.Server.Entities
                         else
                         {
                             PacketSender.SendChatMsg(mPlayer, Strings.Banks.banknospace, ChatMessageType.Bank, CustomColors.Alerts.Error);
-                        }  
+                        }
                     }
                 }
                 else
@@ -354,7 +354,7 @@ namespace Intersect.Server.Entities
             return false;
         }
 
-        public bool TryDepositItem(Item item, bool sendUpdate = true)
+        public bool TryDepositItem(IItem item, bool sendUpdate = true)
         {
             //Permission Check
             if (mGuild != null)
@@ -409,7 +409,7 @@ namespace Intersect.Server.Entities
         /// </summary>
         /// <param name="item"></param>
         /// <param name="sendUpdate"></param>
-        private void PutItem(Item item, bool sendUpdate)
+        private void PutItem(IItem item, bool sendUpdate)
         {
             // Decide how we're going to handle this item.
             var existingSlots = FindItemSlots(item.Descriptor.Id);
@@ -443,7 +443,7 @@ namespace Intersect.Server.Entities
                         updateSlots.Add(slot);
                         toGive -= canAdd;
                     }
-                    
+
                 }
 
                 // Is there anything left to hand out? If so, hand out max stacks and what remains until we run out!
@@ -649,7 +649,7 @@ namespace Intersect.Server.Entities
                 }
             }
 
-            Item tmpInstance = null;
+            IItem tmpInstance = null;
             lock (mLock)
             {
                 if (mBank != null)

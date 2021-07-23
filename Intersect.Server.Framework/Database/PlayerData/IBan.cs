@@ -22,6 +22,8 @@ namespace Intersect.Server.Framework.Database.PlayerData
 
         Guid UserId { get; }
 
+        string Ip { get; }
+
         #endregion Properties
     }
 }

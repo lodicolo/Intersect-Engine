@@ -1,5 +1,6 @@
 ﻿using Intersect.Network.Packets.Server;
 using Intersect.Server.Entities;
+using Intersect.Server.Framework.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Intersect.Server.Maps
     {
         private Dictionary<Guid, List<EntityMovePacket>> mMovements = new Dictionary<Guid, List<EntityMovePacket>>();
 
-        public void Add(Entity en, bool correction, Player forPlayer = null)
+        public void Add(IEntity en, bool correction, IPlayer forPlayer = null)
         {
             lock (mMovements)
             {
@@ -25,7 +26,7 @@ namespace Intersect.Server.Maps
             }
         }
 
-        public void SendPackets(HashSet<Player> nearbyPlayers)
+        public void SendPackets(HashSet<IPlayer> nearbyPlayers)
         {
             if (mMovements.Count > 0)
             {

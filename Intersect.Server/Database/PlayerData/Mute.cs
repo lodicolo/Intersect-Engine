@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Intersect.Logging;
 using Intersect.Server.Framework.Database.PlayerData;
+using Intersect.Server.Framework.Networking;
 using Intersect.Server.Localization;
 using Intersect.Server.Networking;
 
@@ -40,7 +41,7 @@ namespace Intersect.Server.Database.PlayerData
             UserId = userId;
         }
 
-        public Mute(User user, string ip, string reason, int durationDays, string muter) : this(
+        public Mute(IUser user, string ip, string reason, int durationDays, string muter) : this(
             ip, reason, durationDays, muter
         )
         {
@@ -54,7 +55,7 @@ namespace Intersect.Server.Database.PlayerData
         public Guid UserId { get; private set; }
 
         [JsonIgnore, Column("Player")] // SOURCE TODO: Migrate column
-        public virtual User User { get; private set; }
+        public virtual IUser User { get; private set; }
 
         [JsonIgnore, NotMapped]
         public bool IsIp => Guid.Empty == UserId;
@@ -74,7 +75,7 @@ namespace Intersect.Server.Database.PlayerData
 
         public static bool Expired(Mute mute) => mute.EndTime <= DateTime.UtcNow;
 
-        public static bool Add(Mute mute)
+        public static bool Add(IMute mute)
         {
             if (mute == null || mute.User == null && mute.UserId == Guid.Empty)
             {
@@ -107,7 +108,7 @@ namespace Intersect.Server.Database.PlayerData
             Add(new Mute(userId, ip, reason, duration, muter));
 
         public static bool Add(
-            User user,
+            IUser user,
             int duration,
             string reason,
             string muter,
@@ -128,7 +129,7 @@ namespace Intersect.Server.Database.PlayerData
         ) =>
             client.User != null && Add(client.User, duration, reason, muter, ip);
 
-        public static bool Remove(Mute mute)
+        public static bool Remove(IMute mute)
         {
             try
             {
@@ -200,7 +201,7 @@ namespace Intersect.Server.Database.PlayerData
             return false;
         }
 
-        public static bool Remove(User user)
+        public static bool Remove(IUser user)
         {
             try
             {
@@ -220,7 +221,7 @@ namespace Intersect.Server.Database.PlayerData
             return false;
         }
 
-        public static bool Remove(Client client) => client.User != null && Remove(client.User);
+        public static bool Remove(IClient client) => client.User != null && Remove(client.User);
 
         public static string FindMuteReason(
             Guid userId,
@@ -250,7 +251,7 @@ namespace Intersect.Server.Database.PlayerData
         }
 
         public static string FindMuteReason(
-            User user,
+            IUser user,
             string ip
         )
         {

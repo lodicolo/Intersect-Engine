@@ -1,5 +1,5 @@
 ﻿using Intersect.Network.Packets.Server;
-using Intersect.Server.Entities;
+using Intersect.Server.Framework.Entities;
 using System.Collections.Generic;
 
 namespace Intersect.Server.Maps
@@ -16,7 +16,7 @@ namespace Intersect.Server.Maps
             }
         }
 
-        public void SendPackets(HashSet<Player> nearbyPlayers)
+        public void SendPackets(HashSet<IPlayer> nearbyPlayers)
         {
             if (mActionMessages.Count > 0)
             {

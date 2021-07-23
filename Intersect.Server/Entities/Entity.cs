@@ -8,8 +8,11 @@ using Intersect.Server.Database;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Entities.Combat;
 using Intersect.Server.Entities.Events;
+using Intersect.Server.Framework.Database.PlayerData.Players;
 using Intersect.Server.Framework.Entities;
 using Intersect.Server.Framework.Entities.Combat;
+using Intersect.Server.Framework.Entities.Events;
+using Intersect.Server.Framework.Maps;
 using Intersect.Server.General;
 using Intersect.Server.Localization;
 using Intersect.Server.Maps;
@@ -27,7 +30,7 @@ using System.Threading;
 
 namespace Intersect.Server.Entities
 {
-    public partial class Entity : IDisposable, IEntity
+    public partial class Entity : IEntity
     {
         //Instance Values
         private Guid _id;
@@ -66,7 +69,7 @@ namespace Intersect.Server.Entities
 
         [JsonIgnore]
         [NotMapped]
-        public MapInstance Map => MapInstance.Get(MapId);
+        public IMapInstance Map => MapInstance.Get(MapId);
 
         public int X { get; set; }
 
@@ -139,11 +142,11 @@ namespace Intersect.Server.Entities
 
         //Inventory
         [JsonIgnore]
-        public virtual List<InventorySlot> Items { get; set; } = new List<InventorySlot>();
+        public virtual List<IInventorySlot> Items { get; set; } = new List<IInventorySlot>();
 
         //Spells
         [JsonIgnore]
-        public virtual List<SpellSlot> Spells { get; set; } = new List<SpellSlot>();
+        public virtual List<ISpellSlot> Spells { get; set; } = new List<ISpellSlot>();
 
         [JsonIgnore, Column(nameof(NameColor))]
         public string NameColorJson
@@ -222,7 +225,7 @@ namespace Intersect.Server.Entities
         public EventMoveRoute MoveRoute { get; set; } = null;
 
         [NotMapped, JsonIgnore]
-        public EventPageInstance MoveRouteSetter { get; set; } = null;
+        public IEventPageInstance MoveRouteSetter { get; set; } = null;
 
         [NotMapped, JsonIgnore]
         public long MoveTimer { get; set; }
@@ -420,7 +423,7 @@ namespace Intersect.Server.Entities
                     break;
             }
 
-            MapInstance mapInstance = null;
+            IMapInstance mapInstance = null;
             int tileX = 0;
             int tileY = 0;
 
@@ -557,7 +560,7 @@ namespace Intersect.Server.Entities
             return IsTileWalkable(tile.GetMap(), tile.GetX(), tile.GetY(), Z);
         }
 
-        protected virtual int IsTileWalkable(MapInstance map, int x, int y, int z)
+        protected virtual int IsTileWalkable(IMapInstance map, int x, int y, int z)
         {
             //Out of bounds if no map
             if (map == null)
@@ -569,7 +572,7 @@ namespace Intersect.Server.Entities
             return -1;
         }
 
-        protected virtual bool ProcessMoveRoute(Player forPlayer, long timeMs)
+        protected virtual bool ProcessMoveRoute(IPlayer forPlayer, long timeMs)
         {
             var moved = false;
             byte lookDir = 0, moveDir = 0;
@@ -2366,12 +2369,12 @@ namespace Intersect.Server.Entities
             return 9999;
         }
 
-        public int GetDistanceTo(MapInstance targetMap, int targetX, int targetY)
+        public int GetDistanceTo(IMapInstance targetMap, int targetX, int targetY)
         {
             return GetDistanceBetween(Map, targetMap, X, targetX, Y, targetY);
         }
 
-        public int GetDistanceBetween(MapInstance mapA, MapInstance mapB, int xTileA, int xTileB, int yTileA, int yTileB)
+        public int GetDistanceBetween(IMapInstance mapA, IMapInstance mapB, int xTileA, int xTileB, int yTileA, int yTileB)
         {
             if (mapA != null && mapB != null && mapA.MapGrid == mapB.MapGrid
             ) //Make sure both maps exist and that they are in the same dimension
@@ -2495,7 +2498,7 @@ namespace Intersect.Server.Entities
 
             if (dropItems)
             {
-                var lootGenerated = new List<Player>();
+                var lootGenerated = new List<IPlayer>();
                 // If this is an NPC, drop loot for every single player that participated in the fight.
                 if (this is Npc npc && npc.Base.IndividualizedLoot)
                 {
@@ -2737,7 +2740,7 @@ namespace Intersect.Server.Entities
             set => SpellCooldowns = JsonConvert.DeserializeObject<ConcurrentDictionary<Guid, long>>(value ?? "{}");
         }
 
-        [NotMapped] public ConcurrentDictionary<Guid, long> SpellCooldowns = new ConcurrentDictionary<Guid, long>();
+        [NotMapped] public ConcurrentDictionary<Guid, long> SpellCooldowns { get; set; } = new ConcurrentDictionary<Guid, long>();
 
         #endregion Spell Cooldowns
     }

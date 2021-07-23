@@ -13,6 +13,7 @@ using Intersect.Server.Database;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Entities.Events;
 using Intersect.Server.General;
 using Intersect.Server.Localization;
 using Intersect.Server.Maps;
@@ -25,10 +26,10 @@ namespace Intersect.Server.Entities.Events
     public static partial class CommandProcessing
     {
 
-        public static void ProcessCommand(EventCommand command, Player player, Event instance)
+        public static void ProcessCommand(EventCommand command, IPlayer player, IEvent instance)
         {
             var stackInfo = instance.CallStack.Peek();
-            stackInfo.WaitingForResponse = CommandInstance.EventResponse.None;
+            stackInfo.WaitingForResponse = EventResponse.None;
             stackInfo.WaitingOnCommand = null;
             stackInfo.BranchIds = null;
 
@@ -40,26 +41,26 @@ namespace Intersect.Server.Entities.Events
         //Show Text Command
         private static void ProcessCommand(
             ShowTextCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             PacketSender.SendEventDialog(
                 player, ParseEventText(command.Text, player, instance), command.Face, instance.PageInstance.Id
             );
 
-            stackInfo.WaitingForResponse = CommandInstance.EventResponse.Dialogue;
+            stackInfo.WaitingForResponse = EventResponse.Dialogue;
         }
 
         //Show Options Command
         private static void ProcessCommand(
             ShowOptionsCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var txt = ParseEventText(command.Text, player, instance);
@@ -68,7 +69,7 @@ namespace Intersect.Server.Entities.Events
             var opt3 = ParseEventText(command.Options[2], player, instance);
             var opt4 = ParseEventText(command.Options[3], player, instance);
             PacketSender.SendEventDialog(player, txt, opt1, opt2, opt3, opt4, command.Face, instance.PageInstance.Id);
-            stackInfo.WaitingForResponse = CommandInstance.EventResponse.Dialogue;
+            stackInfo.WaitingForResponse = EventResponse.Dialogue;
             stackInfo.WaitingOnCommand = command;
             stackInfo.BranchIds = command.BranchIds;
         }
@@ -76,10 +77,10 @@ namespace Intersect.Server.Entities.Events
         //Input Variable Command
         private static void ProcessCommand(
             InputVariableCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var title = ParseEventText(command.Title, player, instance);
@@ -111,7 +112,7 @@ namespace Intersect.Server.Entities.Events
             }
 
             PacketSender.SendInputVariableDialog(player, title, txt, (VariableDataTypes)type, instance.PageInstance.Id);
-            stackInfo.WaitingForResponse = CommandInstance.EventResponse.Dialogue;
+            stackInfo.WaitingForResponse = EventResponse.Dialogue;
             stackInfo.WaitingOnCommand = command;
             stackInfo.BranchIds = command.BranchIds;
         }
@@ -119,10 +120,10 @@ namespace Intersect.Server.Entities.Events
         //Show Add Chatbox Text Command
         private static void ProcessCommand(
             AddChatboxTextCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var txt = ParseEventText(command.Text, player, instance);
@@ -147,10 +148,10 @@ namespace Intersect.Server.Entities.Events
         //Set Variable Commands
         private static void ProcessCommand(
             SetVariableCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             ProcessVariableModification(command, (dynamic) command.Modification, player, instance);
@@ -159,10 +160,10 @@ namespace Intersect.Server.Entities.Events
         //Set Self Switch Command
         private static void ProcessCommand(
             SetSelfSwitchCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             if (instance.Global)
@@ -185,10 +186,10 @@ namespace Intersect.Server.Entities.Events
         //Conditional Branch Command
         private static void ProcessCommand(
             ConditionalBranchCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var success = Conditions.MeetsCondition(command.Condition, player, instance, null);
@@ -218,10 +219,10 @@ namespace Intersect.Server.Entities.Events
         //Exit Event Process Command
         private static void ProcessCommand(
             ExitEventProcessingCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             callStack.Clear();
@@ -230,10 +231,10 @@ namespace Intersect.Server.Entities.Events
         //Label Command
         private static void ProcessCommand(
             LabelCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             return; //Do Nothing.. just a label
@@ -242,10 +243,10 @@ namespace Intersect.Server.Entities.Events
         //Go To Label Command
         private static void ProcessCommand(
             GoToLabelCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             //Recursively search through commands for the label, and create a brand new call stack based on where that label is located.
@@ -270,10 +271,10 @@ namespace Intersect.Server.Entities.Events
         //Start Common Event Command
         private static void ProcessCommand(
             StartCommmonEventCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var commonEvent = EventBase.Get(command.EventId);
@@ -293,10 +294,10 @@ namespace Intersect.Server.Entities.Events
         //Restore Hp Command
         private static void ProcessCommand(
             RestoreHpCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             if (command.Amount > 0)
@@ -324,10 +325,10 @@ namespace Intersect.Server.Entities.Events
         //Restore Mp Command
         private static void ProcessCommand(
             RestoreMpCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             if (command.Amount > 0)
@@ -348,10 +349,10 @@ namespace Intersect.Server.Entities.Events
         //Level Up Command
         private static void ProcessCommand(
             LevelUpCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.LevelUp();
@@ -360,10 +361,10 @@ namespace Intersect.Server.Entities.Events
         //Give Experience Command
         private static void ProcessCommand(
             GiveExperienceCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var quantity = command.Exp;
@@ -387,10 +388,10 @@ namespace Intersect.Server.Entities.Events
         //Change Level Command
         private static void ProcessCommand(
             ChangeLevelCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.SetLevel(command.Level, true);
@@ -399,10 +400,10 @@ namespace Intersect.Server.Entities.Events
         //Change Spells Command
         private static void ProcessCommand(
             ChangeSpellsCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             //0 is add, 1 is remove
@@ -443,10 +444,10 @@ namespace Intersect.Server.Entities.Events
         //Change Items Command
         private static void ProcessCommand(
             ChangeItemsCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var success = false;
@@ -515,10 +516,10 @@ namespace Intersect.Server.Entities.Events
         //Equip Items Command
         private static void ProcessCommand(
             EquipItemCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var itm = ItemBase.Get(command.ItemId);
@@ -541,10 +542,10 @@ namespace Intersect.Server.Entities.Events
         //Change Sprite Command
         private static void ProcessCommand(
             ChangeSpriteCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.Sprite = command.Sprite;
@@ -554,10 +555,10 @@ namespace Intersect.Server.Entities.Events
         //Change Face Command
         private static void ProcessCommand(
             ChangeFaceCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.Face = command.Face;
@@ -567,10 +568,10 @@ namespace Intersect.Server.Entities.Events
         //Change Gender Command
         private static void ProcessCommand(
             ChangeGenderCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.Gender = command.Gender;
@@ -580,10 +581,10 @@ namespace Intersect.Server.Entities.Events
         //Change Name Color Command
         private static void ProcessCommand(
             ChangeNameColorCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             if (command.Remove)
@@ -607,10 +608,10 @@ namespace Intersect.Server.Entities.Events
         //Change Player Label Command
         private static void ProcessCommand(
             ChangePlayerLabelCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var label = ParseEventText(command.Value, player, instance);
@@ -636,10 +637,10 @@ namespace Intersect.Server.Entities.Events
         //Set Access Command (wtf why would we even allow this? lol)
         private static void ProcessCommand(
             SetAccessCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             if (player.Client == null)
@@ -670,10 +671,10 @@ namespace Intersect.Server.Entities.Events
         //Warp Player Command
         private static void ProcessCommand(
             WarpCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.Warp(
@@ -685,10 +686,10 @@ namespace Intersect.Server.Entities.Events
         //Set Move Route Command
         private static void ProcessCommand(
             SetMoveRouteCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             if (command.Route.Target == Guid.Empty)
@@ -721,10 +722,10 @@ namespace Intersect.Server.Entities.Events
         //Wait for Route Completion Command
         private static void ProcessCommand(
             WaitForRouteCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             if (command.TargetId == Guid.Empty)
@@ -750,10 +751,10 @@ namespace Intersect.Server.Entities.Events
         //Spawn Npc Command
         private static void ProcessCommand(
             SpawnNpcCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var npcId = command.NpcId;
@@ -761,7 +762,7 @@ namespace Intersect.Server.Entities.Events
             var tileX = 0;
             var tileY = 0;
             var direction = (byte) Directions.Up;
-            var targetEntity = (Entity) player;
+            var targetEntity = (IEntity) player;
             if (mapId != Guid.Empty)
             {
                 tileX = command.X;
@@ -840,10 +841,10 @@ namespace Intersect.Server.Entities.Events
         //Despawn Npcs Command
         private static void ProcessCommand(
             DespawnNpcCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var entities = player.SpawnedNpcs.ToArray();
@@ -867,10 +868,10 @@ namespace Intersect.Server.Entities.Events
         //Play Animation Command
         private static void ProcessCommand(
             PlayAnimationCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             //Playing an animations requires a target type/target or just a tile.
@@ -880,7 +881,7 @@ namespace Intersect.Server.Entities.Events
             var tileX = 0;
             var tileY = 0;
             var direction = (byte) Directions.Up;
-            var targetEntity = (Entity) player;
+            var targetEntity = (IEntity) player;
             if (mapId != Guid.Empty)
             {
                 tileX = command.X;
@@ -971,10 +972,10 @@ namespace Intersect.Server.Entities.Events
         //Hold Player Command
         private static void ProcessCommand(
             HoldPlayerCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             instance.HoldingPlayer = true;
@@ -984,10 +985,10 @@ namespace Intersect.Server.Entities.Events
         //Release Player Command
         private static void ProcessCommand(
             ReleasePlayerCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             instance.HoldingPlayer = false;
@@ -997,10 +998,10 @@ namespace Intersect.Server.Entities.Events
         //Hide Player Command
         private static void ProcessCommand(
             HidePlayerCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.HideEntity = true;
@@ -1011,10 +1012,10 @@ namespace Intersect.Server.Entities.Events
         //Show Player Command
         private static void ProcessCommand(
             ShowPlayerCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.HideEntity = false;
@@ -1025,10 +1026,10 @@ namespace Intersect.Server.Entities.Events
         //Play Bgm Command
         private static void ProcessCommand(
             PlayBgmCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             PacketSender.SendPlayMusic(player, command.File);
@@ -1037,10 +1038,10 @@ namespace Intersect.Server.Entities.Events
         //Fadeout Bgm Command
         private static void ProcessCommand(
             FadeoutBgmCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             PacketSender.SendFadeMusic(player);
@@ -1049,10 +1050,10 @@ namespace Intersect.Server.Entities.Events
         //Play Sound Command
         private static void ProcessCommand(
             PlaySoundCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             PacketSender.SendPlaySound(player, command.File);
@@ -1061,10 +1062,10 @@ namespace Intersect.Server.Entities.Events
         //Stop Sounds Command
         private static void ProcessCommand(
             StopSoundsCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             PacketSender.SendStopSounds(player);
@@ -1073,10 +1074,10 @@ namespace Intersect.Server.Entities.Events
         //Show Picture Command
         private static void ProcessCommand(
             ShowPictureCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var id = Guid.Empty;
@@ -1084,7 +1085,7 @@ namespace Intersect.Server.Entities.Events
             if (shouldWait)
             {
                 id = instance.PageInstance.Id;
-                stackInfo.WaitingForResponse = CommandInstance.EventResponse.Picture;
+                stackInfo.WaitingForResponse = EventResponse.Picture;
             }
             
             PacketSender.SendShowPicture(player, command.File, command.Size, command.Clickable, command.HideTime, id);
@@ -1093,10 +1094,10 @@ namespace Intersect.Server.Entities.Events
         //Hide Picture Command
         private static void ProcessCommand(
             HidePictureCommmand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             PacketSender.SendHidePicture(player);
@@ -1105,62 +1106,62 @@ namespace Intersect.Server.Entities.Events
         //Wait Command
         private static void ProcessCommand(
             WaitCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             instance.WaitTimer = Globals.Timing.Milliseconds + command.Time;
-            callStack.Peek().WaitingForResponse = CommandInstance.EventResponse.Timer;
+            callStack.Peek().WaitingForResponse = EventResponse.Timer;
         }
 
         //Open Bank Command
         private static void ProcessCommand(
             OpenBankCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.OpenBank();
-            callStack.Peek().WaitingForResponse = CommandInstance.EventResponse.Bank;
+            callStack.Peek().WaitingForResponse = EventResponse.Bank;
         }
 
         //Open Shop Command
         private static void ProcessCommand(
             OpenShopCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.OpenShop(ShopBase.Get(command.ShopId));
-            callStack.Peek().WaitingForResponse = CommandInstance.EventResponse.Shop;
+            callStack.Peek().WaitingForResponse = EventResponse.Shop;
         }
 
         //Open Crafting Table Command
         private static void ProcessCommand(
             OpenCraftingTableCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.OpenCraftingTable(CraftingTableBase.Get(command.CraftingTableId));
-            callStack.Peek().WaitingForResponse = CommandInstance.EventResponse.Crafting;
+            callStack.Peek().WaitingForResponse = EventResponse.Crafting;
         }
 
         //Set Class Command
         private static void ProcessCommand(
             SetClassCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             if (ClassBase.Get(command.ClassId) != null)
@@ -1176,10 +1177,10 @@ namespace Intersect.Server.Entities.Events
         //Start Quest Command
         private static void ProcessCommand(
             StartQuestCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var success = false;
@@ -1191,7 +1192,7 @@ namespace Intersect.Server.Entities.Events
                     if (command.Offer)
                     {
                         player.OfferQuest(quest);
-                        stackInfo.WaitingForResponse = CommandInstance.EventResponse.Quest;
+                        stackInfo.WaitingForResponse = EventResponse.Quest;
                         stackInfo.BranchIds = command.BranchIds;
                         stackInfo.WaitingOnCommand = command;
 
@@ -1228,10 +1229,10 @@ namespace Intersect.Server.Entities.Events
         //Complete Quest Task Command
         private static void ProcessCommand(
             CompleteQuestTaskCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.CompleteQuestTask(command.QuestId, command.TaskId);
@@ -1240,10 +1241,10 @@ namespace Intersect.Server.Entities.Events
         //End Quest Command
         private static void ProcessCommand(
             EndQuestCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.CompleteQuest(command.QuestId, command.SkipCompletionEvent);
@@ -1252,10 +1253,10 @@ namespace Intersect.Server.Entities.Events
         // Change Player Color Command
         private static void ProcessCommand(
             ChangePlayerColorCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.Color = command.Color;
@@ -1264,10 +1265,10 @@ namespace Intersect.Server.Entities.Events
 
         private static void ProcessCommand(
             ChangeNameCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var success = false;
@@ -1308,10 +1309,10 @@ namespace Intersect.Server.Entities.Events
         //Create Guild Command
         private static void ProcessCommand(
             CreateGuildCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var success = false;
@@ -1389,10 +1390,10 @@ namespace Intersect.Server.Entities.Events
 
         private static void ProcessCommand(
             DisbandGuildCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var success = false;
@@ -1436,24 +1437,24 @@ namespace Intersect.Server.Entities.Events
         //Open Guild Bank Command
         private static void ProcessCommand(
             OpenGuildBankCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             player.OpenBank(true);
-            callStack.Peek().WaitingForResponse = CommandInstance.EventResponse.Bank;
+            callStack.Peek().WaitingForResponse = EventResponse.Bank;
         }
 
 
         //Open Guild Bank Slots Count Command
         private static void ProcessCommand(
             SetGuildBankSlotsCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             var quantity = 0;
@@ -1477,10 +1478,10 @@ namespace Intersect.Server.Entities.Events
         //Reset Stat Point Allocations Command
         private static void ProcessCommand(
             ResetStatPointAllocationsCommand command,
-            Player player,
-            Event instance,
-            CommandInstance stackInfo,
-            Stack<CommandInstance> callStack
+            IPlayer player,
+            IEvent instance,
+            ICommandInstance stackInfo,
+            Stack<ICommandInstance> callStack
         )
         {
             for (var i = 0; i < (int)Stats.StatCount; i++)
@@ -1583,7 +1584,7 @@ namespace Intersect.Server.Entities.Events
             return false;
         }
 
-        public static string ParseEventText(string input, Player player, Event instance)
+        public static string ParseEventText(string input, IPlayer player, IEvent instance)
         {
             if (input == null)
             {
@@ -1647,8 +1648,8 @@ namespace Intersect.Server.Entities.Events
         private static void ProcessVariableModification(
             SetVariableCommand command,
             VariableMod mod,
-            Player player,
-            Event instance
+            IPlayer player,
+            IEvent instance
         )
         {
         }
@@ -1656,8 +1657,8 @@ namespace Intersect.Server.Entities.Events
         private static void ProcessVariableModification(
             SetVariableCommand command,
             BooleanVariableMod mod,
-            Player player,
-            Event instance
+            IPlayer player,
+            IEvent instance
         )
         {
             VariableValue value = null;
@@ -1736,8 +1737,8 @@ namespace Intersect.Server.Entities.Events
         private static void ProcessVariableModification(
             SetVariableCommand command,
             IntegerVariableMod mod,
-            Player player,
-            Event instance
+            IPlayer player,
+            IEvent instance
         )
         {
             VariableValue value = null;
@@ -1928,8 +1929,8 @@ namespace Intersect.Server.Entities.Events
         private static void ProcessVariableModification(
             SetVariableCommand command,
             StringVariableMod mod,
-            Player player,
-            Event instance
+            IPlayer player,
+            IEvent instance
         )
         {
             VariableValue value = null;

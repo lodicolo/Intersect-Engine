@@ -1,6 +1,7 @@
 ﻿using Intersect.Enums;
 using Intersect.Server.Framework.Entities;
 using Intersect.Server.Framework.Entities.Combat;
+using Intersect.Server.Networking;
 using Intersect.Utilities;
 
 namespace Intersect.Server.Entities.Combat

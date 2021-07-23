@@ -91,7 +91,7 @@ namespace Intersect.Server.Entities.Combat
         {
             if (Target != null)
             {
-                Target.DoT?.TryRemove(Id, out DoT val);
+                Target.DoT?.TryRemove(Id, out IDoT val);
                 Target.CachedDots = Target.DoT?.Values.ToArray() ?? new DoT[0];
             }
         }

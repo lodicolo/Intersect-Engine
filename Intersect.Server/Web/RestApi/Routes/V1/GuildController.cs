@@ -1,4 +1,5 @@
-﻿using Intersect.Server.Database;
+﻿using Intersect.Enums;
+using Intersect.Server.Database;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Entities;
 using Intersect.Server.Localization;
@@ -239,7 +240,7 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
                 );
             }
 
-            guild.RemoveMember(player, null, Database.Logging.Entities.GuildHistory.GuildActivityType.Kicked);
+            guild.RemoveMember(player, null, GuildActivityType.Kicked);
 
             return player;
         }

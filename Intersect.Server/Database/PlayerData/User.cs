@@ -5,7 +5,9 @@ using Intersect.Server.Database.PlayerData.Api;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities;
 using Intersect.Server.Framework.Database.PlayerData;
+using Intersect.Server.Framework.Database.PlayerData.Security;
 using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Networking;
 using Intersect.Server.General;
 using Intersect.Server.Networking;
 using Intersect.Server.Web.RestApi.Payloads;
@@ -32,7 +34,7 @@ namespace Intersect.Server.Database.PlayerData
     {
         #region Fields
 
-        private static readonly ConcurrentDictionary<Guid, User> OnlineUsers = new ConcurrentDictionary<Guid, User>();
+        private static readonly ConcurrentDictionary<Guid, IUser> OnlineUsers = new ConcurrentDictionary<Guid, IUser>();
 
         [JsonIgnore]
         [NotMapped]
@@ -44,7 +46,7 @@ namespace Intersect.Server.Database.PlayerData
 
         public static int OnlineCount => OnlineUsers.Count;
 
-        public static List<User> OnlineList => OnlineUsers.Values.ToList();
+        public static List<IUser> OnlineList => OnlineUsers.Values.ToList();
 
         [Column(Order = 2)]
         public string Email { get; set; }
@@ -86,7 +88,7 @@ namespace Intersect.Server.Database.PlayerData
         }
 
         [NotMapped]
-        public UserRights Power { get; set; }
+        public IUserRights Power { get; set; }
 
         [Column("Power")]
         [JsonIgnore]
@@ -110,21 +112,21 @@ namespace Intersect.Server.Database.PlayerData
 
         #region Methods
 
-        public static Tuple<Client, User> Fetch(Guid userId)
+        public static Tuple<IClient, IUser> Fetch(Guid userId)
         {
             var client = Globals.Clients.Find(queryClient => userId == queryClient?.User?.Id);
 
-            return new Tuple<Client, User>(client, client?.User ?? Find(userId));
+            return new Tuple<IClient, IUser>(client, client?.User ?? Find(userId));
         }
 
-        public static Tuple<Client, User> Fetch(string userName)
+        public static Tuple<IClient, IUser> Fetch(string userName)
         {
             var client = Globals.Clients.Find(queryClient => Entity.CompareName(userName, queryClient?.User?.Name));
 
-            return new Tuple<Client, User>(client, client?.User ?? Find(userName));
+            return new Tuple<IClient, IUser>(client, client?.User ?? Find(userName));
         }
 
-        public static User Find(Guid userId)
+        public static IUser Find(Guid userId)
         {
             if (userId == Guid.Empty)
             {
@@ -152,7 +154,7 @@ namespace Intersect.Server.Database.PlayerData
             }
         }
 
-        public static User Find(string username)
+        public static IUser Find(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
             {
@@ -180,7 +182,7 @@ namespace Intersect.Server.Database.PlayerData
             }
         }
 
-        public static User FindFromEmail(string email)
+        public static IUser FindFromEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -208,7 +210,7 @@ namespace Intersect.Server.Database.PlayerData
             }
         }
 
-        public static User FindFromNameOrEmail(string nameOrEmail)
+        public static IUser FindFromNameOrEmail(string nameOrEmail)
         {
             if (string.IsNullOrWhiteSpace(nameOrEmail))
             {
@@ -241,17 +243,17 @@ namespace Intersect.Server.Database.PlayerData
             }
         }
 
-        public static User FindOnline(Guid id)
+        public static IUser FindOnline(Guid id)
         {
             return OnlineUsers.ContainsKey(id) ? OnlineUsers[id] : null;
         }
 
-        public static User FindOnline(string username)
+        public static IUser FindOnline(string username)
         {
             return OnlineUsers.Values.FirstOrDefault(s => s.Name.ToLower().Trim() == username.ToLower().Trim());
         }
 
-        public static User FindOnlineFromEmail(string email)
+        public static IUser FindOnlineFromEmail(string email)
         {
             return OnlineUsers.Values.FirstOrDefault(s => s.Email.ToLower().Trim() == email.ToLower().Trim());
         }
@@ -283,7 +285,7 @@ namespace Intersect.Server.Database.PlayerData
             }
         }
 
-        public static void Login(User user, string ip)
+        public static void Login(IUser user, string ip)
         {
             if (!OnlineUsers.ContainsKey(user.Id))
                 OnlineUsers.TryAdd(user.Id, user);
@@ -291,7 +293,7 @@ namespace Intersect.Server.Database.PlayerData
             user.LastIp = ip;
         }
 
-        public static User PostLoad(User user)
+        public static IUser PostLoad(IUser user)
         {
             if (user != null)
             {
@@ -313,7 +315,7 @@ namespace Intersect.Server.Database.PlayerData
             }
         }
 
-        public static User TryLogin(string username, string ptPassword)
+        public static IUser TryLogin(string username, string ptPassword)
         {
             var user = FindOnline(username);
             try
@@ -594,7 +596,7 @@ namespace Intersect.Server.Database.PlayerData
 
             if (OnlineUsers.ContainsKey(this.Id))
             {
-                OnlineUsers.TryRemove(this.Id, out User removed);
+                OnlineUsers.TryRemove(this.Id, out IUser removed);
             }
         }
 

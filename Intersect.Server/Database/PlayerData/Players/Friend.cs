@@ -2,7 +2,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 using Intersect.Server.Entities;
-
+using Intersect.Server.Framework.Database.PlayerData.Players;
+using Intersect.Server.Framework.Entities;
 using Newtonsoft.Json;
 
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
@@ -11,14 +12,14 @@ using Newtonsoft.Json;
 namespace Intersect.Server.Database.PlayerData.Players
 {
 
-    public class Friend
+    public class Friend : IFriend
     {
 
         public Friend()
         {
         }
 
-        public Friend(Player me, Player friend)
+        public Friend(IPlayer me, IPlayer friend)
         {
             Owner = me;
             Target = friend;
@@ -40,10 +41,10 @@ namespace Intersect.Server.Database.PlayerData.Players
         public Guid Id { get; private set; }
 
         [JsonIgnore]
-        public virtual Player Owner { get; private set; }
+        public virtual IPlayer Owner { get; private set; }
 
         [JsonIgnore]
-        public virtual Player Target { get; private set; }
+        public virtual IPlayer Target { get; private set; }
 
     }
 

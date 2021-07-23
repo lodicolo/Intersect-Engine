@@ -1,5 +1,7 @@
 ﻿using Intersect.Enums;
 using Intersect.Server.Entities;
+using Intersect.Server.Framework.Database;
+using Intersect.Server.Framework.Entities;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -39,7 +41,7 @@ namespace Intersect.Server.Database.Logging.Entities
         }
 
         [NotMapped]
-        public Item[] Items { get; set; } = new Item[0];
+        public IItem[] Items { get; set; } = new Item[0];
 
         [Column("TargetItems")]
         [JsonIgnore]
@@ -57,7 +59,7 @@ namespace Intersect.Server.Database.Logging.Entities
         }
 
         [NotMapped]
-        public Item[] TargetItems { get; set; } = new Item[0];
+        public IItem[] TargetItems { get; set; } = new Item[0];
 
         [NotMapped]
         public string Username { get; set; }
@@ -81,7 +83,7 @@ namespace Intersect.Server.Database.Logging.Entities
         /// <param name="target">Second trader</param>
         /// <param name="ourItems">The items the first trader offered</param>
         /// <param name="theirItems">The items the second trader offered</param>
-        public static void LogTrade(Guid tradeId, Player player, Player target, Item[] ourItems, Item[] theirItems)
+        public static void LogTrade(Guid tradeId, IPlayer player, IPlayer target, IItem[] ourItems, IItem[] theirItems)
         {
             if (Options.Instance.Logging.Trade)
             {

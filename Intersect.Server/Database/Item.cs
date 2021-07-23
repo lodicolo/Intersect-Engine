@@ -105,7 +105,7 @@ namespace Intersect.Server.Database
 
         public string Data() => JsonConvert.SerializeObject(this);
 
-        public virtual void Set(Item item)
+        public virtual void Set(IItem item)
         {
             ItemId = item.ItemId;
             Quantity = item.Quantity;

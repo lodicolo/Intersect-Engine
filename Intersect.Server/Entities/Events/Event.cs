@@ -5,6 +5,7 @@ using Intersect.Enums;
 using Intersect.GameObjects.Events;
 using Intersect.GameObjects.Events.Commands;
 using Intersect.Logging;
+using Intersect.Server.Framework.Entities;
 using Intersect.Server.Framework.Entities.Events;
 using Intersect.Server.Framework.Maps;
 using Intersect.Server.General;
@@ -14,16 +15,16 @@ using Intersect.Server.Networking;
 namespace Intersect.Server.Entities.Events
 {
 
-    public partial class Event : IEvent
+    public partial class Event : Entity, IEvent
     {
 
         public EventBase BaseEvent { get; set; }
 
-        public Stack<CommandInstance> CallStack { get; set; } = new Stack<CommandInstance>();
+        public Stack<ICommandInstance> CallStack { get; set; } = new Stack<ICommandInstance>();
 
         public bool Global { get; set; }
 
-        public EventPageInstance[] GlobalPageInstance { get; set; }
+        public IEventPageInstance[] GlobalPageInstance { get; set; }
 
         public bool HoldingPlayer { get; set; }
 
@@ -37,9 +38,9 @@ namespace Intersect.Server.Entities.Events
 
         public int PageIndex { get; set; }
 
-        public EventPageInstance PageInstance { get; set; }
+        public IEventPageInstance PageInstance { get; set; }
 
-        public Player Player { get; set; }
+        public IPlayer Player { get; set; }
 
         //Special conditions
         public bool PlayerHasDied { get; set; }
@@ -54,7 +55,7 @@ namespace Intersect.Server.Entities.Events
 
         public int Y { get; set; }
 
-        public Event(Guid instanceId, IMapInstance map, Player player, EventBase baseEvent)
+        public Event(Guid instanceId, IMapInstance map, IPlayer player, EventBase baseEvent)
         {
             Id = instanceId;
             MapId = map?.Id ?? Guid.Empty;
@@ -98,7 +99,7 @@ namespace Intersect.Server.Entities.Events
                     Y = PageInstance.Y;
                     if (PageInstance.GlobalClone != null)
                     {
-                        Player.GlobalPageInstanceLookup.TryRemove(PageInstance.GlobalClone, out Event val);
+                        Player.GlobalPageInstanceLookup.TryRemove(PageInstance.GlobalClone, out IEvent val);
                     }
                     PageInstance = null;
                     CallStack.Clear();
@@ -132,36 +133,36 @@ namespace Intersect.Server.Entities.Events
                         {
                             Log.Error("Player variable in event update is null.. not sure how nor how to recover so just gonna let this crash now..");
                         }
-                        if (curStack.WaitingForResponse == CommandInstance.EventResponse.Shop && Player.InShop == null)
+                        if (curStack.WaitingForResponse == EventResponse.Shop && Player.InShop == null)
                         {
-                            curStack.WaitingForResponse = CommandInstance.EventResponse.None;
+                            curStack.WaitingForResponse = EventResponse.None;
                         }
 
-                        if (curStack.WaitingForResponse == CommandInstance.EventResponse.Crafting &&
+                        if (curStack.WaitingForResponse == EventResponse.Crafting &&
                             Player.CraftingTableId == Guid.Empty)
                         {
-                            curStack.WaitingForResponse = CommandInstance.EventResponse.None;
+                            curStack.WaitingForResponse = EventResponse.None;
                         }
 
-                        if (curStack.WaitingForResponse == CommandInstance.EventResponse.Bank && Player.InBank == false)
+                        if (curStack.WaitingForResponse == EventResponse.Bank && Player.InBank == false)
                         {
-                            curStack.WaitingForResponse = CommandInstance.EventResponse.None;
+                            curStack.WaitingForResponse = EventResponse.None;
                         }
 
-                        if (curStack.WaitingForResponse == CommandInstance.EventResponse.Quest &&
+                        if (curStack.WaitingForResponse == EventResponse.Quest &&
                             !Player.QuestOffers.Contains(((StartQuestCommand)curStack.WaitingOnCommand).QuestId))
                         {
-                            curStack.WaitingForResponse = CommandInstance.EventResponse.None;
+                            curStack.WaitingForResponse = EventResponse.None;
                         }
 
-                        if (curStack.WaitingForResponse == CommandInstance.EventResponse.Timer &&
+                        if (curStack.WaitingForResponse == EventResponse.Timer &&
                             WaitTimer < Globals.Timing.Milliseconds)
                         {
-                            curStack.WaitingForResponse = CommandInstance.EventResponse.None;
+                            curStack.WaitingForResponse = EventResponse.None;
                         }
 
                         var commandsExecuted = 0;
-                        while (curStack != null && curStack.WaitingForResponse == CommandInstance.EventResponse.None &&
+                        while (curStack != null && curStack.WaitingForResponse == EventResponse.None &&
                                !(PageInstance?.ShouldDespawn(map) ?? false) &&
                                commandsExecuted < Options.EventWatchdogKillThreshhold)
                         {
@@ -318,7 +319,7 @@ namespace Intersect.Server.Entities.Events
             }
         }
 
-        public Dictionary<string, string> GetParams(Player player)
+        public Dictionary<string, string> GetParams(IPlayer player)
         {
             var prams = new Dictionary<string, string>();
 
@@ -394,7 +395,7 @@ namespace Intersect.Server.Entities.Events
             }
         }
 
-        public string GetParam(Player player, string key)
+        public string GetParam(IPlayer player, string key)
         {
             key = key.ToLower();
 
@@ -411,7 +412,7 @@ namespace Intersect.Server.Entities.Events
             return "";
         }
 
-        public string FormatParameters(Player player)
+        public string FormatParameters(IPlayer player)
         {
             var prams = GetParams(player);
             var output = "{" + Environment.NewLine;

@@ -62,7 +62,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\IItem.cs" />
+    <Compile Include="Database\ISpell.cs" />
     <Compile Include="Database\PlayerData\IBan.cs" />
+    <Compile Include="Database\PlayerData\Players\IFriend.cs" />
     <Compile Include="Database\PlayerData\IMute.cs" />
     <Compile Include="Database\PlayerData\IUser.cs" />
     <Compile Include="Database\PlayerData\Players\IBag.cs" />
@@ -70,9 +72,13 @@
     <Compile Include="Database\PlayerData\Players\IBankSlot.cs" />
     <Compile Include="Database\PlayerData\Players\IGuild.cs" />
     <Compile Include="Database\PlayerData\Players\IGuildBankSlot.cs" />
+    <Compile Include="Database\PlayerData\Players\IHotbarSlot.cs" />
     <Compile Include="Database\PlayerData\Players\IInventorySlot.cs" />
     <Compile Include="Database\PlayerData\Players\IPlayerOwned.cs" />
+    <Compile Include="Database\PlayerData\Players\IQuest.cs" />
     <Compile Include="Database\PlayerData\Players\ISlot.cs" />
+    <Compile Include="Database\PlayerData\Players\ISpellSlot.cs" />
+    <Compile Include="Database\PlayerData\Players\IVariable.cs" />
     <Compile Include="Database\PlayerData\Security\IApiRoles.cs" />
     <Compile Include="Database\PlayerData\Security\IUserRights.cs" />
     <Compile Include="Entities\Combat\IBuff.cs" />
@@ -83,15 +89,20 @@
     <Compile Include="Entities\Events\ICommandInstance.cs" />
     <Compile Include="Entities\Events\IEvent.cs" />
     <Compile Include="Entities\Events\IEventPageInstance.cs" />
+    <Compile Include="Entities\IBankInterface.cs" />
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\INpc.cs" />
     <Compile Include="Entities\IPlayer.cs" />
     <Compile Include="Entities\IProjectile.cs" />
     <Compile Include="Entities\IProjectileSpawn.cs" />
+    <Compile Include="Entities\ITrading.cs" />
     <Compile Include="Entities\Label.cs" />
     <Compile Include="Maps\IMapInstance.cs" />
     <Compile Include="Maps\IMapItem.cs" />
+    <Compile Include="Maps\IMapItemSpawn.cs" />
+    <Compile Include="Maps\IMapTileLoc.cs" />
     <Compile Include="Maps\IMapTrapInstance.cs" />
+    <Compile Include="Networking\IClient.cs" />
     <Compile Include="Plugins\Events\Entities\EntitySpawnEventArgs.cs" />
     <Compile Include="Plugins\Helpers\IEntityHelper.cs" />
     <Compile Include="Plugins\ServerPluginEntry.cs" />

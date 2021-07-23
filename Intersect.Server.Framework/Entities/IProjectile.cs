@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Intersect.Server.Framework.Entities
 {
-    public interface IProjectile
+    public interface IProjectile : IEntity
     {
         ProjectileBase Base { get; set; }
         bool HasGrappled { get; set; }

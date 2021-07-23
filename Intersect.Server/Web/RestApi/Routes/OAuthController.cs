@@ -6,6 +6,7 @@ using System.Web.Http;
 
 using Intersect.Server.Database.PlayerData;
 using Intersect.Server.Database.PlayerData.Api;
+using Intersect.Server.Framework.Database.PlayerData;
 using Intersect.Server.Web.RestApi.Attributes;
 
 namespace Intersect.Server.Web.RestApi.Routes
@@ -21,7 +22,7 @@ namespace Intersect.Server.Web.RestApi.Routes
         [Route("token/{username}")]
         public async Task<IHttpActionResult> DeleteToken(string username)
         {
-            User user;
+            IUser user;
 
             user = Database.PlayerData.User.Find(username);
 
@@ -55,7 +56,7 @@ namespace Intersect.Server.Web.RestApi.Routes
         [Route("token/{username}/{tokenId:guid}")]
         public async Task<IHttpActionResult> DeleteToken(string username, Guid tokenId)
         {
-            User user;
+            IUser user;
 
             user = Database.PlayerData.User.Find(username);
 

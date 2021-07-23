@@ -2,8 +2,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 using Intersect.Enums;
-using Intersect.Server.Entities;
 using Intersect.Server.Framework.Database.PlayerData.Players;
+using Intersect.Server.Framework.Entities;
 using Intersect.Utilities;
 
 using Newtonsoft.Json;
@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 namespace Intersect.Server.Database.PlayerData.Players
 {
 
-    public class HotbarSlot : ISlot, IPlayerOwned
+    public class HotbarSlot : IHotbarSlot
     {
 
         public HotbarSlot()
@@ -38,18 +38,18 @@ namespace Intersect.Server.Database.PlayerData.Players
         [JsonIgnore]
         public string StatBuffsJson
         {
-            get => DatabaseUtils.SaveIntArray(PreferredStatBuffs, (int) Enums.Stats.StatCount);
-            set => PreferredStatBuffs = DatabaseUtils.LoadIntArray(value, (int) Enums.Stats.StatCount);
+            get => DatabaseUtils.SaveIntArray(PreferredStatBuffs, (int)Enums.Stats.StatCount);
+            set => PreferredStatBuffs = DatabaseUtils.LoadIntArray(value, (int)Enums.Stats.StatCount);
         }
 
         [NotMapped]
-        public int[] PreferredStatBuffs { get; set; } = new int[(int) Stats.StatCount];
+        public int[] PreferredStatBuffs { get; set; } = new int[(int)Stats.StatCount];
 
         [JsonIgnore]
         public Guid PlayerId { get; private set; }
 
         [JsonIgnore]
-        public virtual Player Player { get; private set; }
+        public virtual IPlayer Player { get; private set; }
 
         [JsonIgnore]
         public int Slot { get; private set; }

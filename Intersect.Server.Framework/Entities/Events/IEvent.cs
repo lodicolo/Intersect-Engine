@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Intersect.Server.Framework.Entities.Events
 {
-    public interface IEvent
+    public interface IEvent : IEntity
     {
         EventBase BaseEvent { get; set; }
         Stack<ICommandInstance> CallStack { get; set; }

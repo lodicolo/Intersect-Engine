@@ -42,7 +42,7 @@ namespace Intersect.Server.Entities
         public IEntity Target { get; set; }
 
         public Projectile(
-            Entity owner,
+            IEntity owner,
             SpellBase parentSpell,
             ItemBase parentItem,
             ProjectileBase projectile,
@@ -51,7 +51,7 @@ namespace Intersect.Server.Entities
             byte Y,
             byte z,
             byte direction,
-            Entity target
+            IEntity target
         ) : base()
         {
             Base = projectile;

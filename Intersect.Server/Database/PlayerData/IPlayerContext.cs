@@ -1,7 +1,7 @@
 ﻿using Intersect.Server.Database.PlayerData.Api;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Entities;
-
+using Intersect.Server.Framework.Database.PlayerData.Players;
 using Microsoft.EntityFrameworkCore;
 
 namespace Intersect.Server.Database.PlayerData

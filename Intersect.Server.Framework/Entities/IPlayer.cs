@@ -4,10 +4,14 @@ using Intersect.GameObjects.Events;
 using Intersect.GameObjects.Switches_and_Variables;
 using Intersect.Network;
 using Intersect.Network.Packets.Server;
+using Intersect.Server.Framework.Database;
 using Intersect.Server.Framework.Database.PlayerData;
 using Intersect.Server.Framework.Database.PlayerData.Players;
-
+using Intersect.Server.Framework.Database.PlayerData.Security;
+using Intersect.Server.Framework.Entities.Events;
+using Intersect.Server.Framework.Maps;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Intersect.Server.Framework.Entities
@@ -42,7 +46,19 @@ namespace Intersect.Server.Framework.Entities
 
         long ExperienceToNextLevel { get; }
 
-        List<Friend> Friends { get; set; }
+        List<IPlayer> Party { get; set; }
+
+        IPlayer PartyRequester { get; set; }
+
+        Dictionary<IPlayer, long> PartyRequests { get; set; }
+
+        List<IFriend> Friends { get; set; }
+
+        IPlayer FriendRequester { get; set; }
+
+        Dictionary<IPlayer, long> FriendRequests { get; set; }
+
+        ITrading Trading { get; set; }
 
         Gender Gender { get; set; }
 
@@ -54,7 +70,7 @@ namespace Intersect.Server.Framework.Entities
 
         int GuildRank { get; set; }
 
-        List<HotbarSlot> Hotbar { get; set; }
+        List<IHotbarSlot> Hotbar { get; set; }
 
         bool InBank { get; }
 
@@ -76,9 +92,9 @@ namespace Intersect.Server.Framework.Entities
 
         ulong PlayTimeSeconds { get; set; }
 
-        UserRights Power { get; }
+        IUserRights Power { get; }
 
-        List<Quest> Quests { get; set; }
+        List<IQuest> Quests { get; set; }
 
         long SaveTimer { get; set; }
 
@@ -88,7 +104,44 @@ namespace Intersect.Server.Framework.Entities
 
         Guid UserId { get; }
 
-        List<Variable> Variables { get; set; }
+        List<IVariable> Variables { get; set; }
+
+        IBag InBag { get; set; }
+
+        ShopBase InShop { get; set; }
+
+        bool GuildBank { get; set; }
+        IBankInterface BankInterface { get; set; }
+
+        Networking.IClient Client { get; set; }
+
+        Guid LastMapEntered { get; set; }
+
+        ConcurrentDictionary<Guid, long> ItemCooldowns { get; set; }
+
+        ConcurrentDictionary<IEventPageInstance, IEvent> GlobalPageInstanceLookup { get; set; }
+
+        List<INpc> SpawnedNpcs { get; set; }
+
+        ConcurrentDictionary<Guid, IEvent> EventLookup { get; set; }
+
+        ConcurrentDictionary<IMapTileLoc, IEvent> EventTileLookup { get; set; }
+
+        ConcurrentDictionary<Guid, IEvent> EventBaseIdLookup { get; set; }
+
+        Guid CraftingTableId { get; set; }
+
+        Guid CraftId { get; set; }
+
+        long CraftTimer { get; set; }
+
+        List<Guid> QuestOffers { get; set; }
+
+        IPlayer ChatTarget { get; set; }
+
+        long LastChatTime { get; set; }
+
+        bool InGame { get; set; }
 
         #endregion Properties
 
@@ -112,7 +165,7 @@ namespace Intersect.Server.Framework.Entities
 
         bool CanGiveItem(Guid itemId, int quantity);
 
-        bool CanGiveItem(Item item);
+        bool CanGiveItem(IItem item);
 
         int CanMove(int moveDir);
 
@@ -122,7 +175,7 @@ namespace Intersect.Server.Framework.Entities
 
         bool CanTakeItem(Guid itemId, int quantity);
 
-        bool CanTakeItem(Item item);
+        bool CanTakeItem(IItem item);
 
         void CastSpell(Guid spellId, int spellSlot = -1);
 
@@ -162,11 +215,11 @@ namespace Intersect.Server.Framework.Entities
 
         void EquipmentProcessItemSwap(int item1, int item2);
 
-        EventPageInstance EventAt(Guid mapId, int x, int y, int z);
+        IEventPageInstance EventAt(Guid mapId, int x, int y, int z);
 
-        Event EventExists(MapTileLoc loc);
+        IEvent EventExists(IMapTileLoc loc);
 
-        Event FindGlobalEventInstance(EventPageInstance en);
+        IEvent FindGlobalEventInstance(IEventPageInstance en);
 
         int FindInventoryItemQuantity(Guid itemId);
 
@@ -178,7 +231,7 @@ namespace Intersect.Server.Framework.Entities
 
         List<IInventorySlot> FindOpenInventorySlots();
 
-        Quest FindQuest(Guid questId);
+        IQuest FindQuest(Guid questId);
 
         int FindSpell(Guid spellId);
 
@@ -188,7 +241,7 @@ namespace Intersect.Server.Framework.Entities
 
         void FriendRequest(IPlayer fromPlayer);
 
-        Bag GetBag();
+        IBag GetBag();
 
         decimal GetCooldownReduction();
 
@@ -214,7 +267,7 @@ namespace Intersect.Server.Framework.Entities
 
         double GetTenacity();
 
-        Variable GetVariable(Guid id, bool createIfNull = false);
+        IVariable GetVariable(Guid id, bool createIfNull = false);
 
         VariableValue GetVariableValue(Guid id);
 
@@ -222,9 +275,9 @@ namespace Intersect.Server.Framework.Entities
 
         void GiveExperience(long amount);
 
-        void HandleEventCollision(Event evt, int pageNum);
+        void HandleEventCollision(IEvent evt, int pageNum);
 
-        bool HasBag(Bag bag);
+        bool HasBag(IBag bag);
 
         bool HasFriend(string name);
 
@@ -266,7 +319,7 @@ namespace Intersect.Server.Framework.Entities
 
         void OfferQuest(QuestBase quest);
 
-        bool OpenBag(Item bagItem, ItemBase itemDescriptor);
+        bool OpenBag(IItem bagItem, ItemBase itemDescriptor);
 
         bool OpenBank(bool guild = false);
 
@@ -342,11 +395,11 @@ namespace Intersect.Server.Framework.Entities
 
         bool TryDropItemFrom(int slotIndex, int amount);
 
-        bool TryForgetSpell(Spell spell, bool sendUpdate = true);
+        bool TryForgetSpell(ISpell spell, bool sendUpdate = true);
 
-        bool TryGetItemAt(int slotIndex, out Item item);
+        bool TryGetItemAt(int slotIndex, out IItem item);
 
-        bool TryGetSlot(int slotIndex, out InventorySlot slot, bool createSlotIfNull = false);
+        bool TryGetSlot(int slotIndex, out IInventorySlot slot, bool createSlotIfNull = false);
 
         bool TryGiveItem(Guid itemId, int quantity);
 
@@ -354,19 +407,19 @@ namespace Intersect.Server.Framework.Entities
 
         bool TryGiveItem(Guid itemId, int quantity, ItemHandling handler, bool bankOverflow = false, bool sendUpdate = true);
 
-        bool TryGiveItem(Item item);
+        bool TryGiveItem(IItem item);
 
-        bool TryGiveItem(Item item, ItemHandling handler = ItemHandling.Normal, bool bankOverflow = false, bool sendUpdate = true);
+        bool TryGiveItem(IItem item, ItemHandling handler = ItemHandling.Normal, bool bankOverflow = false, bool sendUpdate = true);
 
-        bool TryGiveItem(Item item, ItemHandling handler);
+        bool TryGiveItem(IItem item, ItemHandling handler);
 
         void TryLogout(bool force = false);
 
         bool TryTakeItem(Guid itemId, int amount, ItemHandling handler = ItemHandling.Normal, bool sendUpdate = true);
 
-        bool TryTakeItem(InventorySlot slot, int amount, ItemHandling handler = ItemHandling.Normal, bool sendUpdate = true);
+        bool TryTakeItem(IInventorySlot slot, int amount, ItemHandling handler = ItemHandling.Normal, bool sendUpdate = true);
 
-        bool TryTeachSpell(Spell spell, bool sendUpdate = true);
+        bool TryTeachSpell(ISpell spell, bool sendUpdate = true);
 
         void UnequipInvalidItems();
 

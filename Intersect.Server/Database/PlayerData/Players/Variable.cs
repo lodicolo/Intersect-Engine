@@ -2,14 +2,15 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Switches_and_Variables;
-using Intersect.Server.Entities;
+
 using Intersect.Server.Framework.Database.PlayerData.Players;
+using Intersect.Server.Framework.Entities;
 using Newtonsoft.Json;
 
 namespace Intersect.Server.Database.PlayerData.Players
 {
 
-    public class Variable : IPlayerOwned
+    public class Variable : IVariable
     {
 
         public Variable() : this(Guid.Empty) { }
@@ -53,7 +54,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         public Guid PlayerId { get; protected set; }
 
         [JsonIgnore]
-        public virtual Player Player { get; protected set; }
+        public virtual IPlayer Player { get; protected set; }
 
     }
 

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Intersect.Logging;
-
+using Intersect.Server.Framework.Database.PlayerData;
 using Newtonsoft.Json;
 
 namespace Intersect.Server.Database.PlayerData.Api
@@ -174,7 +174,7 @@ namespace Intersect.Server.Database.PlayerData.Api
             }
         }
 
-        public static IEnumerable<RefreshToken> FindForUser(User user)
+        public static IEnumerable<RefreshToken> FindForUser(IUser user)
         {
             return FindForUser(user.Id);
         }

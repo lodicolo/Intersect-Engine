@@ -24,14 +24,14 @@ namespace Intersect.GameObjects.Maps
             ObjectCreationHandling = ObjectCreationHandling.Replace
         };
 
-        [NotMapped] [JsonIgnore]        public readonly Dictionary<Guid, EventBase> LocalEvents = new Dictionary<Guid, EventBase>();
+        [NotMapped] [JsonIgnore] public Dictionary<Guid, EventBase> LocalEvents { get; private set; } = new Dictionary<Guid, EventBase>();
 
         //Client/Editor Only
         [JsonIgnore] [NotMapped] public MapAutotiles Autotiles;
 
-        [NotMapped] public List<Guid> EventIds = new List<Guid>();
+        [NotMapped] public List<Guid> EventIds { get; set; } = new List<Guid>();
 
-        [NotMapped] [JsonIgnore] public List<EventBase> EventsCache = new List<EventBase>();
+        [NotMapped] [JsonIgnore] public List<EventBase> EventsCache { get; set; } = new List<EventBase>();
 
         //Core Data
         [JsonIgnore] [NotMapped] public Dictionary<string, Tile[,]> Layers = new Dictionary<string, Tile[,]>();

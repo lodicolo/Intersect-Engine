@@ -1,5 +1,6 @@
 ﻿using Intersect.Enums;
 using Intersect.Server.Entities;
+using Intersect.Server.Framework.Entities;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -50,7 +51,7 @@ namespace Intersect.Server.Database.Logging.Entities
         /// <param name="message">The message to send.</param>
         /// <param name="type">The type of message we are sending.</param>
         /// <param name="target">The target id of this message, can be a player or guild id.</param>
-        public static void LogMessage(Player player, string message, ChatMessageType type, Guid targetId)
+        public static void LogMessage(IPlayer player, string message, ChatMessageType type, Guid targetId)
         {
             if (Options.Instance.Logging.Chat)
             {

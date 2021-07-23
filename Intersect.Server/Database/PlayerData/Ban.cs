@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Intersect.Logging;
 using Intersect.Server.Framework.Database.PlayerData;
+using Intersect.Server.Framework.Networking;
 using Intersect.Server.Localization;
 using Intersect.Server.Networking;
 
@@ -36,7 +37,7 @@ namespace Intersect.Server.Database.PlayerData
             UserId = userId;
         }
 
-        public Ban(User user, string ip, string reason, int durationDays, string banner) : this(
+        public Ban(IUser user, string ip, string reason, int durationDays, string banner) : this(
             ip, reason, durationDays, banner
         )
         {
@@ -50,7 +51,7 @@ namespace Intersect.Server.Database.PlayerData
         public Guid UserId { get; private set; }
 
         [JsonIgnore, Column("Player")] // SOURCE TODO: Migrate column
-        public virtual User User { get; private set; }
+        public virtual IUser User { get; private set; }
 
         public string Ip { get; private set; }
 
@@ -101,7 +102,7 @@ namespace Intersect.Server.Database.PlayerData
             Add(new Ban(userId, ip, reason, duration, banner));
 
         public static bool Add(
-            User user,
+            IUser user,
             int duration,
             string reason,
             string banner,
@@ -118,7 +119,7 @@ namespace Intersect.Server.Database.PlayerData
         ) =>
             client.User != null && Add(client.User, duration, reason, banner, ip);
 
-        public static bool Remove(Ban ban)
+        public static bool Remove(IBan ban)
         {
             if (ban == null || ban.User == null && ban.UserId == Guid.Empty)
             {
@@ -200,7 +201,7 @@ namespace Intersect.Server.Database.PlayerData
             return false;
         }
 
-        public static bool Remove(User user)
+        public static bool Remove(IUser user)
         {
             if (!Remove(user.Ban))
             {
@@ -212,9 +213,9 @@ namespace Intersect.Server.Database.PlayerData
             return true;
         }
 
-        public static bool Remove(Client client) => client.User != null && Remove(client.User);
+        public static bool Remove(IClient client) => client.User != null && Remove(client.User);
 
-        public static string CheckBan(User user, string ip)
+        public static string CheckBan(IUser user, string ip)
         {
             var ban = user?.Ban;
 

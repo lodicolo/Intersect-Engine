@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Intersect.GameObjects;
+using Intersect.Server.Framework.Database;
 using Newtonsoft.Json;
 
 namespace Intersect.Server.Database
 {
 
-    public class Spell
+    public class Spell : ISpell
     {
 
         public Spell()
@@ -31,17 +32,16 @@ namespace Intersect.Server.Database
 
         public static Spell None => new Spell(Guid.Empty);
 
-        public Spell Clone()
+        public ISpell Clone()
         {
-            var newSpell = new Spell()
-            {
+            var newSpell = new Spell() {
                 SpellId = SpellId
             };
 
             return newSpell;
         }
 
-        public virtual void Set(Spell spell)
+        public virtual void Set(ISpell spell)
         {
             SpellId = spell.SpellId;
         }

@@ -28,6 +28,9 @@ using Intersect.Server.Database.PlayerData;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities;
+using Intersect.Server.Framework.Database.PlayerData;
+using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Maps;
 using Intersect.Server.General;
 using Intersect.Server.Localization;
 using Intersect.Server.Maps;
@@ -342,7 +345,7 @@ namespace Intersect.Server.Database
             }
         }
 
-        public static bool SetPlayerPower(User user, UserRights power)
+        public static bool SetPlayerPower(IUser user, UserRights power)
         {
             if (user != null)
             {
@@ -375,7 +378,7 @@ namespace Intersect.Server.Database
             return null;
         }
 
-        public static Player GetUserCharacter(User user, Guid characterId)
+        public static IPlayer GetUserCharacter(IUser user, Guid characterId)
         {
             if (user == null) return null;
             foreach (var character in user.Players)
@@ -424,7 +427,7 @@ namespace Intersect.Server.Database
             client?.SetUser(user);
         }
 
-        public static void ResetPass(User user, string password)
+        public static void ResetPass(IUser user, string password)
         {
             var sha = new SHA256Managed();
 
@@ -1307,7 +1310,7 @@ namespace Intersect.Server.Database
                     {
                         var myGrid = map.MapGrid;
                         var surroundingMapIds = new List<Guid>();
-                        var surroundingMaps = new List<MapInstance>();
+                        var surroundingMaps = new List<IMapInstance>();
                         for (var x = map.MapGridX - 1; x <= map.MapGridX + 1; x++)
                         {
                             for (var y = map.MapGridY - 1; y <= map.MapGridY + 1; y++)

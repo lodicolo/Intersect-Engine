@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +9,9 @@ using Intersect.Server.Database.PlayerData.Api;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.SeedData;
 using Intersect.Server.Entities;
-
+using Intersect.Server.Framework.Database.PlayerData;
+using Intersect.Server.Framework.Database.PlayerData.Players;
+using Intersect.Server.Framework.Entities;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
@@ -88,42 +91,42 @@ namespace Intersect.Server.Database.PlayerData
         {
             modelBuilder.Entity<RefreshToken>().HasOne(token => token.User);
 
-            modelBuilder.Entity<Ban>().HasOne(b => b.User);
-            modelBuilder.Entity<Mute>().HasOne(b => b.User);
+            modelBuilder.Entity<Ban>().HasOne(b => (User)b.User);
+            modelBuilder.Entity<Mute>().HasOne(b => (User)b.User);
 
-            modelBuilder.Entity<User>().HasMany(b => b.Players).WithOne(p => p.User);
+            modelBuilder.Entity<User>().HasMany(b => b.Players).WithOne(p => (User)p.User);
 
             modelBuilder.Entity<Player>()
                 .HasMany(b => b.Friends)
-                .WithOne(p => p.Owner)
+                .WithOne(p => (Player)p.Owner)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Friend>().HasOne(b => b.Target).WithMany().OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Player>().HasMany(b => b.Spells).WithOne(p => p.Player);
+            modelBuilder.Entity<Player>().HasMany(b => b.Spells).WithOne(p => (Player)p.Player);
 
-            modelBuilder.Entity<Player>().HasMany(b => b.Items).WithOne(p => p.Player);
+            modelBuilder.Entity<Player>().HasMany(b => b.Items).WithOne(p => (Player)p.Player);
 
-            modelBuilder.Entity<Player>().HasMany(b => b.Variables).WithOne(p => p.Player);
+            modelBuilder.Entity<Player>().HasMany(b => b.Variables).WithOne(p => (Player)p.Player);
             modelBuilder.Entity<Variable>().HasIndex(p => new {p.VariableId, CharacterId = p.PlayerId}).IsUnique();
 
-            modelBuilder.Entity<Player>().HasMany(b => b.Hotbar).WithOne(p => p.Player);
+            modelBuilder.Entity<Player>().HasMany(b => b.Hotbar).WithOne(p => (Player)p.Player);
 
-            modelBuilder.Entity<Player>().HasMany(b => b.Quests).WithOne(p => p.Player);
+            modelBuilder.Entity<Player>().HasMany(b => b.Quests).WithOne(p => (Player)p.Player);
             modelBuilder.Entity<Quest>().HasIndex(p => new {p.QuestId, CharacterId = p.PlayerId}).IsUnique();
 
-            modelBuilder.Entity<Player>().HasMany(b => b.Bank).WithOne(p => p.Player);
+            modelBuilder.Entity<Player>().HasMany(b => b.Bank).WithOne(p => (Player)p.Player);
 
             modelBuilder.Entity<Bag>()
                 .HasMany(b => b.Slots)
-                .WithOne(p => p.ParentBag)
+                .WithOne(p => (Bag)p.ParentBag)
                 .HasForeignKey(p => p.ParentBagId);
 
             modelBuilder.Entity<InventorySlot>().HasOne(b => b.Bag);
             modelBuilder.Entity<BagSlot>().HasOne(b => b.Bag);
             modelBuilder.Entity<BankSlot>().HasOne(b => b.Bag);
 
-            modelBuilder.Entity<Guild>().HasMany(b => b.Bank).WithOne(p => p.Guild);
+            modelBuilder.Entity<Guild>().HasMany(b => b.Bank).WithOne(p => (Guild)p.Guild);
             modelBuilder.Entity<GuildBankSlot>().HasOne(b => b.Bag);
         }
 
@@ -151,7 +154,7 @@ namespace Intersect.Server.Database.PlayerData
             }
         }
 
-        public void StopTrackingUsersExcept(User user)
+        public void StopTrackingUsersExcept(IUser user)
         {
             //We don't want to be saving this players friends or anything....
             var otherUsers = ChangeTracker.Entries().Where(e => (e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted) && (e.Entity is User && e.Entity != user)).ToList();
@@ -167,7 +170,7 @@ namespace Intersect.Server.Database.PlayerData
 
         }
 
-        public void StopTrackingPlayersExcept(Player[] players, bool trackUsers = true)
+        public void StopTrackingPlayersExcept(IPlayer[] players, bool trackUsers = true)
         {
             //We don't want to be saving this players friends or anything....
             var otherPlayers = ChangeTracker.Entries().Where(e => (e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted) && (e.Entity is Player && !players.Contains(e.Entity))).ToList();

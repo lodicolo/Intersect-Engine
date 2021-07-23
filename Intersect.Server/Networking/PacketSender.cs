@@ -19,7 +19,10 @@ using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities;
 using Intersect.Server.Entities.Events;
+using Intersect.Server.Framework.Database;
+using Intersect.Server.Framework.Database.PlayerData.Players;
 using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Maps;
 using Intersect.Server.General;
 using Intersect.Server.Localization;
 using Intersect.Server.Maps;
@@ -140,7 +143,7 @@ namespace Intersect.Server.Networking
         }
 
         //MapPacket
-        public static MapPacket GenerateMapPacket(Client client, Guid mapId)
+        public static MapPacket GenerateMapPacket(Framework.Networking.IClient client, Guid mapId)
         {
             if (client == null)
             {
@@ -211,7 +214,7 @@ namespace Intersect.Server.Networking
         }
 
         //MapPacket
-        public static void SendMap(Client client, Guid mapId, bool allEditors = false)
+        public static void SendMap(Framework.Networking.IClient client, Guid mapId, bool allEditors = false)
         {
             var sentMaps = client?.SentMaps;
             if (sentMaps == null)
@@ -315,7 +318,7 @@ namespace Intersect.Server.Networking
             if (map != null)
             {
                 var entities = map.GetEntities(false);
-                var sendEntities = new List<Entity>();
+                var sendEntities = new List<IEntity>();
                 for (var i = 0; i < entities.Count; i++)
                 {
                     if (entities[i] != null)
@@ -374,9 +377,9 @@ namespace Intersect.Server.Networking
         }
 
         //MapEntitiesPacket
-        public static void SendMapEntitiesTo(IPlayer player, ConcurrentDictionary<Guid, Entity> entities)
+        public static void SendMapEntitiesTo(IPlayer player, ConcurrentDictionary<Guid, IEntity> entities)
         {
-            var sendEntities = new List<Entity>();
+            var sendEntities = new List<IEntity>();
 
             foreach (var en in entities)
             {
@@ -405,7 +408,7 @@ namespace Intersect.Server.Networking
             }
         }
 
-        public static void SendMapEntityEquipmentTo(IPlayer player, List<Entity> entities)
+        public static void SendMapEntityEquipmentTo(IPlayer player, List<IEntity> entities)
         {
             for (var i = 0; i < entities.Count; i++)
             {
@@ -461,7 +464,7 @@ namespace Intersect.Server.Networking
         }
 
         //EntityDataPacket
-        public static void SendEntityDataToMap(IEntity en, MapInstance map, IPlayer except = null)
+        public static void SendEntityDataToMap(IEntity en, IMapInstance map, IPlayer except = null)
         {
             if (en == null)
             {
@@ -1004,7 +1007,7 @@ namespace Intersect.Server.Networking
             }
 
             // Collect a list of all players in the surrounding.
-            var playerList = new List<Player>();
+            var playerList = new List<IPlayer>();
             playerList.AddRange(map.GetPlayersOnMap());
 
             foreach (var surrMap in map.SurroundingMaps)
@@ -1027,7 +1030,7 @@ namespace Intersect.Server.Networking
         /// <param name="itemRef">The map item that we are sending (or null if removing), passing this saves us a lookup for it.</param>
         /// <param name="sendToAll">If we are removing the item from the map, do we send this data to everyone?</param>
         /// <param name="owner">The previous owner of an item being removed when the data is not send to everyone.</param>
-        public static void SendMapItemUpdate(Guid mapId, MapItem itemRef, bool removing, bool sendToAll = true, Guid owner = new Guid())
+        public static void SendMapItemUpdate(Guid mapId, IMapItem itemRef, bool removing, bool sendToAll = true, Guid owner = new Guid())
         {
             var map = MapInstance.Get(mapId);
 
@@ -1309,12 +1312,12 @@ namespace Intersect.Server.Networking
         }
 
         //MapGridPacket
-        public static void SendMapGrid(Client client, int gridId, bool clearKnownMaps = false)
+        public static void SendMapGrid(Framework.Networking.IClient client, int gridId, bool clearKnownMaps = false)
         {
             var grid = DbInterface.GetGrid(gridId);
             SendMapGrid(client,grid,clearKnownMaps);
         }
-        public static void SendMapGrid(Client client, MapGrid grid, bool clearKnownMaps = false)
+        public static void SendMapGrid(Framework.Networking.IClient client, MapGrid grid, bool clearKnownMaps = false)
         {
             if (client == null || grid == null)
             {
@@ -1642,7 +1645,7 @@ namespace Intersect.Server.Networking
 
         //GameObjectPacket
         public static void SendGameObject(
-            Client client,
+            Framework.Networking.IClient client,
             IDatabaseObject obj,
             bool deleted = false,
             bool another = false,
@@ -1676,7 +1679,7 @@ namespace Intersect.Server.Networking
         }
 
         //GameObjectPacket
-        public static void SendQuestEventsTo(Client client, QuestBase qst)
+        public static void SendQuestEventsTo(Framework.Networking.IClient client, QuestBase qst)
         {
             SendEventIfExists(client, qst.StartEvent);
             SendEventIfExists(client, qst.EndEvent);
@@ -1687,7 +1690,7 @@ namespace Intersect.Server.Networking
         }
 
         //GameObjectPacket
-        public static void SendEventIfExists(Client client, EventBase evt)
+        public static void SendEventIfExists(Framework.Networking.IClient client, EventBase evt)
         {
             if (evt != null && evt.Id != Guid.Empty)
             {
@@ -1916,7 +1919,7 @@ namespace Intersect.Server.Networking
         }
 
         //BagPacket
-        public static void SendOpenBag(IPlayer player, int slots, Bag bag)
+        public static void SendOpenBag(IPlayer player, int slots, IBag bag)
         {
             player.SendPacket(new BagPacket(slots, false));
             for (var i = 0; i < slots; i++)
@@ -1926,7 +1929,7 @@ namespace Intersect.Server.Networking
         }
 
         //BagUpdatePacket
-        public static void SendBagUpdate(IPlayer player, int slot, Item item)
+        public static void SendBagUpdate(IPlayer player, int slot, IItem item)
         {
             if (item != null && item.ItemId != Guid.Empty && item.Quantity > 0)
             {

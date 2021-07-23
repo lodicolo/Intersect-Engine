@@ -22,7 +22,7 @@ namespace Intersect.Server.Entities.Events
 
         public bool DisablePreview { get; set; }
 
-        public EventPageInstance GlobalClone { get; set; }
+        public IEventPageInstance GlobalClone { get; set; }
 
         private bool mDirectionFix;
 
@@ -40,7 +40,7 @@ namespace Intersect.Server.Entities.Events
 
         private bool mWalkingAnim;
 
-        public Event MyEventIndex { get; set; }
+        public IEvent MyEventIndex { get; set; }
 
         public EventGraphic MyGraphic { get; set; } = new EventGraphic();
 
@@ -48,7 +48,7 @@ namespace Intersect.Server.Entities.Events
 
         public string Param { get; set; }
 
-        public Player Player { get; set; }
+        public IPlayer Player { get; set; }
 
         public EventTrigger Trigger { get; set; }
 
@@ -58,8 +58,8 @@ namespace Intersect.Server.Entities.Events
             EventBase myEvent,
             EventPage myPage,
             Guid mapId,
-            Event eventIndex,
-            Player player
+            IEvent eventIndex,
+            IPlayer player
         ) : base(Guid.NewGuid())
         {
             BaseEvent = myEvent;
@@ -130,9 +130,9 @@ namespace Intersect.Server.Entities.Events
             EventPage myPage,
             Guid instanceId,
             Guid mapId,
-            Event eventIndex,
-            Player player,
-            EventPageInstance globalClone
+            IEvent eventIndex,
+            IPlayer player,
+            IEventPageInstance globalClone
         ) : base(instanceId)
         {
             BaseEvent = myEvent;
@@ -363,7 +363,7 @@ namespace Intersect.Server.Entities.Events
             }
         }
 
-        protected override bool ProcessMoveRoute(Player forPlayer, long timeMs)
+        protected override bool ProcessMoveRoute(IPlayer forPlayer, long timeMs)
         {
             if (!base.ProcessMoveRoute(forPlayer, timeMs))
             {

@@ -4,6 +4,7 @@ using Intersect.GameObjects.Conditions;
 using Intersect.GameObjects.Events;
 using Intersect.GameObjects.Switches_and_Variables;
 using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Entities.Events;
 using Intersect.Server.General;
 using Intersect.Server.Maps;
 
@@ -13,7 +14,7 @@ namespace Intersect.Server.Entities.Events
 {
     public static partial class Conditions
     {
-        public static bool CanSpawnPage(EventPage page, IPlayer player, Event activeInstance)
+        public static bool CanSpawnPage(EventPage page, IPlayer player, IEvent activeInstance)
         {
             return MeetsConditionLists(page.ConditionLists, player, activeInstance);
         }
@@ -21,7 +22,7 @@ namespace Intersect.Server.Entities.Events
         public static bool MeetsConditionLists(
             ConditionLists lists,
             IPlayer player,
-            Event eventInstance,
+            IEvent eventInstance,
             bool singleList = true,
             QuestBase questBase = null
         )
@@ -67,7 +68,7 @@ namespace Intersect.Server.Entities.Events
         public static bool MeetsConditionList(
             ConditionList list,
             IPlayer player,
-            Event eventInstance,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -89,7 +90,7 @@ namespace Intersect.Server.Entities.Events
         public static bool MeetsCondition(
             Condition condition,
             IPlayer player,
-            Event eventInstance,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -103,8 +104,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             VariableIsCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -128,8 +129,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             HasItemCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -153,8 +154,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             ClassIsCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -168,8 +169,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             KnowsSpellCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -183,8 +184,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             LevelOrStatCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -254,8 +255,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             SelfSwitchCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -263,7 +264,7 @@ namespace Intersect.Server.Entities.Events
             {
                 if (eventInstance.Global)
                 {
-                    if (MapInstance.Get(eventInstance.MapId).GlobalEventInstances.TryGetValue(eventInstance.BaseEvent, out Event evt))
+                    if (MapInstance.Get(eventInstance.MapId).GlobalEventInstances.TryGetValue(eventInstance.BaseEvent, out IEvent evt))
                     {
                         if (evt != null)
                         {
@@ -282,8 +283,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             AccessIsCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -302,8 +303,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             TimeBetweenCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -320,8 +321,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             CanStartQuestCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -342,8 +343,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             QuestInProgressCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -352,8 +353,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             QuestCompletedCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -362,8 +363,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             NoNpcsOnMapCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -392,8 +393,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             GenderIsCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -402,8 +403,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             MapIsCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -412,8 +413,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             IsItemEquippedCondition condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -433,8 +434,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             HasFreeInventorySlots condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -462,8 +463,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             InGuildWithRank condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase
         )
         {
@@ -472,8 +473,8 @@ namespace Intersect.Server.Entities.Events
 
         public static bool MeetsCondition(
             MapZoneTypeIs condition,
-            Player player,
-            Event eventInstance,
+            IPlayer player,
+            IEvent eventInstance,
             QuestBase questBase)
         {
             return player.Map?.ZoneType == condition.ZoneType;
@@ -484,8 +485,8 @@ namespace Intersect.Server.Entities.Events
         public static bool CheckVariableComparison(
             VariableValue currentValue,
             VariableCompaison comparison,
-            Player player,
-            Event instance
+            IPlayer player,
+            IEvent instance
         )
         {
             return VariableCheckHandlerRegistry.CheckVariableComparison(currentValue, comparison, player, instance);
@@ -494,8 +495,8 @@ namespace Intersect.Server.Entities.Events
         public static bool CheckVariableComparison(
             VariableValue currentValue,
             BooleanVariableComparison comparison,
-            Player player,
-            Event instance
+            IPlayer player,
+            IEvent instance
         )
         {
             VariableValue compValue = null;
@@ -544,8 +545,8 @@ namespace Intersect.Server.Entities.Events
         public static bool CheckVariableComparison(
             VariableValue currentValue,
             IntegerVariableComparison comparison,
-            Player player,
-            Event instance
+            IPlayer player,
+            IEvent instance
         )
         {
             long compareAgainst = 0;
@@ -638,8 +639,8 @@ namespace Intersect.Server.Entities.Events
         public static bool CheckVariableComparison(
             VariableValue currentValue,
             StringVariableComparison comparison,
-            Player player,
-            Event instance
+            IPlayer player,
+            IEvent instance
         )
         {
             var varVal = CommandProcessing.ParseEventText(currentValue.String ?? "", player, instance);

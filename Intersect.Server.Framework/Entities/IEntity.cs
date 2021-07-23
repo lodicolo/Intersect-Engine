@@ -2,6 +2,7 @@
 using Intersect.GameObjects;
 using Intersect.GameObjects.Events;
 using Intersect.Network.Packets.Server;
+using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Framework.Database.PlayerData.Players;
 using Intersect.Server.Framework.Entities.Combat;
 using Intersect.Server.Framework.Entities.Events;
@@ -12,7 +13,7 @@ using System.Collections.Generic;
 
 namespace Intersect.Server.Framework.Entities
 {
-    public interface IEntity
+    public interface IEntity : IDisposable
     {
         #region Properties
 
@@ -96,7 +97,7 @@ namespace Intersect.Server.Framework.Entities
 
         string SpellCooldownsJson { get; set; }
 
-        List<SpellSlot> Spells { get; set; }
+        List<ISpellSlot> Spells { get; set; }
 
         string Sprite { get; set; }
 
@@ -107,6 +108,8 @@ namespace Intersect.Server.Framework.Entities
         string StatsJson { get; set; }
 
         ConcurrentDictionary<SpellBase, IStatus> Statuses { get; }
+
+        ConcurrentDictionary<Guid, long> SpellCooldowns { get; set; }
 
         bool StatusesUpdated { get; set; }
 

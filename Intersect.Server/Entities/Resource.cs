@@ -6,6 +6,7 @@ using Intersect.GameObjects;
 using Intersect.Network.Packets.Server;
 using Intersect.Server.Database;
 using Intersect.Server.Database.PlayerData.Players;
+using Intersect.Server.Framework.Entities;
 using Intersect.Server.General;
 using Intersect.Server.Maps;
 using Intersect.Server.Networking;
@@ -40,7 +41,7 @@ namespace Intersect.Server.Entities
             HideName = true;
         }
 
-        public void Destroy(bool dropItems = false, Entity killer = null)
+        public void Destroy(bool dropItems = false, IEntity killer = null)
         {
             lock (EntityLock)
             {
@@ -51,7 +52,7 @@ namespace Intersect.Server.Entities
             PacketSender.SendEntityLeave(this);
         }
 
-        public override void Die(bool dropItems = true, Entity killer = null)
+        public override void Die(bool dropItems = true, IEntity killer = null)
         {
             lock (EntityLock)
             {
@@ -108,7 +109,7 @@ namespace Intersect.Server.Entities
             PacketSender.SendEntityPositionToAll(this);
         }
 
-        public void SpawnResourceItems(Entity killer)
+        public void SpawnResourceItems(IEntity killer)
         {
             //Find tile to spawn items
             var tiles = new List<TileHelper>();
@@ -206,7 +207,7 @@ namespace Intersect.Server.Entities
             return IsDead() & Base.WalkableAfter || !IsDead() && Base.WalkableBefore;
         }
 
-        public override EntityPacket EntityPacket(EntityPacket packet = null, Player forPlayer = null)
+        public override EntityPacket EntityPacket(EntityPacket packet = null, IPlayer forPlayer = null)
         {
             if (packet == null)
             {

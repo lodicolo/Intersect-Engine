@@ -8,24 +8,25 @@ using Intersect.Core;
 using Intersect.Logging;
 using Intersect.Network;
 using Intersect.Network.Packets;
-using Intersect.Server.Database;
-using Intersect.Server.Database.PlayerData;
 using Intersect.Server.Database.PlayerData.Security;
-using Intersect.Server.Entities;
 using Intersect.Server.General;
 using Intersect.Server.Networking.Lidgren;
 using Intersect.Server.Metrics;
+using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Database.PlayerData;
+using Intersect.Server.Framework.Database.PlayerData.Security;
+using Intersect.Server.Framework.Networking;
 
 namespace Intersect.Server.Networking
 {
 
-    public class Client : IPacketSender
+    public class Client : Framework.Networking.IClient
     {
 
-        public Guid EditorMap = Guid.Empty;
+        public Guid EditorMap { get; set; } = Guid.Empty;
 
         //Client Properties
-        public bool IsEditor;
+        public bool IsEditor { get; set; }
 
         //Network Variables
         private IConnection mConnection;
@@ -41,17 +42,17 @@ namespace Intersect.Server.Networking
         private ConcurrentQueue<Tuple<IPacket, TransmissionMode, long>> mSendPacketQueue = new ConcurrentQueue<Tuple<IPacket, TransmissionMode, long>>();
         public ConcurrentQueue<IPacket> HandlePacketQueue = new ConcurrentQueue<IPacket>();
         public ConcurrentQueue<IPacket> RecentPackets = new ConcurrentQueue<IPacket>();
-        public bool PacketHandlingQueued = false;
-        public bool PacketSendingQueued = false;
+        public bool PacketHandlingQueued { get; set; } = false;
+        public bool PacketSendingQueued { get; set; } = false;
         public Config.FloodThreshholds PacketFloodingThreshholds { get; set; } = Options.Instance.SecurityOpts?.PacketOpts.Threshholds;
         public long LastPing { get; set; } = -1;
 
-        protected long mTimeout = 20000; //20 seconds
+        protected long mTimeout { get; set; } = 20000; //20 seconds
 
         private bool mBanChecked;
 
         //Sent Maps
-        public Dictionary<Guid, Tuple<long, int>> SentMaps = new Dictionary<Guid, Tuple<long, int>>();
+        public Dictionary<Guid, Tuple<long, int>> SentMaps { get; set; } = new Dictionary<Guid, Tuple<long, int>>();
 
         public Client(IApplicationContext applicationContext, IConnection connection = null)
         {
@@ -102,7 +103,7 @@ namespace Intersect.Server.Networking
 
         public long LastPacketDesyncForgiven { get; set; }
 
-        public UserRights Power
+        public IUserRights Power
         {
             get => User?.Power ?? UserRights.None;
             set
@@ -116,15 +117,15 @@ namespace Intersect.Server.Networking
             }
         }
 
-        public User User { get; private set; }
+        public IUser User { get; private set; }
 
-        public List<Player> Characters => User?.Players;
+        public List<IPlayer> Characters => User?.Players;
 
-        public Player Entity { get; set; }
+        public IPlayer Entity { get; set; }
 
         public IApplicationContext ApplicationContext { get; }
 
-        public void SetUser(User user)
+        public void SetUser(IUser user)
         {
             if (user == null)
             {
@@ -133,13 +134,13 @@ namespace Intersect.Server.Networking
 
             if (user != null && user != User)
             {
-                User.Login(user, mConnection.Ip);
+                Database.PlayerData.User.Login(user, mConnection.Ip);
             }
 
             User = user;
         }
 
-        public void LoadCharacter(Player character)
+        public void LoadCharacter(IPlayer character)
         {
             //Entity = new Player(Id, this, character);
             Entity = character;
@@ -169,7 +170,7 @@ namespace Intersect.Server.Networking
                 if (mConnection != null)
                 {
                     Logout(shutdown);
-                        
+
                     Globals.Clients.Remove(this);
                     Globals.ClientArray = Globals.Clients.ToArray();
                     Globals.ClientLookup.Remove(mConnection.Guid);

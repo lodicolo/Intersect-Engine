@@ -1,10 +1,10 @@
 ﻿
 using Intersect.Admin.Actions;
-using Intersect.Server.Database;
 using Intersect.Server.Database.Logging.Entities;
 using Intersect.Server.Database.PlayerData;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities;
+using Intersect.Server.Framework.Entities;
 using Intersect.Server.Localization;
 using Intersect.Server.Networking;
 using System;
@@ -16,7 +16,7 @@ namespace Intersect.Server.Admin.Actions
     {
 
         //BanAction
-        public static void ProcessAction(Client client, Player player, BanAction action)
+        public static void ProcessAction(Client client, IPlayer player, BanAction action)
         {
             var target = Player.Find(action.Name);
             if (target != null)

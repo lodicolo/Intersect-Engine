@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using Intersect.Server.Networking;
 using Intersect.Server.Networking.Lidgren;
 using Intersect.Server.Database.PlayerData.Players;
+using Intersect.Server.Framework.Maps;
 
 namespace Intersect.Server.Core
 {
@@ -48,13 +49,13 @@ namespace Intersect.Server.Core
             /// <summary>
             /// Queue of active maps which maps are added to after being updated. Once a map makes it to the front of the queue they are updated again.
             /// </summary>
-            public readonly ConcurrentQueue<MapInstance> MapUpdateQueue = new ConcurrentQueue<MapInstance>();
+            public readonly ConcurrentQueue<IMapInstance> MapUpdateQueue = new ConcurrentQueue<IMapInstance>();
 
             /// <summary>
             /// Queue of active maps which maps are added to after being updated. Once a map makes it to the front of the queue they are updated again. 
             /// This queue is only used for projectile updates if the projectile update interval does not match the map update interval in the server config.
             /// </summary>
-            public readonly ConcurrentQueue<MapInstance> MapProjectileUpdateQueue = new ConcurrentQueue<MapInstance>();
+            public readonly ConcurrentQueue<IMapInstance> MapProjectileUpdateQueue = new ConcurrentQueue<IMapInstance>();
 
             /// <summary>
             /// This is the set of maps determined to be 'active' based on player locations in the game. Our logic recalculates this hashset every 250ms.
@@ -172,18 +173,18 @@ namespace Intersect.Server.Core
                         {
                             if (Options.Instance.Processing.MapUpdateInterval != Options.Instance.Processing.ProjectileUpdateInterval)
                             {
-                                while (MapProjectileUpdateQueue.TryPeek(out MapInstance result) && result.LastProjectileUpdateTime + Options.Instance.Processing.ProjectileUpdateInterval <= startTime)
+                                while (MapProjectileUpdateQueue.TryPeek(out IMapInstance result) && result.LastProjectileUpdateTime + Options.Instance.Processing.ProjectileUpdateInterval <= startTime)
                                 {
-                                    if (MapProjectileUpdateQueue.TryDequeue(out MapInstance sameResult))
+                                    if (MapProjectileUpdateQueue.TryDequeue(out IMapInstance sameResult))
                                     {
                                         LogicPool.QueueWorkItem(UpdateMap, sameResult, true);
                                     }
                                 }
                             }
 
-                            while (MapUpdateQueue.TryPeek(out MapInstance result) && result.LastUpdateTime + Options.Instance.Processing.MapUpdateInterval <= startTime)
+                            while (MapUpdateQueue.TryPeek(out IMapInstance result) && result.LastUpdateTime + Options.Instance.Processing.MapUpdateInterval <= startTime)
                             {
-                                if (MapUpdateQueue.TryDequeue(out MapInstance sameResult))
+                                if (MapUpdateQueue.TryDequeue(out IMapInstance sameResult))
                                 {
                                     if (Options.Instance.Metrics.Enable)
                                     {
@@ -313,7 +314,7 @@ namespace Intersect.Server.Core
             /// Adds a map to the map update queues for our logic loop to start processing.
             /// </summary>
             /// <param name="map">The map in which we want to add to our update queues.</param>
-            private void AddToQueue(MapInstance map)
+            private void AddToQueue(IMapInstance map)
             {
                 if (Options.Instance.Processing.MapUpdateInterval != Options.Instance.Processing.ProjectileUpdateInterval)
                 {
@@ -329,7 +330,7 @@ namespace Intersect.Server.Core
             /// </summary>
             /// <param name="map">The map our thread updates.</param>
             /// <param name="onlyProjectiles">If true only map projectiles are updated and not the entire map.</param>
-            private void UpdateMap(MapInstance map, bool onlyProjectiles)
+            private void UpdateMap(IMapInstance map, bool onlyProjectiles)
             {
                 try
                 {

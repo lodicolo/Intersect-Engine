@@ -9,5 +9,6 @@ namespace Intersect.Server.Framework.Database.PlayerData.Players
         IPlayer Player { get; }
         Guid PlayerId { get; }
         int Slot { get; }
+
     }
 }

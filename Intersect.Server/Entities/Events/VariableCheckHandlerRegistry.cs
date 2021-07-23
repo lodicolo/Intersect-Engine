@@ -1,5 +1,7 @@
 ﻿using Intersect.GameObjects.Events;
 using Intersect.GameObjects.Switches_and_Variables;
+using Intersect.Server.Framework.Entities;
+using Intersect.Server.Framework.Entities.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +14,8 @@ namespace Intersect.Server.Entities.Events
     public static class VariableCheckHandlerRegistry
     {
         private static Dictionary<Type, HandleVariableComparison> CheckVariableComparisonFunctions = new Dictionary<Type, HandleVariableComparison>();
-        private delegate bool HandleVariableComparison(VariableValue currentValue, VariableCompaison comparison, Player player, Event eventInstance);
-        private delegate bool HandleVariableComparisonBool<TComparison>(VariableValue currentValue, TComparison comparison, Player player, Event eventInstance) where TComparison : VariableCompaison;
+        private delegate bool HandleVariableComparison(VariableValue currentValue, VariableCompaison comparison, IPlayer player, IEvent eventInstance);
+        private delegate bool HandleVariableComparisonBool<TComparison>(VariableValue currentValue, TComparison comparison, IPlayer player, IEvent eventInstance) where TComparison : VariableCompaison;
         private static MethodInfo CreateWeaklyTypedDelegateForVariableCheckMethodInfoInfo;
         private static bool Initialized = false;
         private static object mLock = new object();
@@ -40,7 +42,7 @@ namespace Intersect.Server.Entities.Events
             Initialized = true;
         }
 
-        public static bool CheckVariableComparison(VariableValue currentValue, VariableCompaison comparison, Player player, Event instance)
+        public static bool CheckVariableComparison(VariableValue currentValue, VariableCompaison comparison, IPlayer player, IEvent instance)
         {
             if (!Initialized)
             {
@@ -68,7 +70,7 @@ namespace Intersect.Server.Entities.Events
                     Delegate.CreateDelegate(typeof(HandleVariableComparisonBool<TComparison>), target, methodInfo) as
                         HandleVariableComparisonBool<TComparison>;
 
-            return (VariableValue currentValue, VariableCompaison comparison, Player player, Event eventInstance) => stronglyTyped(
+            return (VariableValue currentValue, VariableCompaison comparison, IPlayer player, IEvent eventInstance) => stronglyTyped(
                 currentValue, (TComparison)comparison, player, eventInstance
             );
 

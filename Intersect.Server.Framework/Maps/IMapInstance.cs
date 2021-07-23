@@ -1,4 +1,5 @@
-﻿using Intersect.GameObjects;
+﻿using Intersect.Enums;
+using Intersect.GameObjects;
 using Intersect.GameObjects.Events;
 using Intersect.GameObjects.Maps;
 using Intersect.Models;
@@ -20,6 +21,31 @@ namespace Intersect.Server.Framework.Maps
         Guid[] SurroundingMapIds { get; set; }
         IMapInstance[] SurroundingMaps { get; set; }
         ConcurrentDictionary<Guid, IMapItem>[] TileItems { get; }
+        ConcurrentDictionary<Guid, IMapItemSpawn> ItemRespawns { get; set; }
+        long LastUpdateTime { get; set; }
+        long UpdateQueueStart { get; set; }
+        long LastProjectileUpdateTime { get; set; }
+        //Location of Map in the current grid
+        int MapGrid { get; set; }
+        int MapGridX { get; set; }
+        int MapGridY { get; set; }
+        ConcurrentDictionary<EventBase, IEvent> GlobalEventInstances { get; set; }
+        //Traps
+        ConcurrentDictionary<Guid, IMapTrapInstance> MapTraps { get; set; }
+        MapZones ZoneType { get; set; }
+        Guid Left { get; set; }
+        Guid Right { get; set; }
+        Guid Up { get; set; }
+        Guid Down { get; set; }
+        MapAttribute[,] Attributes { get; set; }
+        IProjectile[] MapProjectilesCached { get; set; }
+        IMapTrapInstance[] MapTrapsCached { get; set; }
+        List<EventBase> EventsCache { get; set; }
+        byte[] TileData { get; set; }
+        byte[] AttributeData { get; set; }
+        int Revision { get; set; }
+        List<Guid> EventIds { get; set; }
+        Dictionary<Guid, EventBase> LocalEvents { get; }
 
         void AddBatchedActionMessage(ActionMsgPacket packet);
         void AddBatchedAnimation(PlayAnimationPacket packet);

@@ -2,6 +2,7 @@
 
 using Intersect.Enums;
 using Intersect.Server.Database;
+using Intersect.Server.Framework.Maps;
 
 namespace Intersect.Server.Maps
 {
@@ -179,7 +180,7 @@ namespace Intersect.Server.Maps
             return mMapId;
         }
 
-        public MapInstance GetMap()
+        public IMapInstance GetMap()
         {
             return MapInstance.Get(mMapId);
         }

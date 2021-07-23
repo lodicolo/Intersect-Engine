@@ -2,28 +2,30 @@
 using System.Collections.Generic;
 
 using Intersect.Server.Database;
+using Intersect.Server.Framework.Database;
+using Intersect.Server.Framework.Entities;
 
 namespace Intersect.Server.Entities
 {
 
-    public struct Trading : IDisposable
+    public struct Trading : ITrading
     {
 
-        private readonly Player mPlayer;
+        private IPlayer mPlayer { get; }
 
         public bool Actively => Counterparty != null;
 
-        public Player Counterparty;
+        public IPlayer Counterparty { get; set; }
 
-        public bool Accepted;
+        public bool Accepted { get; set; }
 
-        public Item[] Offer;
+        public IItem[] Offer { get; set; }
 
-        public Player Requester;
+        public IPlayer Requester { get; set; }
 
-        public Dictionary<Player, long> Requests;
+        public Dictionary<IPlayer, long> Requests { get; set; }
 
-        public Trading(Player player)
+        public Trading(IPlayer player)
         {
             mPlayer = player;
 
@@ -31,12 +33,12 @@ namespace Intersect.Server.Entities
             Counterparty = null;
             Offer = new Item[Options.MaxInvItems];
             Requester = null;
-            Requests = new Dictionary<Player, long>();
+            Requests = new Dictionary<IPlayer, long>();
         }
 
         public void Dispose()
         {
-            Offer = Array.Empty<Item>();
+            Offer = Array.Empty<IItem>();
             Requester = null;
             Requests.Clear();
         }

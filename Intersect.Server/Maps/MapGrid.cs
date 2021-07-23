@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using Intersect.Server.Database;
-
+using Intersect.Server.Framework.Maps;
 using Newtonsoft.Json.Linq;
 
 namespace Intersect.Server.Maps
@@ -87,10 +87,10 @@ namespace Intersect.Server.Maps
             }
         }
 
-        private void CalculateBounds(MapInstance map, int x, int y)
+        private void CalculateBounds(IMapInstance map, int x, int y)
         {
-            var maps = new Stack<Tuple<MapInstance, int, int>>();
-            maps.Push(new Tuple<MapInstance, int, int>(map, x, y));
+            var maps = new Stack<Tuple<IMapInstance, int, int>>();
+            maps.Push(new Tuple<IMapInstance, int, int>(map, x, y));
             while (maps.Count > 0)
             {
                 var curMap = maps.Pop();
@@ -128,22 +128,22 @@ namespace Intersect.Server.Maps
 
                 if (MapInstance.Lookup.Keys.Contains(map.Up) && MapInstance.Get(map.Up).Down == map.Id)
                 {
-                    maps.Push(new Tuple<MapInstance, int, int>(MapInstance.Get(map.Up), x, y - 1));
+                    maps.Push(new Tuple<IMapInstance, int, int>(MapInstance.Get(map.Up), x, y - 1));
                 }
 
                 if (MapInstance.Lookup.Keys.Contains(map.Down) && MapInstance.Get(map.Down).Up == map.Id)
                 {
-                    maps.Push(new Tuple<MapInstance, int, int>(MapInstance.Get(map.Down), x, y + 1));
+                    maps.Push(new Tuple<IMapInstance, int, int>(MapInstance.Get(map.Down), x, y + 1));
                 }
 
                 if (MapInstance.Lookup.Keys.Contains(map.Left) && MapInstance.Get(map.Left).Right == map.Id)
                 {
-                    maps.Push(new Tuple<MapInstance, int, int>(MapInstance.Get(map.Left), x - 1, y));
+                    maps.Push(new Tuple<IMapInstance, int, int>(MapInstance.Get(map.Left), x - 1, y));
                 }
 
                 if (MapInstance.Lookup.Keys.Contains(map.Right) && MapInstance.Get(map.Right).Left == map.Id)
                 {
-                    maps.Push(new Tuple<MapInstance, int, int>(MapInstance.Get(map.Right), x + 1, y));
+                    maps.Push(new Tuple<IMapInstance, int, int>(MapInstance.Get(map.Right), x + 1, y));
                 }
             }
         }
