@@ -61,7 +61,7 @@ namespace Intersect.Server.Database.PlayerData
         IUser IMute.User => User;
 
         [JsonIgnore, NotMapped]
-        public bool IsIp => Guid.Empty == UserId;
+        public bool IsIp => !string.IsNullOrWhiteSpace(Ip);
 
         public string Ip { get; private set; }
 

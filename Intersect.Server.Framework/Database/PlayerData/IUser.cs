@@ -12,7 +12,6 @@ namespace Intersect.Server.Framework.Database.PlayerData
 
         string Email { get; set; }
         Guid Id { get; }
-        string LastIp { get; set; }
         DateTime? LoginTime { get; set; }
         string Name { get; set; }
         List<IPlayer> Players { get; }

@@ -12,7 +12,6 @@ namespace Intersect.Server.Framework.Networking
     public interface IClient : IPacketSender
     {
         long AccountAttempts { get; set; }
-        IApplicationContext ApplicationContext { get; }
         bool Banned { get; set; }
         List<IPlayer> Characters { get; }
         Guid EditorMap { get; set; }
@@ -31,10 +30,8 @@ namespace Intersect.Server.Framework.Networking
         bool PacketHandlingQueued { get; set; }
         bool PacketSendingQueued { get; set; }
         long PacketTimer { get; set; }
-        string Password { get; }
         long Ping { get; }
         IUserRights Power { get; set; }
-        string Salt { get; }
         Dictionary<Guid, Tuple<long, int>> SentMaps { get; set; }
         int TimedBufferPacketsRemaining { get; set; }
         long TimeoutMs { get; set; }
@@ -50,7 +47,6 @@ namespace Intersect.Server.Framework.Networking
         void Logout(bool force = false);
         void Pinged();
         void ResetTimeout();
-        bool Send(IPacket packet);
         bool Send(IPacket packet, TransmissionMode mode);
         void SendPackets();
         void SetUser(IUser user);

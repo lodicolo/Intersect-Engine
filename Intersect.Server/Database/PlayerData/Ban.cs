@@ -69,6 +69,9 @@ namespace Intersect.Server.Database.PlayerData
         [NotMapped]
         public bool IsExpired => Expired(this);
 
+        [JsonIgnore, NotMapped]
+        public bool IsIp => !string.IsNullOrWhiteSpace(Ip);
+
         public static bool Expired(Ban ban) => ban.EndTime <= DateTime.UtcNow;
 
         public static bool Add(Ban ban)

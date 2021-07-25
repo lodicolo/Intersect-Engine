@@ -17,6 +17,7 @@ using Intersect.Server.Framework.Entities;
 using Intersect.Server.Framework.Database.PlayerData;
 using Intersect.Server.Framework.Database.PlayerData.Security;
 using Intersect.Server.Framework.Networking;
+using Intersect.Utilities;
 
 using IClient = Intersect.Server.Framework.Networking.IClient;
 
@@ -59,9 +60,11 @@ namespace Intersect.Server.Networking
 
         public Client(IApplicationContext applicationContext, IConnection connection = null)
         {
-            this.mConnection = connection;
-            mConnectTime = Globals.Timing.Milliseconds;
-            mConnectionTimeout = Globals.Timing.Milliseconds + mTimeout;
+            ApplicationContext = applicationContext;
+            
+            mConnection = connection;
+            mConnectTime = Timing.Global.Milliseconds;
+            mConnectionTimeout = Timing.Global.Milliseconds + mTimeout;
 
             PacketSender.SendServerConfig(this);
             PacketSender.SendPing(this);

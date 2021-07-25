@@ -14,6 +14,8 @@ namespace Intersect.Server.Framework.Database.PlayerData
 
         bool IsExpired { get; }
 
+        bool IsIp { get; }
+
         string Reason { get; }
 
         DateTime StartTime { get; }
@@ -21,8 +23,6 @@ namespace Intersect.Server.Framework.Database.PlayerData
         IUser User { get; }
 
         Guid UserId { get; }
-
-        string Ip { get; }
 
         #endregion Properties
     }
