@@ -54,11 +54,11 @@ namespace Intersect.Server.Entities
 
         #region Chat
 
-        [JsonIgnore] [NotMapped] public IPlayer ChatTarget { get; set; } = null;
+        [JsonIgnore, NotMapped] public IPlayer ChatTarget { get; set; } = null;
 
         #endregion
 
-        [NotMapped, JsonIgnore] public long LastChatTime { get; set; } = -1;
+        [JsonIgnore, NotMapped] public long LastChatTime { get; set; } = -1;
 
         #region Quests
 
@@ -126,11 +126,25 @@ namespace Intersect.Server.Entities
 
         //Bank
         [JsonIgnore]
-        public virtual List<IBankSlot> Bank { get; set; } = new List<IBankSlot>();
+        public virtual List<BankSlot> Bank { get; set; } = new List<BankSlot>();
+
+        [JsonIgnore, NotMapped]
+        List<IBankSlot> IPlayer.Bank
+        {
+            get => Bank.Cast<IBankSlot>().ToList();
+            set => Bank = value.Cast<BankSlot>().ToList();
+        }
 
         //Friends -- Not used outside of EF
         [JsonIgnore]
-        public virtual List<IFriend> Friends { get; set; } = new List<IFriend>();
+        public virtual List<Friend> Friends { get; set; } = new List<Friend>();
+
+        [JsonIgnore, NotMapped]
+        List<IFriend> IPlayer.Friends
+        {
+            get => Friends.Cast<IFriend>().ToList();
+            set => Friends = value.Cast<Friend>().ToList();
+        }
 
         //Local Friends
         [NotMapped, JsonProperty("Friends")]
@@ -138,16 +152,37 @@ namespace Intersect.Server.Entities
 
         //HotBar
         [JsonIgnore]
-        public virtual List<IHotbarSlot> Hotbar { get; set; } = new List<IHotbarSlot>();
+        public virtual List<HotbarSlot> Hotbar { get; set; } = new List<HotbarSlot>();
 
+        [JsonIgnore, NotMapped]
+        List<IHotbarSlot> IPlayer.Hotbar
+        {
+            get => Hotbar.Cast<IHotbarSlot>().ToList();
+            set => Hotbar = value.Cast<HotbarSlot>().ToList();
+        }
+        
         //Quests
         [JsonIgnore]
-        public virtual List<IQuest> Quests { get; set; } = new List<IQuest>();
+        public virtual List<Quest> Quests { get; set; } = new List<Quest>();
 
+        [JsonIgnore, NotMapped]
+        List<IQuest> IPlayer.Quests
+        {
+            get => Quests.Cast<IQuest>().ToList();
+            set => Quests = value.Cast<Quest>().ToList();
+        }
+        
         //Variables
         [JsonIgnore]
-        public virtual List<IVariable> Variables { get; set; } = new List<IVariable>();
+        public virtual List<Variable> Variables { get; set; } = new List<Variable>();
 
+        [JsonIgnore, NotMapped]
+        List<IVariable> IPlayer.Variables
+        {
+            get => Variables.Cast<IVariable>().ToList();
+            set => Variables = value.Cast<Variable>().ToList();
+        }
+        
         [JsonIgnore, NotMapped]
         public bool IsValidPlayer => !IsDisposed && Client?.Entity == this;
 
@@ -171,15 +206,20 @@ namespace Intersect.Server.Entities
         /// <summary>
         /// References the in-memory copy of the guild for this player, reference this instead of the Guild property below.
         /// </summary>
-        [NotMapped] [JsonIgnore] public IGuild Guild { get; set; }
+        [JsonIgnore, NotMapped] public IGuild Guild { get; set; }
 
         /// <summary>
         /// This field is used for EF database fields only and should never be assigned to or used, instead the guild instance will be assigned to CachedGuild above
         /// </summary>
-        [JsonIgnore] public IGuild DbGuild { get; set; }
+        [JsonIgnore] public Guild DbGuild { get; set; }
 
-        [NotMapped]
-        [JsonIgnore]
+        IGuild IPlayer.DbGuild
+        {
+            get => DbGuild;
+            set => DbGuild = value as Guild;
+        }
+
+        [JsonIgnore, NotMapped]
         public Tuple<IPlayer, IGuild> GuildInvite { get; set; }
 
         public int GuildRank { get; set; }
@@ -4874,7 +4914,7 @@ namespace Intersect.Server.Entities
         {
             if (CanStartQuest(quest))
             {
-                var questProgress = FindQuest(quest.Id);
+                var questProgress = FindQuest(quest.Id) as Quest;
                 if (questProgress != null)
                 {
                     questProgress.TaskId = quest.Tasks[0].Id;
@@ -5156,7 +5196,7 @@ namespace Intersect.Server.Entities
 
         public void SetSwitchValue(Guid id, bool value)
         {
-            var s = GetSwitch(id);
+            var s = GetSwitch(id) as Variable;
             var changed = true;
             if (s != null)
             {
@@ -5228,7 +5268,7 @@ namespace Intersect.Server.Entities
 
         public void SetVariableValue(Guid id, long value)
         {
-            var v = GetVariable(id);
+            var v = GetVariable(id) as Variable;
             var changed = true;
             if (v != null)
             {
@@ -5253,7 +5293,7 @@ namespace Intersect.Server.Entities
 
         public void SetVariableValue(Guid id, string value)
         {
-            var v = GetVariable(id);
+            var v = GetVariable(id) as Variable;
             var changed = true;
             if (v != null)
             {
@@ -6172,7 +6212,13 @@ namespace Intersect.Server.Entities
         [JsonProperty(nameof(Trading))]
         private Guid JsonTradingId => Trading.Counterparty?.Id ?? Guid.Empty;
 
-        [JsonIgnore, NotMapped] public ITrading Trading { get; set; }
+        [JsonIgnore, NotMapped] public Trading Trading;
+
+        ITrading IPlayer.Trading
+        {
+            get => Trading;
+            set => Trading = (Trading) value;
+        }
 
         #endregion
 
@@ -6245,7 +6291,7 @@ namespace Intersect.Server.Entities
             set => ItemCooldowns = JsonConvert.DeserializeObject<ConcurrentDictionary<Guid, long>>(value ?? "{}");
         }
 
-        [JsonIgnore] public ConcurrentDictionary<Guid, long> ItemCooldowns { get; set; } = new ConcurrentDictionary<Guid, long>();
+        [JsonIgnore, NotMapped] public ConcurrentDictionary<Guid, long> ItemCooldowns { get; set; } = new ConcurrentDictionary<Guid, long>();
 
         #endregion
 

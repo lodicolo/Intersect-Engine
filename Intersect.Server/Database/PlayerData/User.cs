@@ -9,7 +9,6 @@ using Intersect.Server.Framework.Database.PlayerData.Security;
 using Intersect.Server.Framework.Entities;
 using Intersect.Server.Framework.Networking;
 using Intersect.Server.General;
-using Intersect.Server.Networking;
 using Intersect.Server.Web.RestApi.Payloads;
 
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +33,7 @@ namespace Intersect.Server.Database.PlayerData
     {
         #region Fields
 
-        private static readonly ConcurrentDictionary<Guid, IUser> OnlineUsers = new ConcurrentDictionary<Guid, IUser>();
+        private static readonly ConcurrentDictionary<Guid, User> OnlineUsers = new ConcurrentDictionary<Guid, User>();
 
         [JsonIgnore]
         [NotMapped]
@@ -46,7 +45,7 @@ namespace Intersect.Server.Database.PlayerData
 
         public static int OnlineCount => OnlineUsers.Count;
 
-        public static List<IUser> OnlineList => OnlineUsers.Values.ToList();
+        public static List<User> OnlineList => OnlineUsers.Values.ToList();
 
         [Column(Order = 2)]
         public string Email { get; set; }
@@ -72,7 +71,10 @@ namespace Intersect.Server.Database.PlayerData
         public DateTime? PasswordResetTime { get; set; }
 
         [JsonIgnore]
-        public virtual List<IPlayer> Players { get; set; } = new List<IPlayer>();
+        public virtual List<Player> Players { get; set; } = new List<Player>();
+
+        [JsonIgnore, NotMapped]
+        List<IPlayer> IUser.Players => Players.Cast<IPlayer>().ToList();
 
         public ulong PlayTimeSeconds
         {
@@ -144,7 +146,7 @@ namespace Intersect.Server.Database.PlayerData
             {
                 using (var context = DbInterface.CreatePlayerContext())
                 {
-                    return User.PostLoad(QueryUserById(context, userId));
+                    return PostLoad(QueryUserById(context, userId));
                 }
             }
             catch (Exception ex)
@@ -172,7 +174,7 @@ namespace Intersect.Server.Database.PlayerData
             {
                 using (var context = DbInterface.CreatePlayerContext())
                 {
-                    return User.PostLoad(QueryUserByName(context, username));
+                    return PostLoad(QueryUserByName(context, username));
                 }
             }
             catch (Exception ex)
@@ -200,7 +202,7 @@ namespace Intersect.Server.Database.PlayerData
             {
                 using (var context = DbInterface.CreatePlayerContext())
                 {
-                    return User.PostLoad(QueryUserByEmail(context, email));
+                    return PostLoad(QueryUserByEmail(context, email));
                 }
             }
             catch (Exception ex)
@@ -210,7 +212,7 @@ namespace Intersect.Server.Database.PlayerData
             }
         }
 
-        public static IUser FindFromNameOrEmail(string nameOrEmail)
+        public static User FindFromNameOrEmail(string nameOrEmail)
         {
             if (string.IsNullOrWhiteSpace(nameOrEmail))
             {
@@ -233,7 +235,7 @@ namespace Intersect.Server.Database.PlayerData
             {
                 using (var context = DbInterface.CreatePlayerContext())
                 {
-                    return User.PostLoad(QueryUserByName(context, nameOrEmail));
+                    return PostLoad(QueryUserByName(context, nameOrEmail));
                 }
             }
             catch (Exception ex)
@@ -243,17 +245,17 @@ namespace Intersect.Server.Database.PlayerData
             }
         }
 
-        public static IUser FindOnline(Guid id)
+        public static User FindOnline(Guid id)
         {
             return OnlineUsers.ContainsKey(id) ? OnlineUsers[id] : null;
         }
 
-        public static IUser FindOnline(string username)
+        public static User FindOnline(string username)
         {
             return OnlineUsers.Values.FirstOrDefault(s => s.Name.ToLower().Trim() == username.ToLower().Trim());
         }
 
-        public static IUser FindOnlineFromEmail(string email)
+        public static User FindOnlineFromEmail(string email)
         {
             return OnlineUsers.Values.FirstOrDefault(s => s.Email.ToLower().Trim() == email.ToLower().Trim());
         }
@@ -285,7 +287,7 @@ namespace Intersect.Server.Database.PlayerData
             }
         }
 
-        public static void Login(IUser user, string ip)
+        public static void Login(User user, string ip)
         {
             if (!OnlineUsers.ContainsKey(user.Id))
                 OnlineUsers.TryAdd(user.Id, user);
@@ -293,7 +295,7 @@ namespace Intersect.Server.Database.PlayerData
             user.LastIp = ip;
         }
 
-        public static IUser PostLoad(IUser user)
+        public static User PostLoad(User user)
         {
             if (user != null)
             {
@@ -382,9 +384,9 @@ namespace Intersect.Server.Database.PlayerData
             }
         }
 
-        public void AddCharacter(IPlayer newCharacter)
+        public void AddCharacter(IPlayer player)
         {
-            if (newCharacter == null)
+            if (!(player is Player newCharacter))
             {
                 return;
             }
@@ -399,7 +401,7 @@ namespace Intersect.Server.Database.PlayerData
                     {
                         context.Users.Update(this);
 
-                        this.Players.Add(newCharacter);
+                        Players.Add(newCharacter);
 
                         Player.Load(newCharacter);
 
@@ -450,9 +452,9 @@ namespace Intersect.Server.Database.PlayerData
             }
         }
 
-        public void DeleteCharacter(IPlayer deleteCharacter)
+        public void DeleteCharacter(IPlayer player)
         {
-            if (deleteCharacter == null)
+            if (!(player is Player deleteCharacter))
             {
                 return;
             }
@@ -473,7 +475,7 @@ namespace Intersect.Server.Database.PlayerData
 
                         context.Entry(deleteCharacter).State = EntityState.Deleted;
 
-                        this.Players.Remove(deleteCharacter);
+                        Players.Remove(deleteCharacter);
 
                         context.SaveChanges();
                     }
@@ -526,14 +528,14 @@ namespace Intersect.Server.Database.PlayerData
 
                     context.StopTrackingUsersExcept(this);
 
-                    if (this.UserBan != null)
+                    if (UserBan != null)
                     {
-                        context.Entry(this.UserBan).State = EntityState.Detached;
+                        context.Entry(UserBan).State = EntityState.Detached;
                     }
 
-                    if (this.UserMute != null)
+                    if (UserMute != null)
                     {
-                        context.Entry(this.UserMute).State = EntityState.Detached;
+                        context.Entry(UserMute).State = EntityState.Detached;
                     }
 
                     context.SaveChanges();
@@ -583,21 +585,15 @@ namespace Intersect.Server.Database.PlayerData
             return IsPasswordValid(oldPassword) && TrySetPassword(newPassword);
         }
 
-        public void TryLogout()
+        public bool TryLogout()
         {
             //If we still have a character online (probably being held up in combat) then don't logout yet.
-            foreach (var chr in Players)
+            if (Players.Any(chr => Player.FindOnline(chr.Id) != default))
             {
-                if (Player.FindOnline(chr.Id) != null)
-                {
-                    return;
-                }
+                return false;
             }
 
-            if (OnlineUsers.ContainsKey(this.Id))
-            {
-                OnlineUsers.TryRemove(this.Id, out IUser removed);
-            }
+            return OnlineUsers.ContainsKey(Id) && OnlineUsers.TryRemove(Id, out _);
         }
 
         public bool TrySetPassword(string passwordHash)
@@ -628,9 +624,16 @@ namespace Intersect.Server.Database.PlayerData
         #region Instance Variables
 
         [ApiVisibility(ApiVisibility.Restricted)]
-        public IBan Ban
+        [NotMapped]
+        IBan IUser.Ban
         {
-            get => UserBan ?? IpBan;
+            get => Ban;
+            set => Ban = value as Ban;
+        }
+
+        public Ban Ban
+        {
+            get => UserBan as Ban ?? IpBan as Ban;
             set => UserBan = value;
         }
 
@@ -647,9 +650,16 @@ namespace Intersect.Server.Database.PlayerData
         public bool IsMuted => Mute != null;
 
         [ApiVisibility(ApiVisibility.Restricted)]
-        public IMute Mute
+        [NotMapped]
+        IMute IUser.Mute
         {
-            get => UserMute ?? IpMute;
+            get => Mute;
+            set => Mute = value as Mute;
+        }
+
+        public Mute Mute
+        {
+            get => UserMute as Mute ?? IpMute as Mute;
             set => UserMute = value;
         }
 

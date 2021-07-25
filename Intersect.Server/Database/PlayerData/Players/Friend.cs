@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using Intersect.Extensions;
 using Intersect.Server.Entities;
 using Intersect.Server.Framework.Database.PlayerData.Players;
 using Intersect.Server.Framework.Entities;
@@ -21,8 +22,15 @@ namespace Intersect.Server.Database.PlayerData.Players
 
         public Friend(IPlayer me, IPlayer friend)
         {
-            Owner = me;
-            Target = friend;
+            
+            Owner = me as Player ??
+                    throw new ArgumentException(
+                        ExceptionMessages.ExpectedReceived.Format(typeof(Player).FullName, me?.GetType().FullName), nameof(me)
+                    );
+            Target = friend as Player ??
+                     throw new ArgumentException(
+                         ExceptionMessages.ExpectedReceived.Format(typeof(Player).FullName, friend?.GetType().FullName), nameof(friend)
+                     );
         }
 
         [JsonProperty(nameof(Owner))]
@@ -41,10 +49,16 @@ namespace Intersect.Server.Database.PlayerData.Players
         public Guid Id { get; private set; }
 
         [JsonIgnore]
-        public virtual IPlayer Owner { get; private set; }
+        public virtual Player Owner { get; private set; }
+
+        [JsonIgnore, NotMapped]
+        IPlayer IFriend.Owner => Owner;
 
         [JsonIgnore]
-        public virtual IPlayer Target { get; private set; }
+        public virtual Player Target { get; private set; }
+
+        [JsonIgnore, NotMapped]
+        IPlayer IFriend.Target => Target;
 
     }
 

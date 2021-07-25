@@ -15,11 +15,7 @@ namespace Intersect.Server.Framework.Database.PlayerData
         string LastIp { get; set; }
         DateTime? LoginTime { get; set; }
         string Name { get; set; }
-        string Password { get; set; }
-        string Salt { get; set; }
-        string PasswordResetCode { get; set; }
-        DateTime? PasswordResetTime { get; set; }
-        List<IPlayer> Players { get; set; }
+        List<IPlayer> Players { get; }
         IBan Ban { get; set; }
         IBan IpBan { get; set; }
         IMute IpMute { get; set; }
@@ -45,7 +41,7 @@ namespace Intersect.Server.Framework.Database.PlayerData
 
         void Save(bool force = false);
 
-        void TryLogout();
+        bool TryLogout();
 
         bool TryChangePassword(string oldPassword, string newPassword);
 

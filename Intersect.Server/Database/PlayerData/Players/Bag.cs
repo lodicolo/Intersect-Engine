@@ -37,13 +37,19 @@ namespace Intersect.Server.Database.PlayerData.Players
 
         public int SlotCount { get; private set; }
 
-        public virtual List<IBagSlot> Slots { get; set; } = new List<IBagSlot>();
+        public virtual List<BagSlot> Slots { get; set; } = new List<BagSlot>();
+
+        List<IBagSlot> IBag.Slots
+        {
+            get => Slots.Cast<IBagSlot>().ToList();
+            set => Slots = value.Cast<BagSlot>().ToList();
+        }
 
         public void ValidateSlots(bool checkItemExistence = true)
         {
             if (Slots == null)
             {
-                Slots = new List<IBagSlot>(SlotCount);
+                Slots = new List<BagSlot>(SlotCount);
             }
 
             var slots = Slots

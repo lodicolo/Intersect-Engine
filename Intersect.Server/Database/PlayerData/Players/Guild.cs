@@ -59,7 +59,14 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// Guild bank slots
         /// </summary>
         [JsonIgnore]
-        public virtual List<IGuildBankSlot> Bank { get; set; } = new List<IGuildBankSlot>();
+        public virtual List<GuildBankSlot> Bank { get; set; } = new List<GuildBankSlot>();
+
+        [JsonIgnore, NotMapped]
+        List<IGuildBankSlot> IGuild.Bank
+        {
+            get => Bank.Cast<IGuildBankSlot>().ToList();
+            set => Bank = value.Cast<GuildBankSlot>().ToList();
+        }
 
         /// <summary>
         /// Sets the number of bank slots alotted to this guild. Banks lots can only expand.
@@ -69,23 +76,20 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// <summary>
         /// Contains a record of all guild members
         /// </summary>
-        [NotMapped]
-        [JsonIgnore]
-        public ConcurrentDictionary<Guid, GuildMember> Members { get; private set; } = new ConcurrentDictionary<Guid, GuildMember>();
+        [JsonIgnore, NotMapped]
+        public ConcurrentDictionary<Guid, GuildMember> Members { get; } = new ConcurrentDictionary<Guid, GuildMember>();
 
         /// <summary>
         /// The last time this guilds status was updated and memberlist was send to online players
         /// </summary>
-        [NotMapped]
-        [JsonIgnore]
+        [JsonIgnore, NotMapped]
         public long LastUpdateTime { get; set; } = -1;
 
         /// <summary>
         /// Locking context to prevent saving this guild to the db twice at the same time, and to prevent bank items from being withdrawed/deposited into by 2 threads at the same time
         /// </summary>
-        [NotMapped]
-        [JsonIgnore]
-        private object mLock = new object();
+        [JsonIgnore, NotMapped]
+        private readonly object mLock = new object();
 
 
         /// <summary>
@@ -95,7 +99,7 @@ namespace Intersect.Server.Database.PlayerData.Players
         /// <param name="name">The Name of the guild.</param>
         public static Guild CreateGuild(IPlayer creator, string name)
         {
-            name = name.Trim();
+            name = name?.Trim();
 
             if (creator != null && FieldChecking.IsValidGuildName(name, Strings.Regex.guildname))
             {

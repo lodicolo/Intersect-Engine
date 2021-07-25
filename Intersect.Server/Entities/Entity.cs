@@ -142,11 +142,23 @@ namespace Intersect.Server.Entities
 
         //Inventory
         [JsonIgnore]
-        public virtual List<IInventorySlot> Items { get; set; } = new List<IInventorySlot>();
+        public virtual List<InventorySlot> Items { get; set; } = new List<InventorySlot>();
+
+        List<IInventorySlot> IEntity.Items
+        {
+            get => Items.Cast<IInventorySlot>().ToList();
+            set => Items = value.Cast<InventorySlot>().ToList();
+        }
 
         //Spells
         [JsonIgnore]
-        public virtual List<ISpellSlot> Spells { get; set; } = new List<ISpellSlot>();
+        public virtual List<SpellSlot> Spells { get; set; } = new List<SpellSlot>();
+
+        List<ISpellSlot> IEntity.Spells
+        {
+            get => Spells.Cast<ISpellSlot>().ToList();
+            set => Spells = value.Cast<SpellSlot>().ToList();
+        }
 
         [JsonIgnore, Column(nameof(NameColor))]
         public string NameColorJson

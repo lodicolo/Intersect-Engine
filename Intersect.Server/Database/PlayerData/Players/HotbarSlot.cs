@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 using Intersect.Enums;
+using Intersect.Server.Entities;
 using Intersect.Server.Framework.Database.PlayerData.Players;
 using Intersect.Server.Framework.Entities;
 using Intersect.Utilities;
@@ -49,7 +50,10 @@ namespace Intersect.Server.Database.PlayerData.Players
         public Guid PlayerId { get; private set; }
 
         [JsonIgnore]
-        public virtual IPlayer Player { get; private set; }
+        public virtual Player Player { get; private set; }
+
+        [JsonIgnore, NotMapped]
+        IPlayer IPlayerOwned.Player => Player;
 
         [JsonIgnore]
         public int Slot { get; private set; }

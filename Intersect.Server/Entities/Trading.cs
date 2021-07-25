@@ -11,19 +11,19 @@ namespace Intersect.Server.Entities
     public struct Trading : ITrading
     {
 
-        private IPlayer mPlayer { get; }
+        private readonly IPlayer mPlayer;
 
         public bool Actively => Counterparty != null;
 
-        public IPlayer Counterparty { get; set; }
+        public IPlayer Counterparty;
 
-        public bool Accepted { get; set; }
+        public bool Accepted;
 
-        public IItem[] Offer { get; set; }
+        public IItem[] Offer;
 
-        public IPlayer Requester { get; set; }
+        public IPlayer Requester;
 
-        public Dictionary<IPlayer, long> Requests { get; set; }
+        public Dictionary<IPlayer, long> Requests;
 
         public Trading(IPlayer player)
         {
@@ -36,13 +36,48 @@ namespace Intersect.Server.Entities
             Requests = new Dictionary<IPlayer, long>();
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             Offer = Array.Empty<IItem>();
             Requester = null;
             Requests.Clear();
         }
+        
+        /// <inheritdoc />
+        bool ITrading.Accepted
+        {
+            get => Accepted;
+            set => Accepted = value;
+        }
 
+        /// <inheritdoc />
+        IPlayer ITrading.Counterparty
+        {
+            get => Counterparty;
+            set => Counterparty = value;
+        }
+
+        /// <inheritdoc />
+        IItem[] ITrading.Offer
+        {
+            get => Offer;
+            set => Offer = value;
+        }
+
+        /// <inheritdoc />
+        IPlayer ITrading.Requester
+        {
+            get => Requester;
+            set => Requester = value;
+        }
+
+        /// <inheritdoc />
+        Dictionary<IPlayer, long> ITrading.Requests
+        {
+            get => Requests;
+            set => Requests = value;
+        }
     }
 
 }

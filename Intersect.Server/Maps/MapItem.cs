@@ -43,7 +43,7 @@ namespace Intersect.Server.Maps
             Y = y;
         }
 
-        public MapItem(Guid itemId, int quantity, int x, int y, Guid? bagId, IBag bag) : base(itemId, quantity, bagId, bag)
+        public MapItem(Guid itemId, int quantity, int x, int y, Guid? bagId, Bag bag) : base(itemId, quantity, bagId, bag)
         {
             UniqueId = Guid.NewGuid();
             X = x;

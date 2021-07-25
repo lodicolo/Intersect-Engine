@@ -7,8 +7,6 @@ namespace Intersect.Server.Framework.Database.PlayerData.Players
     {
         bool Completed { get; set; }
         Guid Id { get; }
-        IPlayer Player { get; }
-        Guid PlayerId { get; }
         Guid QuestId { get; }
         Guid TaskId { get; set; }
         int TaskProgress { get; set; }

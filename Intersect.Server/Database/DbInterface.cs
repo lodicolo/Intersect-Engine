@@ -378,7 +378,7 @@ namespace Intersect.Server.Database
             return null;
         }
 
-        public static IPlayer GetUserCharacter(IUser user, Guid characterId)
+        public static IPlayer GetUserCharacter(User user, Guid characterId)
         {
             if (user == null) return null;
             foreach (var character in user.Players)
@@ -427,7 +427,7 @@ namespace Intersect.Server.Database
             client?.SetUser(user);
         }
 
-        public static void ResetPass(IUser user, string password)
+        public static void ResetPass(User user, string password)
         {
             var sha = new SHA256Managed();
 

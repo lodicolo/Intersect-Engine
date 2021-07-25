@@ -7,6 +7,5 @@ namespace Intersect.Server.Framework.Database.PlayerData.Players
         Guid Id { get; }
         IBag ParentBag { get; }
         Guid ParentBagId { get; }
-        int Slot { get; }
     }
 }

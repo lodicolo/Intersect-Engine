@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 
+using Intersect.Server.Database.PlayerData;
 using Intersect.Server.Framework.Database.PlayerData;
 using Intersect.Server.Localization;
 using Intersect.Utilities;
@@ -11,7 +12,9 @@ namespace Intersect.Server.Notifications
     public class PasswordResetEmail : Notification
     {
 
-        public PasswordResetEmail(IUser user) : base(user.Email)
+        public PasswordResetEmail(IUser user) : this(user as User) { }
+
+        public PasswordResetEmail(User user) : base(user?.Email ?? throw new ArgumentNullException(nameof(user)))
         {
             LoadFromTemplate("PasswordReset", user.Name);
             Subject = Strings.PasswordResetNotification.subject;

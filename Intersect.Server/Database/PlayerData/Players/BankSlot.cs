@@ -31,7 +31,10 @@ namespace Intersect.Server.Database.PlayerData.Players
         public Guid PlayerId { get; private set; }
 
         [JsonIgnore]
-        public virtual IPlayer Player { get; private set; }
+        public virtual Player Player { get; private set; }
+
+        [JsonIgnore, NotMapped]
+        IPlayer IPlayerOwned.Player => Player;
 
         public int Slot { get; private set; }
 

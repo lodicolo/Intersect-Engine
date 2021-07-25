@@ -45,7 +45,7 @@ namespace Intersect.Server.Database.PlayerData
             ip, reason, durationDays, muter
         )
         {
-            User = user;
+            User = user as User ?? throw new ArgumentException($"Is of type {user?.GetType().FullName} instead of {typeof(User).FullName}.", nameof(user));
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -55,7 +55,10 @@ namespace Intersect.Server.Database.PlayerData
         public Guid UserId { get; private set; }
 
         [JsonIgnore, Column("Player")] // SOURCE TODO: Migrate column
-        public virtual IUser User { get; private set; }
+        public virtual User User { get; private set; }
+
+        [NotMapped]
+        IUser IMute.User => User;
 
         [JsonIgnore, NotMapped]
         public bool IsIp => Guid.Empty == UserId;

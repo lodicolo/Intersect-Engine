@@ -28,7 +28,10 @@ namespace Intersect.Server.Database.PlayerData.Players
         public Guid ParentBagId { get; private set; }
 
         [JsonIgnore]
-        public virtual IBag ParentBag { get; private set; }
+        public virtual Bag ParentBag { get; private set; }
+
+        [JsonIgnore, NotMapped]
+        IBag IBagSlot.ParentBag => ParentBag;
 
         public int Slot { get; private set; }
 

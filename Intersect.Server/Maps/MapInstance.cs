@@ -14,6 +14,7 @@ using Intersect.Logging;
 using Intersect.Network.Packets.Server;
 using Intersect.Server.Classes.Maps;
 using Intersect.Server.Database;
+using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Entities;
 using Intersect.Server.Entities.Events;
 using Intersect.Server.Framework.Database;
@@ -349,7 +350,7 @@ namespace Intersect.Server.Maps
                     }
                 }
 
-                var mapItem = new MapItem(item.ItemId, amount + existingCount, x, y, item.BagId, item.Bag) {
+                var mapItem = new MapItem(item.ItemId, amount + existingCount, x, y, item.BagId, item.Bag as Bag) {
                     DespawnTime = Timing.Global.Milliseconds + Options.Loot.ItemDespawnTime,
                     Owner = owner,
                     OwnershipTime = Timing.Global.Milliseconds + Options.Loot.ItemOwnershipTime,
@@ -378,7 +379,7 @@ namespace Intersect.Server.Maps
                 // Oh boy here we go! Set quantity to 1 and drop multiple!
                 for (var i = 0; i < amount; i++)
                 {
-                    var mapItem = new MapItem(item.ItemId, amount, x, y, item.BagId, item.Bag) {
+                    var mapItem = new MapItem(item.ItemId, amount, x, y, item.BagId, item.Bag as Bag) {
                         DespawnTime = Globals.Timing.Milliseconds + Options.Loot.ItemDespawnTime,
                         Owner = owner,
                         OwnershipTime = Globals.Timing.Milliseconds + Options.Loot.ItemOwnershipTime,

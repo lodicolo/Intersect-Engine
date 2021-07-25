@@ -9,6 +9,5 @@ namespace Intersect.Server.Database.PlayerData.Players
         IGuild Guild { get; }
         Guid GuildId { get; }
         Guid Id { get; }
-        int Slot { get; }
     }
 }

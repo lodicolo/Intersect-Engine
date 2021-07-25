@@ -31,10 +31,10 @@ namespace Intersect.Server.Database.PlayerData.Players
         public Guid PlayerId { get; private set; }
 
         [JsonIgnore]
-        IPlayer IPlayerOwned.Player { get; }
-
-        [JsonIgnore]
         public virtual Player Player { get; private set; }
+
+        [JsonIgnore, NotMapped]
+        IPlayer IPlayerOwned.Player => Player;
 
         public int Slot { get; private set; }
     }

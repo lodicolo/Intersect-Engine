@@ -8,6 +8,7 @@ using Intersect.Core;
 using Intersect.Logging;
 using Intersect.Network;
 using Intersect.Network.Packets;
+using Intersect.Server.Database.PlayerData;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.General;
 using Intersect.Server.Networking.Lidgren;
@@ -16,6 +17,8 @@ using Intersect.Server.Framework.Entities;
 using Intersect.Server.Framework.Database.PlayerData;
 using Intersect.Server.Framework.Database.PlayerData.Security;
 using Intersect.Server.Framework.Networking;
+
+using IClient = Intersect.Server.Framework.Networking.IClient;
 
 namespace Intersect.Server.Networking
 {
@@ -117,9 +120,11 @@ namespace Intersect.Server.Networking
             }
         }
 
-        public IUser User { get; private set; }
+        public User User { get; private set; }
 
-        public List<IPlayer> Characters => User?.Players;
+        IUser IClient.User => User;
+
+        public List<IPlayer> Characters => (User as IUser).Players;
 
         public IPlayer Entity { get; set; }
 
@@ -132,12 +137,19 @@ namespace Intersect.Server.Networking
                 User?.TryLogout();
             }
 
-            if (user != null && user != User)
+            if (user is User newUser)
             {
-                Database.PlayerData.User.Login(user, mConnection.Ip);
-            }
+                if (newUser != null && newUser != User)
+                {
+                    User.Login(newUser, mConnection.Ip);
+                }
 
-            User = user;
+                User = newUser;                 
+            }
+            else
+            {
+                User = null;
+            }
         }
 
         public void LoadCharacter(IPlayer character)
@@ -217,9 +229,9 @@ namespace Intersect.Server.Networking
             entity?.TryLogout();
             Entity = null;
 
-            if (User != null && User.LoginTime != null)
+            if (User?.LoginTime != null)
             {
-                User.PlayTimeSeconds += (ulong)(DateTime.UtcNow - (DateTime)User.LoginTime).TotalSeconds;
+                User.PlayTimeSeconds += (ulong)(DateTime.UtcNow - User.LoginTime.Value).TotalSeconds;
                 User.LoginTime = null;
             }
 

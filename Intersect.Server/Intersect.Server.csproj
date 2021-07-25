@@ -505,6 +505,11 @@
     <Compile Include="Entities\Trading.cs" />
     <Compile Include="Entities\Events\CommandInstance.cs" />
     <Compile Include="Entities\Events\CommandProcessing.cs" />
+    <Compile Include="ExceptionMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
     <Compile Include="General\Formulas.cs" />
     <Compile Include="General\Time.cs" />
     <Compile Include="Localization\CommandsNamespace.cs" />
@@ -869,6 +874,10 @@
     <Compile Include="Entities\Entity.Comparison.cs" />
     <Compile Include="Core\ConsoleService.ConsoleThread.cs" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="ExceptionMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\libe_sqlite3_x64.so" />
     <EmbeddedResource Include="Resources\libe_sqlite3.dylib" />
     <EmbeddedResource Include="Resources\libe_sqlite3_x86.so" />

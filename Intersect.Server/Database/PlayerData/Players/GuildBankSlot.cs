@@ -28,7 +28,10 @@ namespace Intersect.Server.Database.PlayerData.Players
         public Guid GuildId { get; private set; }
 
         [JsonIgnore]
-        public virtual IGuild Guild { get; private set; }
+        public virtual Guild Guild { get; private set; }
+
+        [JsonIgnore, NotMapped]
+        IGuild IGuildBankSlot.Guild => Guild;
 
         public int Slot { get; private set; }
 

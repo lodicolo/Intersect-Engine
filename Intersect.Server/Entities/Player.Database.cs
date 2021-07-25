@@ -28,7 +28,9 @@ namespace Intersect.Server.Entities
         public Guid UserId { get; private set; }
 
         [JsonIgnore]
-        public virtual IUser User { get; private set; }
+        public virtual User User { get; private set; }
+
+        IUser IPlayer.User => User;
 
         [NotMapped, JsonIgnore]
         public long SaveTimer { get; set; } = Globals.Timing.Milliseconds + Options.Instance.Processing.PlayerSaveInterval;

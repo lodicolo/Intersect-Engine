@@ -12,7 +12,5 @@ namespace Intersect.Server.Framework.Entities
         IItem[] Offer { get; set; }
         IPlayer Requester { get; set; }
         Dictionary<IPlayer, long> Requests { get; set; }
-
-        void Dispose();
     }
 }

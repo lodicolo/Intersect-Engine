@@ -8,8 +8,6 @@ namespace Intersect.Server.Framework.Database.PlayerData.Players
     {
         Guid Id { get; }
         string Json { get; }
-        IPlayer Player { get; }
-        Guid PlayerId { get; }
         VariableValue Value { get; set; }
         dynamic ValueData { get; }
         Guid VariableId { get; }

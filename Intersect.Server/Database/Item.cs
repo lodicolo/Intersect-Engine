@@ -26,7 +26,7 @@ namespace Intersect.Server.Database
         {
         }
 
-        public Item(Guid itemId, int quantity, Guid? bagId, IBag bag, bool includeStatBuffs = true)
+        public Item(Guid itemId, int quantity, Guid? bagId, Bag bag, bool includeStatBuffs = true)
         {
             ItemId = itemId;
             Quantity = quantity;
@@ -68,7 +68,13 @@ namespace Intersect.Server.Database
         public static Item None => new Item();
 
         [JsonIgnore]
-        public virtual IBag Bag { get; set; }
+        public virtual Bag Bag { get; set; }
+
+        IBag IItem.Bag
+        {
+            get => Bag;
+            set => Bag = value as Bag;
+        }
 
         // TODO: THIS SHOULD NOT BE A NULLABLE. This needs to be fixed.
         public Guid? BagId { get; set; }
@@ -110,7 +116,7 @@ namespace Intersect.Server.Database
             ItemId = item.ItemId;
             Quantity = item.Quantity;
             BagId = item.BagId;
-            Bag = item.Bag;
+            Bag = item.Bag as Bag;
             for (var i = 0; i < (int)Stats.StatCount; i++)
             {
                 StatBuffs[i] = item.StatBuffs[i];
@@ -133,9 +139,9 @@ namespace Intersect.Server.Database
                 // ReSharper disable once InvertIf Justification: Do not introduce two different return points that assert a value state
                 if (descriptor?.ItemType == ItemTypes.Bag)
                 {
-                    bag = PlayerData.Players.Bag.GetBag(BagId ?? Guid.Empty);
+                    bag = Bag.GetBag(BagId ?? Guid.Empty);
                     bag?.ValidateSlots();
-                    Bag = bag;
+                    Bag = bag as Bag;
                 }
             }
 
