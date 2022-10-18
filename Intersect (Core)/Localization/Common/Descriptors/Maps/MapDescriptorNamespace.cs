@@ -1,12 +1,13 @@
 using Intersect.Enums;
-
 using Newtonsoft.Json;
 
 namespace Intersect.Localization.Common.Descriptors.Maps;
 
-public partial class MapDescriptorNamespace : LocaleNamespace
+public class MapDescriptorNamespace : LocaleNamespace
 {
-    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    [JsonProperty(
+        NullValueHandling = NullValueHandling.Ignore
+    )]
     public readonly LocaleDictionary<MapAttributes, LocalizedString> AttributeTypes = new()
     {
         { MapAttributes.Animation, @"Animation" },
@@ -20,6 +21,6 @@ public partial class MapDescriptorNamespace : LocaleNamespace
         { MapAttributes.Sound, @"Map Sound" },
         { MapAttributes.Walkable, @"Walkable" },
         { MapAttributes.Warp, @"Warp" },
-        { MapAttributes.ZDimension, @"Z-Dimension" },
+        { MapAttributes.ZDimension, @"Z-Dimension" }
     };
 }

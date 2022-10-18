@@ -1,6 +1,5 @@
+using Intersect.Framework.Commands.Parsing;
 using Intersect.Localization;
-using Intersect.Server.Core.CommandParsing;
-
 using Newtonsoft.Json;
 
 namespace Intersect.Server.Localization
@@ -105,7 +104,7 @@ namespace Intersect.Server.Localization
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)] public readonly LocalizedString FlagInfo = @"(flag)";
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public readonly LocaleCommand Help = new LocaleCommand
+            public readonly LocaleCommand Help = new()
             {
                 Name = @"help",
                 Description = @"help",

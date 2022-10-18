@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Intersect.Localization.Common;
 
-public abstract partial class AbstractRootNamespace : LocaleNamespace
+public abstract class AbstractRootNamespace : LocaleNamespace
 {
     private readonly Dictionary<FieldInfo, Localized> _localized;
 
@@ -14,10 +14,17 @@ public abstract partial class AbstractRootNamespace : LocaleNamespace
         _localized = new();
         _namespaces = new();
 
-        CrawlNamespace(this, this);
+        CrawlNamespace(
+            this,
+            this
+        );
 
-        Localized = new ReadOnlyDictionary<FieldInfo, Localized>(_localized);
-        Namespaces = new ReadOnlyDictionary<FieldInfo, LocaleNamespace>(_namespaces);
+        Localized = new ReadOnlyDictionary<FieldInfo, Localized>(
+            _localized
+        );
+        Namespaces = new ReadOnlyDictionary<FieldInfo, LocaleNamespace>(
+            _namespaces
+        );
     }
 
     [Newtonsoft.Json.JsonIgnore]
@@ -28,18 +35,28 @@ public abstract partial class AbstractRootNamespace : LocaleNamespace
     [System.Text.Json.Serialization.JsonIgnore]
     public IReadOnlyDictionary<FieldInfo, LocaleNamespace> Namespaces { get; }
 
-    private static void CrawlNamespace(AbstractRootNamespace rootNamespace, LocaleNamespace currentNamespace)
+    private static void CrawlNamespace(
+        AbstractRootNamespace rootNamespace,
+        LocaleNamespace currentNamespace
+    )
     {
         var currentNamespaceType = currentNamespace.GetType();
-        var fieldInfos = currentNamespaceType.GetFields(BindingFlags.Public | BindingFlags.Instance);
+        var fieldInfos = currentNamespaceType.GetFields(
+            BindingFlags.Public | BindingFlags.Instance
+        );
         foreach (var fieldInfo in fieldInfos)
         {
-            var fieldValue = fieldInfo.GetValue(currentNamespace);
+            var fieldValue = fieldInfo.GetValue(
+                currentNamespace
+            );
             switch (fieldValue)
             {
                 case LocaleNamespace localeNamespace:
                     rootNamespace._namespaces[fieldInfo] = localeNamespace;
-                    CrawlNamespace(rootNamespace, localeNamespace);
+                    CrawlNamespace(
+                        rootNamespace,
+                        localeNamespace
+                    );
                     break;
 
                 case Localized localized:

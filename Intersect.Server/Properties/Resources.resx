@@ -117,4 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Program_Bootstrap_ExceptionOccurredAbortingStartup" xml:space="preserve">
+    <value>Exception occurred during application bootstrapping, aborting startup.</value>
+  </data>
+  <data name="Program_HostBuilder_ExceptionDuringConfigurationAbortingStartup" xml:space="preserve">
+    <value>Exception occurred configuring application, aborting startup.</value>
+  </data>
 </root>

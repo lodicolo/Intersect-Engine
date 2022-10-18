@@ -3,8 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <Configurations>Debug;Release;NoFody</Configurations>
-    <Nullable>disable</Nullable>
+    <Configurations>Debug;Release</Configurations>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Framework\Intersect.Framework.Commands\Intersect.Framework.Commands.csproj" />
     <ProjectReference Include="..\Intersect (Core)\Intersect.Core.csproj" />
     <ProjectReference Include="..\Intersect.Network\Intersect.Network.csproj" />
     <ProjectReference Include="..\Intersect.Server.Framework\Intersect.Server.Framework.csproj" />
@@ -49,6 +50,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="appsettings.Development.json" />
+    <None Remove="appsettings.json" />
+    <EmbeddedResource Include="appsettings.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,9 +64,6 @@
     <EmbeddedResource Include="Resources\notifications\PasswordReset.html" />
     <EmbeddedResource Include="Resources\e_sqlite3x64.dll" />
     <EmbeddedResource Include="Resources\e_sqlite3x86.dll" />
-    <None Include="FodyWeavers.xml">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -108,6 +109,15 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
     <PackageReference Include="Pomelo.JsonObject" Version="2.2.1" />
     <PackageReference Include="Remotion.Linq" Version="2.2.0" />
+    <PackageReference Include="Serilog" Version="2.12.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+    <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Serilog.Settings.AppSettings" Version="2.2.3-dev-00066" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.4.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="SmartThreadPool.dll" Version="2.3.0" />
     <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.0" />
     <PackageReference Include="SqlKata" Version="2.3.7" />

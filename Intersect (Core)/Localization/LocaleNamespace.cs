@@ -1,34 +1,48 @@
 using System.Reflection;
-
 using Intersect.Framework.Reflection;
 
-namespace Intersect.Localization
-{
-    [Serializable]
-    public abstract partial class LocaleNamespace : Localized
-    {
-        protected LocaleNamespace() => ValidateNamespaceType(GetType());
+namespace Intersect.Localization;
 
-        public static void ValidateNamespaceType(Type type)
+/// <summary>
+/// Namespace of localizations.
+/// </summary>
+[Serializable]
+public abstract class LocaleNamespace : Localized
+{
+    /// <summary>
+    /// Constructs an instance of this <see cref="LocaleNamespace"/>
+    /// </summary>
+    protected LocaleNamespace() => ValidateNamespaceType(GetType());
+
+    private static void ValidateNamespaceType(Type type)
+    {
+        if (!type.Extends<LocaleNamespace>())
         {
-            if (!type.Extends<LocaleNamespace>())
+            throw new ArgumentException(
+                string.Format(
+                    LocalizationResources.LocaleNamespace_ValidateNamespaceType_NotSubclass,
+                    type.FullName,
+                    typeof(LocaleNamespace).FullName
+                ),
+                nameof(type)
+            );
+        }
+
+        var fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+        foreach (var fieldInfo in fieldInfos)
+        {
+            if (!fieldInfo.FieldType.Extends<Localized>())
             {
                 throw new ArgumentException(
-                    $"{type.FullName} does not extend from {typeof(LocaleNamespace).FullName}.",
+                    string.Format(
+                        LocalizationResources.LocaleNamespace_ValidateNamespaceType_DisallowedFieldType,
+                        type.FullName,
+                        fieldInfo.Name,
+                        fieldInfo.FieldType.FullName
+                    ),
                     nameof(type)
                 );
-            }
-
-            var fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-            foreach (var fieldInfo in fieldInfos)
-            {
-                if (!fieldInfo.FieldType.Extends<Localized>())
-                {
-                    throw new ArgumentException(
-                        $"{type.FullName} contains invalid field {fieldInfo.Name} of disallowed type {fieldInfo.FieldType.FullName}.",
-                        nameof(type)
-                    );
-                }
             }
         }
     }

@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -54,6 +53,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>CommonStrings.resx</DependentUpon>
     </Compile>
+    <Compile Update="Localization\LocalizationResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>LocalizationResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -84,6 +88,10 @@
     <EmbeddedResource Update="CommonStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CommonStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Localization\LocalizationResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LocalizationResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

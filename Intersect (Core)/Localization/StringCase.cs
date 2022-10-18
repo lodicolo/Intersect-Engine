@@ -6,5 +6,5 @@ public enum StringCase
 
     Lower,
 
-    Upper,
+    Upper
 }

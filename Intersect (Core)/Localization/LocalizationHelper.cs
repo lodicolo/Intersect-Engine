@@ -31,36 +31,46 @@ public static class CultureInfoExtensions
     public static bool IsOrIsAncestorOf(
         this CultureInfo cultureInfo,
         CultureInfo possibleDescendantCultureInfo
-    ) => cultureInfo.LCID == possibleDescendantCultureInfo.LCID
-        || cultureInfo.IsAncestorOf(possibleDescendantCultureInfo);
+    ) => cultureInfo.LCID == possibleDescendantCultureInfo.LCID || cultureInfo.IsAncestorOf(
+        possibleDescendantCultureInfo
+    );
 }
 
 public static class LocalizationHelper
 {
-    public static readonly CultureInfo CultureEnUS = CultureInfo.GetCultureInfo("en-US");
+    public static readonly CultureInfo CultureEnUS = CultureInfo.GetCultureInfo(
+        "en-US"
+    );
 
-    public static string? MatchCulture(CultureInfo cultureInfo, IEnumerable<string> strings, char delimiter = '.')
+    public static string? MatchCulture(
+        CultureInfo cultureInfo,
+        IEnumerable<string> strings,
+        char delimiter = '.'
+    )
     {
         // Because InvariantCulture is a static readonly we can compare directly
         if (cultureInfo == CultureInfo.InvariantCulture)
         {
-            return strings.FirstOrDefault(@string => @string.Count(@char => @char == delimiter) < 2);
+            return strings.FirstOrDefault(
+                @string => @string.Count(
+                    @char => @char == delimiter
+                ) < 2
+            );
         }
 
         var currentCultureInfo = cultureInfo;
         while (currentCultureInfo is not null && currentCultureInfo != CultureInfo.InvariantCulture)
         {
             var matching = strings.FirstOrDefault(
-                @string => @string
-                    .Split(delimiter)
-                    .Any(
-                        segment =>
-                            string.Equals(
-                                currentCultureInfo.IetfLanguageTag,
-                                segment,
-                                StringComparison.OrdinalIgnoreCase
-                            )
+                @string => @string.Split(
+                    delimiter
+                ).Any(
+                    segment => string.Equals(
+                        currentCultureInfo.IetfLanguageTag,
+                        segment,
+                        StringComparison.OrdinalIgnoreCase
                     )
+                )
             );
 
             if (matching != default)
@@ -71,9 +81,15 @@ public static class LocalizationHelper
             currentCultureInfo = currentCultureInfo.Parent;
         }
 
-        if (!CultureEnUS.IsOrIsAncestorOf(cultureInfo))
+        if (!CultureEnUS.IsOrIsAncestorOf(
+                cultureInfo
+            ))
         {
-            var matching = MatchCulture(CultureEnUS, strings, delimiter);
+            var matching = MatchCulture(
+                CultureEnUS,
+                strings,
+                delimiter
+            );
 
             if (matching != default)
             {
@@ -81,6 +97,10 @@ public static class LocalizationHelper
             }
         }
 
-        return MatchCulture(CultureInfo.InvariantCulture, strings, delimiter);
+        return MatchCulture(
+            CultureInfo.InvariantCulture,
+            strings,
+            delimiter
+        );
     }
 }

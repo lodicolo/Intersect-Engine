@@ -9,17 +9,22 @@ public sealed class ReactiveString
 
     private string? _value;
 
-    public ReactiveString(LocalizedString localizedString, Consumer consumer)
+    public ReactiveString(
+        LocalizedString localizedString,
+        Consumer consumer
+    )
     {
         _consumer = consumer;
         _localizedString = localizedString;
-        _localizedString.Repopulated += (_, _) => _value = default;
+        _localizedString.Repopulated += (
+            _,
+            _
+        ) => _value = default;
     }
 
-    public override string ToString()
-    {
-        return _value ??= _consumer(_localizedString);
-    }
+    public override string ToString() => _value ??= _consumer(
+        _localizedString
+    );
 
     public static implicit operator string(ReactiveString str) => str?.ToString();
 }

@@ -82,14 +82,18 @@ public static partial class TypeExtensions
 
     public static bool ExtendedBy<TChildType>(this Type type) => typeof(TChildType).Extends(type);
 
-    public static Type? FindConcreteType(this Type abstractType, Func<Type, bool> predicate, bool allLoadedAssemblies = false)
+    public static Type? FindConcreteType(this Type abstractType, Func<Type, bool> predicate,
+        bool allLoadedAssemblies = false)
     {
         if (!abstractType.IsAbstract && !abstractType.IsInterface)
         {
-            throw new ArgumentException($"Expected abstract/interface type, received {abstractType.FullName}", nameof(abstractType));
+            throw new ArgumentException($"Expected abstract/interface type, received {abstractType.FullName}",
+                nameof(abstractType));
         }
 
-        var assembliesToCheck = allLoadedAssemblies ? AppDomain.CurrentDomain.GetAssemblies() : new[] { abstractType.Assembly };
+        var assembliesToCheck = allLoadedAssemblies
+            ? AppDomain.CurrentDomain.GetAssemblies()
+            : new[] { abstractType.Assembly };
         var validAssembliesToCheck = assembliesToCheck.Where(assembly => !assembly.IsDynamic);
         var allTypes = validAssembliesToCheck.SelectMany(assembly =>
         {
@@ -107,6 +111,35 @@ public static partial class TypeExtensions
         var allDescendantTypes = allConcreteTypes.Where(type => type.Extends(abstractType));
         var firstPredicateMatch = allDescendantTypes.FirstOrDefault(predicate);
         return firstPredicateMatch;
+    }
+
+    public static Type[] FindDerivedTypes(this Type type, params Assembly[] assemblies)
+    {
+        var targetAssemblies = assemblies;
+        if (targetAssemblies.Length < 1)
+        {
+            targetAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+        }
+
+        var derivedTypes = targetAssemblies
+            .Where(assembly => !assembly.IsDynamic)
+            .SelectMany(assembly =>
+            {
+                try
+                {
+                    return assembly.ExportedTypes;
+                }
+                catch
+                {
+                    return Array.Empty<Type>();
+                }
+            })
+            .SelectMany(type => type.GetProperties())
+            .Select(propertyInfo => propertyInfo.PropertyType)
+            .Where(type => type.Extends(type))
+            .Distinct()
+            .ToArray();
+        return derivedTypes;
     }
 
     public static Type FindGenericType(this Type type) =>

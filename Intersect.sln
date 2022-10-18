@@ -79,6 +79,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImGui.NET", "..\ImGui.NET\s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intersect.Runtime.MonoGame", "Intersect.Runtime.MonoGame\Intersect.Runtime.MonoGame.csproj", "{C214D061-44E9-4386-8491-40E588EF6946}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intersect.Framework.Runtime", "Framework\Intersect.Framework.Runtime\Intersect.Framework.Runtime.csproj", "{97F93B7C-1E88-4261-B480-39881D4A2EBD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{4BAC3D85-7047-481C-A2C1-C75939419C50}"
+	ProjectSection(SolutionItems) = preProject
+		Tests\Directory.Build.props = Tests\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intersect.Framework.Commands", "Framework\Intersect.Framework.Commands\Intersect.Framework.Commands.csproj", "{D3FA5FB1-2A08-4E5D-842A-2C277954ADA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -200,6 +209,18 @@ Global
 		{C214D061-44E9-4386-8491-40E588EF6946}.NoFody|Any CPU.Build.0 = Debug|Any CPU
 		{C214D061-44E9-4386-8491-40E588EF6946}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C214D061-44E9-4386-8491-40E588EF6946}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97F93B7C-1E88-4261-B480-39881D4A2EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97F93B7C-1E88-4261-B480-39881D4A2EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97F93B7C-1E88-4261-B480-39881D4A2EBD}.NoFody|Any CPU.ActiveCfg = Debug|Any CPU
+		{97F93B7C-1E88-4261-B480-39881D4A2EBD}.NoFody|Any CPU.Build.0 = Debug|Any CPU
+		{97F93B7C-1E88-4261-B480-39881D4A2EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97F93B7C-1E88-4261-B480-39881D4A2EBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3FA5FB1-2A08-4E5D-842A-2C277954ADA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3FA5FB1-2A08-4E5D-842A-2C277954ADA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3FA5FB1-2A08-4E5D-842A-2C277954ADA0}.NoFody|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3FA5FB1-2A08-4E5D-842A-2C277954ADA0}.NoFody|Any CPU.Build.0 = Debug|Any CPU
+		{D3FA5FB1-2A08-4E5D-842A-2C277954ADA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3FA5FB1-2A08-4E5D-842A-2C277954ADA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -217,6 +238,9 @@ Global
 		{43C0B637-C2DF-49B1-A394-5572E1E4B61E} = {91D46B09-C92B-450B-AEC2-C7A6EE0F8E3B}
 		{E8FB92B2-A001-416F-89DF-5AD9FB1AC81D} = {91D46B09-C92B-450B-AEC2-C7A6EE0F8E3B}
 		{A006322F-ACE7-4B89-9659-F499C70AFF93} = {118586E7-C9A1-40D3-A1F2-60BAA1FECA66}
+		{97F93B7C-1E88-4261-B480-39881D4A2EBD} = {118586E7-C9A1-40D3-A1F2-60BAA1FECA66}
+		{4BAC3D85-7047-481C-A2C1-C75939419C50} = {91D46B09-C92B-450B-AEC2-C7A6EE0F8E3B}
+		{D3FA5FB1-2A08-4E5D-842A-2C277954ADA0} = {118586E7-C9A1-40D3-A1F2-60BAA1FECA66}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {06095334-0BBD-4FDA-A230-272D08AFB221}

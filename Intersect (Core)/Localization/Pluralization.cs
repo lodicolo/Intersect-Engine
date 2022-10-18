@@ -12,5 +12,5 @@ public enum Pluralization
 
     PluralLower,
 
-    PluralUpper,
+    PluralUpper
 }

@@ -1,17 +1,18 @@
 using Intersect.Metadata.Licensing;
-
 using Newtonsoft.Json;
 
 namespace Intersect.Localization.Common;
 
-public partial class LicensingNamespace : LocaleNamespace
+public class LicensingNamespace : LocaleNamespace
 {
-    [JsonProperty(NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
+    [JsonProperty(
+        NullValueHandling = NullValueHandling.Ignore,
+        DefaultValueHandling = DefaultValueHandling.Ignore
+    )]
     public readonly LocaleDictionary<LicenseType, LocalizedLicenseNotice> Notices = new()
     {
         {
-            LicenseType.GPLv3,
-            new(
+            LicenseType.GPLv3, new(
                 @"Copyright (C) {00}  {01}
 
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -26,8 +27,7 @@ public partial class LicensingNamespace : LocaleNamespace
             )
         },
         {
-            LicenseType.MIT,
-            @"MIT License
+            LicenseType.MIT, @"MIT License
 
 Copyright (c) 2020 Ascension Game Dev
 
@@ -48,6 +48,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE."
-        },
+        }
     };
 }

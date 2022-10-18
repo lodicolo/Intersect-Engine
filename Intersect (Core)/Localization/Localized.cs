@@ -1,11 +1,7 @@
-using System;
+namespace Intersect.Localization;
 
-namespace Intersect.Localization
-{
-
-    [Serializable]
-    public abstract partial class Localized
-    {
-    }
-
-}
+/// <summary>
+/// Base unit for a localized piece of information.
+/// </summary>
+[Serializable]
+public abstract class Localized { }

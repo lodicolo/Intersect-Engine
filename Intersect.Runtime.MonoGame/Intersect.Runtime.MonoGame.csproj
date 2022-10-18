@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Framework\Intersect.Framework.Runtime\Intersect.Framework.Runtime.csproj" />
     <ProjectReference Include="..\Intersect (Core)\Intersect.Core.csproj" />
     <ProjectReference Include="..\Intersect.Client.Framework\Intersect.Client.Framework.csproj" />
   </ItemGroup>
@@ -16,6 +17,10 @@
   <ItemGroup Label="Project Embedded Resources">
     <EmbeddedResource Include="$(IntersectRepoPath)\assets\intersect-logo-qu.bmp">
       <LogicalName>Icon.bmp</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Assets\AssetsResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AssetsResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
@@ -52,6 +57,18 @@
   <ItemGroup>
     <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.9" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" GeneratePathProperty="True" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Legacy" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Assets\AssetsResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AssetsResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

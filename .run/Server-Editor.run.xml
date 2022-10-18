@@ -1,0 +1,7 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Server-Editor" type="CompoundRunConfigurationType">
+    <toRun name="Intersect.Editor" type="LaunchSettings" />
+    <toRun name="Intersect.Server: Development" type="LaunchSettings" />
+    <method v="2" />
+  </configuration>
+</component>

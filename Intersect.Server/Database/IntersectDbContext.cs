@@ -2,11 +2,10 @@ using System.Data;
 using System.Data.Common;
 using Intersect.Config;
 using Intersect.Framework;
-using Intersect.Server.Database.Converters;
+using Intersect.Framework.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.Logging;
 
 namespace Intersect.Server.Database;
 
@@ -94,7 +93,7 @@ public abstract partial class IntersectDbContext<TDbContext> : DbContext, ISeeda
 
         var idConverterGenericType = typeof(IdGuidConverter<>);
 
-        var idTypes = Id<object>.FindDerivedTypes();
+        var idTypes = typeof(Id<>).FindDerivedTypes();
         foreach (var idType in idTypes)
         {
             configurationBuilder

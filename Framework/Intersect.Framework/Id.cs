@@ -2,20 +2,22 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
-
 using Intersect.Framework.Converters.Json;
 using Intersect.Framework.Reflection;
+
+using NewtonsoftJsonConverter = Newtonsoft.Json.JsonConverterAttribute;
+using SystemJsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
 
 namespace Intersect.Framework;
 
 /// <summary>
 /// Represents a type-bound unique identifier.
 /// </summary>
-/// <typeparam name="T">the type this Id is for</typeparam>
 /// <param name="Guid">the generic unique identifier value</param>
+/// <typeparam name="T">the type this Id is for</typeparam>
 [DataContract]
-[JsonConverter(typeof(IdJsonConverterFactory))]
-[Newtonsoft.Json.JsonConverter(typeof(IdNewtonsoftJsonConverter))]
+[NewtonsoftJsonConverter(typeof(IdNewtonsoftJsonConverter))]
+[SystemJsonConverter(typeof(IdSystemJsonConverterFactory))]
 [Serializable]
 public record struct Id<T>(Guid Guid)
 {
@@ -37,32 +39,4 @@ public record struct Id<T>(Guid Guid)
     /// <param name="id">the <see cref="Id{T}"/> to convert</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator Guid(Id<T> id) => id.Guid;
-
-    public static IEnumerable<Type> FindDerivedTypes(params Assembly[] assemblies)
-    {
-        var targetAssemblies = assemblies;
-        if (targetAssemblies.Length < 1)
-        {
-            targetAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-        }
-
-        var derivedTypes = targetAssemblies
-            .Where(assembly => !assembly.IsDynamic)
-            .SelectMany(assembly =>
-            {
-                try
-                {
-                    return assembly.ExportedTypes;
-                }
-                catch
-                {
-                    return Array.Empty<Type>();
-                }
-            })
-            .SelectMany(type => type.GetProperties())
-            .Select(propertyInfo => propertyInfo.PropertyType)
-            .Where(type => type.Extends(typeof(Id<>)))
-            .Distinct();
-        return derivedTypes;
-    }
 }
