@@ -1,5 +1,4 @@
 ﻿using Intersect.Framework.Services;
-using Intersect.Server.Services.Background;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 

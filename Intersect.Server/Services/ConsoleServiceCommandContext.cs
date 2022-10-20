@@ -1,7 +1,7 @@
 ﻿using Intersect.Framework.Commands;
 using Microsoft.Extensions.Hosting;
 
-namespace Intersect.Server.Services.Background;
+namespace Intersect.Server.Services;
 
 internal class ConsoleServiceCommandContext : ICommandContext
 {

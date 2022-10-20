@@ -28,7 +28,7 @@ public abstract class ServiceOptions : IEquatable<ServiceOptions>
     }
 
     /// <inheritdoc />
-    public bool Equals(ServiceOptions? other)
+    public virtual bool Equals(ServiceOptions? other)
     {
         if (ReferenceEquals(null, other))
         {
@@ -52,7 +52,7 @@ public abstract class ServiceOptions : IEquatable<ServiceOptions>
 }
 
 [Serializable]
-public abstract class ServiceOptions<TService, TOptions> : ServiceOptions
+public abstract class ServiceOptions<TService, TOptions> : ServiceOptions, IEquatable<TOptions>
     where TOptions : ServiceOptions<TService, TOptions>, new()
 {
     protected ServiceOptions() { }
@@ -113,4 +113,9 @@ public abstract class ServiceOptions<TService, TOptions> : ServiceOptions
     }
 
     public virtual void CopyTo(TOptions other) { }
+
+    /// <inheritdoc />
+    public virtual bool Equals(TOptions? other) => base.Equals(other);
+
+    public virtual void Validate() { }
 }

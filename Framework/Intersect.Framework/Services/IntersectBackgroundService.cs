@@ -149,7 +149,7 @@ public abstract class
                 return;
             }
 
-            ValidateOptions();
+            Options.Validate();
 
             enabled = Options.ConfigurationLoader?.Options.Enabled ?? false;
 
@@ -215,8 +215,6 @@ public abstract class
     }
 
     protected abstract Task ExecuteServiceAsync(CancellationToken cancellationToken);
-
-    protected virtual void ValidateOptions() { }
 
     protected virtual void HandleConfigurationChange() { }
 

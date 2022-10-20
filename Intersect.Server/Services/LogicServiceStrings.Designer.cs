@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Intersect.Framework.Runtime.Assets {
+namespace Intersect.Server.Services {
     using System;
     
     
@@ -21,14 +21,14 @@ namespace Intersect.Framework.Runtime.Assets {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class AssetManagerResources {
+    internal class LogicServiceStrings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal AssetManagerResources() {
+        internal LogicServiceStrings() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace Intersect.Framework.Runtime.Assets {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Intersect.Framework.Runtime.Assets.AssetManagerResources", typeof(AssetManagerResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Intersect.Server.Services.LogicServiceStrings", typeof(LogicServiceStrings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,29 +60,38 @@ namespace Intersect.Framework.Runtime.Assets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adding an asset loader that was already registered and not completely removed..
+        ///   Looks up a localized string similar to {0} must be greater than or equal to -1..
         /// </summary>
-        internal static string AddLoader_AddingAnAssetLoaderThatWasNotCompletelyRemoved {
+        internal static string IdleTimeoutMustBeGreaterThanOrEqualToNegative1 {
             get {
-                return ResourceManager.GetString("AddLoader_AddingAnAssetLoaderThatWasNotCompletelyRemoved", resourceCulture);
+                return ResourceManager.GetString("IdleTimeoutMustBeGreaterThanOrEqualToNegative1", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tried to load &quot;{AssetName}&quot; of type &quot;{AssetType}&quot; but there was a conflicting asset of type &quot;{ExistingAssetType}&quot; for the qualified asset name &quot;{QualifiedAssetName}&quot;..
+        ///   Looks up a localized string similar to {0} cannot be less than {1}..
         /// </summary>
-        internal static string TryGet_LogError_ConflictingAssetOfDifferentType {
+        internal static string MaximumWorkerThreadsCannotBeLessThanMinimumWorkerThreads {
             get {
-                return ResourceManager.GetString("TryGet_LogError_ConflictingAssetOfDifferentType", resourceCulture);
+                return ResourceManager.GetString("MaximumWorkerThreadsCannotBeLessThanMinimumWorkerThreads", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There is no loader registered for &quot;{AssetType}&quot; in order to load &quot;{AssetName}&quot;..
+        ///   Looks up a localized string similar to {0} must be at least 1..
         /// </summary>
-        internal static string TryGet_LogWarning_NoLoaderForType {
+        internal static string MaximumWorkerThreadsMustBeAtLeast1 {
             get {
-                return ResourceManager.GetString("TryGet_LogWarning_NoLoaderForType", resourceCulture);
+                return ResourceManager.GetString("MaximumWorkerThreadsMustBeAtLeast1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} cannot be negative..
+        /// </summary>
+        internal static string MinimumWorkerThreadsCannotBeNegative {
+            get {
+                return ResourceManager.GetString("MinimumWorkerThreadsCannotBeNegative", resourceCulture);
             }
         }
     }

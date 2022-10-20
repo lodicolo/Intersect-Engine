@@ -18,13 +18,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddLoader_AddingAnAssetLoaderThatWasNotCompletelyRemoved" xml:space="preserve">
-    <value>Adding an asset loader that was already registered and not completely removed.</value>
+  <data name="MaximumWorkerThreadsCannotBeLessThanMinimumWorkerThreads" xml:space="preserve">
+    <value>{0} cannot be less than {1}.</value>
   </data>
-  <data name="TryGet_LogError_ConflictingAssetOfDifferentType" xml:space="preserve">
-    <value>Tried to load "{AssetName}" of type "{AssetType}" but there was a conflicting asset of type "{ExistingAssetType}" for the qualified asset name "{QualifiedAssetName}".</value>
+  <data name="MaximumWorkerThreadsMustBeAtLeast1" xml:space="preserve">
+    <value>{0} must be at least 1.</value>
   </data>
-  <data name="TryGet_LogWarning_NoLoaderForType" xml:space="preserve">
-    <value>There is no loader registered for "{AssetType}" in order to load "{AssetName}".</value>
+  <data name="MinimumWorkerThreadsCannotBeNegative" xml:space="preserve">
+    <value>{0} cannot be negative.</value>
+  </data>
+  <data name="IdleTimeoutMustBeGreaterThanOrEqualToNegative1" xml:space="preserve">
+    <value>{0} must be greater than or equal to -1.</value>
   </data>
 </root>

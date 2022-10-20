@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Intersect.Framework.Runtime.Assets {
+namespace Intersect.Server.Services {
     using System;
     
     
@@ -21,14 +21,14 @@ namespace Intersect.Framework.Runtime.Assets {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class AssetManagerResources {
+    internal class ConsoleServiceStrings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal AssetManagerResources() {
+        internal ConsoleServiceStrings() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace Intersect.Framework.Runtime.Assets {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Intersect.Framework.Runtime.Assets.AssetManagerResources", typeof(AssetManagerResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Intersect.Server.Services.ConsoleServiceStrings", typeof(ConsoleServiceStrings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -56,33 +56,6 @@ namespace Intersect.Framework.Runtime.Assets {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adding an asset loader that was already registered and not completely removed..
-        /// </summary>
-        internal static string AddLoader_AddingAnAssetLoaderThatWasNotCompletelyRemoved {
-            get {
-                return ResourceManager.GetString("AddLoader_AddingAnAssetLoaderThatWasNotCompletelyRemoved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Tried to load &quot;{AssetName}&quot; of type &quot;{AssetType}&quot; but there was a conflicting asset of type &quot;{ExistingAssetType}&quot; for the qualified asset name &quot;{QualifiedAssetName}&quot;..
-        /// </summary>
-        internal static string TryGet_LogError_ConflictingAssetOfDifferentType {
-            get {
-                return ResourceManager.GetString("TryGet_LogError_ConflictingAssetOfDifferentType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There is no loader registered for &quot;{AssetType}&quot; in order to load &quot;{AssetName}&quot;..
-        /// </summary>
-        internal static string TryGet_LogWarning_NoLoaderForType {
-            get {
-                return ResourceManager.GetString("TryGet_LogWarning_NoLoaderForType", resourceCulture);
             }
         }
     }

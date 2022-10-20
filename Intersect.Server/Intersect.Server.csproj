@@ -22,6 +22,16 @@
   <ItemGroup>
     <Compile Remove="Networking\IntersectNetworkServer.cs" />
     <Compile Remove="Networking\IntersectNetworkSocket.cs" />
+    <Compile Update="Services\LogicServiceStrings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>LogicServiceStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Services\ConsoleServiceStrings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ConsoleServiceStrings.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -53,6 +63,14 @@
     <EmbeddedResource Include="appsettings.Development.json" />
     <None Remove="appsettings.json" />
     <EmbeddedResource Include="appsettings.json" />
+    <EmbeddedResource Update="Services\LogicServiceStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LogicServiceStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Services\ConsoleServiceStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ConsoleServiceStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

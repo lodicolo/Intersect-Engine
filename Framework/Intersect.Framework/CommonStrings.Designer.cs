@@ -58,14 +58,5 @@ namespace Intersect.Framework {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Caused by:.
-        /// </summary>
-        internal static string ExceptionCausedBy {
-            get {
-                return ResourceManager.GetString("ExceptionCausedBy", resourceCulture);
-            }
-        }
     }
 }

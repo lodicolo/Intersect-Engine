@@ -1,6 +1,6 @@
 ﻿using Intersect.Framework.Services;
 
-namespace Intersect.Server.Services.Background;
+namespace Intersect.Server.Services;
 
 [Serializable]
 public sealed class ConsoleServiceOptions : ServiceOptions<ConsoleService, ConsoleServiceOptions>

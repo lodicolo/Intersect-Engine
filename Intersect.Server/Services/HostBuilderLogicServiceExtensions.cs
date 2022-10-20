@@ -1,7 +1,7 @@
 ﻿using Intersect.Framework.Services;
 using Microsoft.Extensions.Hosting;
 
-namespace Intersect.Server.Services.Background;
+namespace Intersect.Server.Services;
 
 public static class HostBuilderLogicServiceExtensions
 {
