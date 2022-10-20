@@ -3,6 +3,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace Intersect.Server.Services;
 
+/// <summary>
+/// Extensions to configure <see cref="IHostBuilder"/> with <see cref="LogicService"/>.
+/// </summary>
 public static class HostBuilderLogicServiceExtensions
 {
     public static IHostBuilder UseLogicService(this IHostBuilder hostBuilder) => hostBuilder

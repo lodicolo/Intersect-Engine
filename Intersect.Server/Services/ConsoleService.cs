@@ -21,6 +21,9 @@ public sealed class ConsoleService
     private readonly ICommandContext _commandContext;
     private readonly CommandParser _parser;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ConsoleService"/> class.
+    /// </summary>
     public ConsoleService(
         IOptions<ConsoleServiceOptions> options,
         ILogger<ConsoleService> logger,

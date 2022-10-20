@@ -5,6 +5,7 @@ namespace Intersect.Server.Services;
 /// <summary>
 /// Configuration initializer for <see cref="ConsoleServiceOptions"/>.
 /// </summary>
+// ReSharper disable once ClassNeverInstantiated.Global Instantiated via generic host
 public sealed class ConsoleServiceOptionsSetup : ServiceOptionsSetup<ConsoleService, ConsoleServiceOptions>
 {
     /// <summary>

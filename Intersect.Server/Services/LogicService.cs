@@ -9,6 +9,9 @@ public class LogicService : IntersectBackgroundService<LogicService, LogicServic
 {
     private readonly SmartThreadPool _threadPool;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LogicService"/> class.
+    /// </summary>
     public LogicService(IOptions<LogicServiceOptions> options, ILogger<LogicService> logger) : base(options, logger)
     {
         _threadPool = new(new STPStartInfo

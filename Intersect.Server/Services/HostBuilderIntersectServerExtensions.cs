@@ -1,9 +1,12 @@
-using Intersect.Framework.Services;
+﻿using Intersect.Framework.Services;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
 namespace Intersect.Server.Services;
 
+/// <summary>
+/// Extensions to configure <see cref="IHostBuilder"/> with services for the Intersect Server.
+/// </summary>
 public static class HostBuilderIntersectServerExtensions
 {
     public static IHostBuilder ConfigureIntersectBackgroundServiceDefaults<TService, TOptions, TConfigureOptions>(

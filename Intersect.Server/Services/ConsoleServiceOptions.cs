@@ -2,6 +2,9 @@
 
 namespace Intersect.Server.Services;
 
+/// <summary>
+/// Provides programmatic configuration of console service-specific features.
+/// </summary>
 [Serializable]
 public sealed class ConsoleServiceOptions : ServiceOptions<ConsoleService, ConsoleServiceOptions>
 {

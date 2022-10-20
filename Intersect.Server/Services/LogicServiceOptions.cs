@@ -4,7 +4,7 @@ using Intersect.Framework.Services;
 namespace Intersect.Server.Services;
 
 /// <summary>
-///
+/// Provides programmatic configuration of logic service-specific features.
 /// </summary>
 [Serializable]
 public sealed class LogicServiceOptions : ServiceOptions<LogicService, LogicServiceOptions>

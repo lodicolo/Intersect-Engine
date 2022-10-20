@@ -5,6 +5,7 @@ namespace Intersect.Server.Services;
 /// <summary>
 /// Configuration initializer for <see cref="LogicServiceOptions"/>.
 /// </summary>
+// ReSharper disable once ClassNeverInstantiated.Global Instantiated via generic host
 public sealed class LogicServiceOptionsSetup : ServiceOptionsSetup<LogicService, LogicServiceOptions>
 {
     /// <summary>

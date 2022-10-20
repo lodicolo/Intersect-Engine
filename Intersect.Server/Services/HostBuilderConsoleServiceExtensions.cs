@@ -3,6 +3,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace Intersect.Server.Services;
 
+/// <summary>
+/// Extensions to configure <see cref="IHostBuilder"/> with <see cref="ConsoleService"/>.
+/// </summary>
 public static class HostBuilderConsoleServiceExtensions
 {
     public static IHostBuilder UseConsoleService(this IHostBuilder hostBuilder) => hostBuilder
