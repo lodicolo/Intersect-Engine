@@ -1,4 +1,4 @@
-﻿using Intersect.Framework.Services;
+using Intersect.Framework.Services;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
@@ -17,7 +17,7 @@ public static class HostBuilderIntersectServerExtensions
             (hostBuilderContext, options) =>
             {
                 var serviceName = typeof(TService).Name.Replace("Service", string.Empty);
-                var configuration = hostBuilderContext.Configuration.GetSection($"Intersect:{serviceName}");
+                var configuration = hostBuilderContext.Configuration.GetSection($"Intersect:Services:{serviceName}");
                 options.Configure(configuration, reloadOnChange: true);
             }
         );
