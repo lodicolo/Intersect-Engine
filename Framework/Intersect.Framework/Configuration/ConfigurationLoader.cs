@@ -27,6 +27,9 @@ public abstract class ConfigurationLoader
 
     protected IHostEnvironment HostEnvironment { get; }
 
+    /// <summary>
+    /// The <see cref="ILogger"/> instance for this loader.
+    /// </summary>
     protected ILogger Logger { get; }
 
     protected internal Options Options { get; }
@@ -65,6 +68,9 @@ public class ConfigurationLoader<TLoggerCategory, TOptions> : ConfigurationLoade
         Options = options;
     }
 
+    /// <summary>
+    /// The <see cref="ILogger{TCategoryName}"/> instance for this loader.
+    /// </summary>
     public new ILogger<TLoggerCategory> Logger { get; }
 
     protected new Options<TOptions> Options { get; }

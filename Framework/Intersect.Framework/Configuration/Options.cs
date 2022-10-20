@@ -6,6 +6,9 @@ using Microsoft.Extensions.Options;
 
 namespace Intersect.Framework.Configuration;
 
+/// <summary>
+/// The representation of generic options.
+/// </summary>
 [Serializable]
 public abstract class Options : IEquatable<Options>
 {
@@ -25,11 +28,7 @@ public abstract class Options : IEquatable<Options>
         if (GetType() != other.GetType())
         {
             throw new InvalidOperationException(
-                string.Format(
-                    ConfigurationStrings.CopyTo_TypeMismatch,
-                    other.GetType().FullName,
-                    GetType().FullName
-                )
+                string.Format(ConfigurationStrings.CopyTo_TypeMismatch, other.GetType().FullName, GetType().FullName)
             );
         }
     }
@@ -57,15 +56,38 @@ public abstract class Options : IEquatable<Options>
     // ReSharper disable once NonReadonlyMemberInGetHashCode
     public override int GetHashCode() => GetType().GetHashCode();
 
+    /// <summary>
+    /// Validate that the this <see cref="Options"/> instance has valid values.
+    /// Validation errors will be thrown as exceptions.
+    /// </summary>
     public virtual void Validate() { }
 }
 
+/// <summary>
+/// The generic-typed representation of generic options.
+/// </summary>
+/// <typeparam name="TOptions"></typeparam>
 [Serializable]
 public abstract class Options<TOptions> : Options, IEquatable<Options<TOptions>>
     where TOptions : Options<TOptions>, new()
 {
+    /// <summary>
+    /// The <see cref="IServiceProvider"/> of the application host.
+    /// </summary>
     public IServiceProvider? Services { get; internal set; }
 
+    /// <summary>
+    /// Configure the loader for this <see cref="Options{TOptions}"/> instance and returns it.
+    /// </summary>
+    /// <param name="configuration">The <see cref="IConfiguration"/> instance the loader will use.</param>
+    /// <param name="reloadOnChange">If the configuration loader should listen for changes to the configuration.</param>
+    /// <typeparam name="TLoggerCategory">
+    /// The type that is used as the category name of the <see cref="ILogger{TCategoryName}"/> used by <see cref="ConfigurationLoader"/>.
+    /// </typeparam>
+    /// <returns>The configured <see cref="ConfigurationLoader"/> instance.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if <see cref="Services"/> is null when this method is called. This is usually performed by <see cref="OptionsSetup{TOptions}"/>.
+    /// </exception>
     public ConfigurationLoader Configure<TLoggerCategory>(IConfiguration configuration, bool reloadOnChange)
     {
         if (Services is null)
@@ -116,10 +138,8 @@ public abstract class Options<TOptions> : Options, IEquatable<Options<TOptions>>
     /// Copies the configuration values from this instance of <see cref="Options{TOptions}"/> to another.
     /// </summary>
     /// <param name="other">The instance to copy configuration values to.</param>
-    /// <exception cref="InvalidOperationException">Thrown if the other options is not an exact type match.</exception>
     public virtual void CopyTo(Options<TOptions> other) { }
 
     /// <inheritdoc />
     public virtual bool Equals(Options<TOptions>? other) => base.Equals(other);
-
 }

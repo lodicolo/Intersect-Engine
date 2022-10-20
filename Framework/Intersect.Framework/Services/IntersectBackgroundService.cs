@@ -1,12 +1,13 @@
-using System.Diagnostics;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 
 namespace Intersect.Framework.Services;
 
+/// <summary>
+/// Base class for implementing a long running Intersect-specific <see cref="IHostedService"/>.
+/// </summary>
 public abstract class
     IntersectBackgroundService<TService, TOptions, TConfigureOptions> : BackgroundService, IAsyncDisposable
     where TService : IntersectBackgroundService<TService, TOptions, TConfigureOptions>
@@ -38,6 +39,11 @@ public abstract class
 
     private int _stopping;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IntersectBackgroundService{TService,TOptions,TConfigureOptions}"/> class.
+    /// </summary>
+    /// <param name="options">The options used to configure this instance.</param>
+    /// <param name="logger">The logger this instance can use to record information.</param>
     protected IntersectBackgroundService(IOptions<TOptions> options, ILogger<TService> logger)
     {
         Logger = logger;
@@ -225,6 +231,11 @@ public abstract class
         }
     }
 
+
+    /// <summary>
+    /// Triggered when the application host is ready to start the service.
+    /// </summary>
+    /// <param name="cancellationToken">Indicates that the start process has been aborted.</param>
     protected abstract Task ExecuteServiceAsync(CancellationToken cancellationToken);
 
     /// <summary>
@@ -233,6 +244,9 @@ public abstract class
     /// <param name="cancellationToken">Indicates that the shutdown process should no longer be graceful.</param>
     protected virtual Task ShutdownServiceAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
+    /// <summary>
+    /// Service handler after the configuration has been reloaded due to changes.
+    /// </summary>
     protected virtual void HandleConfigurationChange() { }
 
     /// <inheritdoc />
