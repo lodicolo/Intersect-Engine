@@ -83,7 +83,7 @@ namespace Intersect.Server.Database.PlayerData.Security
             return !(b1 == b2);
         }
 
-        protected int ComputePowerScore()
+        private int ComputePowerScore()
         {
             var score = 0;
             score |= Convert.ToInt32(Editor) << 0;

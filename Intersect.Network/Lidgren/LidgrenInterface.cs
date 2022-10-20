@@ -214,7 +214,7 @@ namespace Intersect.Network.Lidgren
             return false;
         }
 
-        protected IConnection FindConnection(NetConnection netConnection)
+        private IConnection FindConnection(NetConnection netConnection)
         {
             var lidgrenId = netConnection?.RemoteUniqueIdentifier ?? -1;
             Debug.Assert(mGuidLookup != null, "mGuidLookup != null");

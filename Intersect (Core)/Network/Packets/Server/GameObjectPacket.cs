@@ -35,7 +35,7 @@ namespace Intersect.Network.Packets.Server
         public bool Deleted { get; set; }
 
         [Key(4)]
-        public string Data { get; set; }
+        public new string Data { get; set; }
 
         [IgnoreMember]
         public Id<Folder>? ParentId { get; set; }

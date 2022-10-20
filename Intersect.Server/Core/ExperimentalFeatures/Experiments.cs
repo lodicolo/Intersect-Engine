@@ -23,7 +23,7 @@ namespace Intersect.Server.Core.ExperimentalFeatures
             PostgreSQL = new ExperimentalFlag(nameof(PostgreSQL), NamespaceId, parentFlag: All);
         }
 
-        public static Experiments Instance
+        public static new Experiments Instance
         {
             get => CommonExperiments<Experiments>.Instance;
             private set => CommonExperiments<Experiments>.Instance = value;

@@ -88,7 +88,7 @@ namespace Intersect.Client.Interface.Game
 
         public string TextValue { get; set; }
 
-        public object UserData { get; set; }
+        public new object UserData { get; set; }
 
         public double Value { get; set; }
 
@@ -358,7 +358,7 @@ namespace Intersect.Client.Interface.Game
             Dispose();
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
             mMyWindow.Close();
             mMyWindow.Parent.RemoveChild(mMyWindow, false);

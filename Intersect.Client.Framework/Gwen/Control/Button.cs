@@ -15,7 +15,7 @@ namespace Intersect.Client.Framework.Gwen.Control
     public partial class Button : Label
     {
 
-        public enum ControlState
+        public new enum ControlState
         {
 
             Normal = 0,

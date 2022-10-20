@@ -1,53 +1,24 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Intersect.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Intersect.Framework.Services;
 
-public abstract class ServiceConfigurationLoader
+public abstract class ServiceConfigurationLoader : ConfigurationLoader
 {
-    private bool _loaded;
-
     internal ServiceConfigurationLoader(
         ILogger logger,
         IHostEnvironment hostEnvironment,
         ServiceOptions serviceOptions,
         IConfiguration configuration,
         bool reloadOnChange
-    )
+    ) : base(logger, hostEnvironment, serviceOptions, configuration, reloadOnChange)
     {
-        Logger = logger;
-        HostEnvironment = hostEnvironment;
         Options = serviceOptions;
-        Configuration = configuration;
-        ReloadOnChange = reloadOnChange;
     }
 
-    public IConfiguration Configuration { get; }
-
-    protected IHostEnvironment HostEnvironment { get; }
-
-    protected ILogger Logger { get; }
-
-    protected internal ServiceOptions Options { get; }
-
-    public bool ReloadOnChange { get; }
-
-    public ServiceOptions Load()
-    {
-        if (_loaded)
-        {
-            return Options;
-        }
-
-        _loaded = true;
-
-        Reload();
-
-        return Options;
-    }
-
-    public abstract bool Reload();
+    protected internal new ServiceOptions Options { get; }
 }
 
 public class ServiceConfigurationLoader<TService, TOptions> : ServiceConfigurationLoader
@@ -79,7 +50,7 @@ public class ServiceConfigurationLoader<TService, TOptions> : ServiceConfigurati
     {
         var reloadedOptions = Configuration.Get<TOptions>(ConfigureBinderOptions) ?? new TOptions();
         var changed = !reloadedOptions.Equals(Options);
-        reloadedOptions.CopyTo(Options);
+        reloadedOptions.CopyTo((Options)Options);
         return changed;
     }
 }

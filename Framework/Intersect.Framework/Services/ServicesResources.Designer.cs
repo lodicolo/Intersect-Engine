@@ -121,23 +121,5 @@ namespace Intersect.Framework.Services {
                 return ResourceManager.GetString("BackgroundService_StoppingServiceDueToConfigurationChange", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} has not be set yet, which is normally done by {1}.
-        /// </summary>
-        internal static string ServiceOptions_Configure_OptionsServicesNotSet {
-            get {
-                return ResourceManager.GetString("ServiceOptions_Configure_OptionsServicesNotSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cannot copy from {0} to {1}..
-        /// </summary>
-        internal static string ServiceOptions_CopyTo_TypeMismatch {
-            get {
-                return ResourceManager.GetString("ServiceOptions_CopyTo_TypeMismatch", resourceCulture);
-            }
-        }
     }
 }

@@ -122,7 +122,7 @@ namespace Intersect.Server.Maps
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static MapController Get(Guid id)
+        public static new MapController Get(Guid id)
         {
             return Lookup.Get<MapController>(id);
         }

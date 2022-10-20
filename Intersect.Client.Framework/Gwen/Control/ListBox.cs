@@ -627,7 +627,7 @@ namespace Intersect.Client.Framework.Gwen.Control
             }
         }
 
-        public ScrollBar GetVerticalScrollBar()
+        public new ScrollBar GetVerticalScrollBar()
         {
             return base.mVerticalScrollBar;
         }

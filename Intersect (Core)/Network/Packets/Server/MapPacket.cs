@@ -41,7 +41,7 @@ namespace Intersect.Network.Packets.Server
         public bool Deleted { get; set; }
 
         [Key(2)]
-        public string Data { get; set; }
+        public new string Data { get; set; }
 
         [Key(3)]
         public byte[] TileData { get; set; }

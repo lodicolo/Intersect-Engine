@@ -29,7 +29,7 @@ namespace Intersect.GameObjects
         //See https://www.ascensiongamedev.com/topic/749-event-text-variables/ for usage info.
         public string TextId { get; set; }
 
-        public VariableDataTypes Type { get; set; } = VariableDataTypes.Boolean;
+        public new VariableDataTypes Type { get; set; } = VariableDataTypes.Boolean;
 
         [NotMapped]
         [JsonIgnore]

@@ -14,10 +14,6 @@ namespace Intersect.Client.Framework.Gwen.Control
 
         int FontSize { get; set; }
 
-        Color TextColor { get; set; }
-
-        Color TextColorOverride { get; set; }
-
         Padding TextPadding { get; set; }
 
         void SizeToContents();

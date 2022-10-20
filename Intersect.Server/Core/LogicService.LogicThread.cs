@@ -79,7 +79,7 @@ namespace Intersect.Server.Core
                     var swCpsTimer = Timing.Global.Milliseconds + 1000;
                     var lastCpuTime = Process.GetCurrentProcess().TotalProcessorTime;
                     var saveServerVariablesTimer = Timing.Global.Milliseconds + Options.Instance.Processing.DatabaseSaveServerVariablesInterval;
-                    var metricsTimer = 0l;
+                    var metricsTimer = 0L;
                     long swCps = 0;
 
                     long updateTimer = 0;

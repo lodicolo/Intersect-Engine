@@ -92,7 +92,6 @@ namespace Intersect.Server.Web.RestApi.Routes.V1
             if (objId == Guid.Empty)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, @"Object not found!");
-                return null;
             }
 
             GameObjectType gameObjectType;

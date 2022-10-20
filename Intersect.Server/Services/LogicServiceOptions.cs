@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Intersect.Framework.Services;
 
-namespace Intersect.Server.Services.Background;
+namespace Intersect.Server.Services;
 
 /// <summary>
 ///

@@ -1,13 +1,16 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Diagnostics;
+using Intersect.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Options = Intersect.Framework.Configuration.Options;
 
 namespace Intersect.Framework.Services;
 
 [Serializable]
-public abstract class ServiceOptions : IEquatable<ServiceOptions>
+public abstract class ServiceOptions : Options, IEquatable<ServiceOptions>
 {
     protected ServiceOptions() { }
 
@@ -17,10 +20,23 @@ public abstract class ServiceOptions : IEquatable<ServiceOptions>
     }
 
     /// <summary>
+    /// Provides a configuration source where service options will be loaded from on start.
+    /// The default is <see langword="null"/>.
+    /// </summary>
+    public new ServiceConfigurationLoader? ConfigurationLoader { get; internal set; }
+
+    /// <summary>
     /// If the service is enabled or not.
     /// The default is <see langword="false"/>.
     /// </summary>
     public bool Enabled { get; protected internal set; }
+
+    public override void CopyTo(Options other)
+    {
+        base.CopyTo(other);
+
+        CopyTo((ServiceOptions)other);
+    }
 
     public virtual void CopyTo(ServiceOptions other)
     {
@@ -44,9 +60,6 @@ public abstract class ServiceOptions : IEquatable<ServiceOptions>
     }
 
     /// <inheritdoc />
-    public override bool Equals(object? obj) => obj is ServiceOptions other && Equals(other);
-
-    /// <inheritdoc />
     // ReSharper disable once NonReadonlyMemberInGetHashCode
     public override int GetHashCode() => HashCode.Combine(Enabled);
 }
@@ -59,12 +72,6 @@ public abstract class ServiceOptions<TService, TOptions> : ServiceOptions, IEqua
 
     protected ServiceOptions(bool enabled = false) : base(enabled) { }
 
-    /// <summary>
-    /// Provides a configuration source where endpoints will be loaded from on start.
-    /// The default is <see langword="null"/>.
-    /// </summary>
-    public ServiceConfigurationLoader? ConfigurationLoader { get; internal set; }
-
     public IServiceProvider? Services { get; internal set; }
 
     public ServiceConfigurationLoader Configure(IConfiguration configuration, bool reloadOnChange)
@@ -73,7 +80,7 @@ public abstract class ServiceOptions<TService, TOptions> : ServiceOptions, IEqua
         {
             throw new InvalidOperationException(
                 string.Format(
-                    ServicesResources.ServiceOptions_Configure_OptionsServicesNotSet,
+                    ConfigurationStrings.ServicesNotSet,
                     nameof(Services),
                     nameof(IConfigureOptions<TOptions>)
                 )
@@ -96,26 +103,13 @@ public abstract class ServiceOptions<TService, TOptions> : ServiceOptions, IEqua
 
     public override void CopyTo(ServiceOptions other)
     {
-        if (other is not TOptions otherTOptions)
-        {
-            throw new InvalidOperationException(
-                string.Format(
-                    ServicesResources.ServiceOptions_CopyTo_TypeMismatch,
-                    other.GetType().FullName,
-                    typeof(TOptions).FullName
-                )
-            );
-        }
-
         base.CopyTo(other);
 
-        CopyTo(otherTOptions);
+        CopyTo((ServiceOptions<TService, TOptions>)other);
     }
 
-    public virtual void CopyTo(TOptions other) { }
+    public virtual void CopyTo(ServiceOptions<TService, TOptions> other) { }
 
     /// <inheritdoc />
     public virtual bool Equals(TOptions? other) => base.Equals(other);
-
-    public virtual void Validate() { }
 }

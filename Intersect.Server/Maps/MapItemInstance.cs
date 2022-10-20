@@ -49,7 +49,7 @@ namespace Intersect.Server.Maps
             Y = y;
         }
 
-        public string Data()
+        public new string Data()
         {
             return JsonConvert.SerializeObject(this);
         }

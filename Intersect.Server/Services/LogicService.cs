@@ -1,6 +1,5 @@
 ﻿using Amib.Threading;
 using Intersect.Framework.Services;
-using Intersect.Server.Services.Background;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

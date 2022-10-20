@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Intersect.Server.Services {
+namespace Intersect.Framework.Configuration {
     using System;
     
     
@@ -21,14 +21,14 @@ namespace Intersect.Server.Services {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ConsoleServiceStrings {
+    internal class ConfigurationStrings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ConsoleServiceStrings() {
+        internal ConfigurationStrings() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace Intersect.Server.Services {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Intersect.Server.Services.ConsoleServiceStrings", typeof(ConsoleServiceStrings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Intersect.Framework.Configuration.ConfigurationStrings", typeof(ConfigurationStrings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,11 +60,20 @@ namespace Intersect.Server.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Non-fatal error occurred during command parsing..
+        ///   Looks up a localized string similar to Cannot copy from {0} to {1}..
         /// </summary>
-        internal static string ConsoleService_NonFatalErrorOccurredDuringCommandParsing {
+        internal static string CopyTo_TypeMismatch {
             get {
-                return ResourceManager.GetString("ConsoleService_NonFatalErrorOccurredDuringCommandParsing", resourceCulture);
+                return ResourceManager.GetString("CopyTo_TypeMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has not be set yet, which is normally done by {1}.
+        /// </summary>
+        internal static string ServicesNotSet {
+            get {
+                return ResourceManager.GetString("ServicesNotSet", resourceCulture);
             }
         }
     }

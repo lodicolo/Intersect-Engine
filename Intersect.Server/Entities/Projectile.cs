@@ -41,7 +41,7 @@ namespace Intersect.Server.Entities
 
         public SpellBase Spell;
 
-        public Entity Target;
+        public new Entity Target;
 
         public Projectile(
             Entity owner,

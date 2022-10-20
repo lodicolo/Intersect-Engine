@@ -65,7 +65,7 @@ namespace Intersect.Server.Entities
         public static int OnlineCount => OnlinePlayers.Count;
 
         [JsonProperty("MaxVitals"), NotMapped]
-        public new int[] MaxVitals => GetMaxVitals();
+        public int[] MaxVitals => GetMaxVitals();
 
         //Name, X, Y, Dir, Etc all in the base Entity Class
         public Guid ClassId { get; set; }
@@ -1293,7 +1293,7 @@ namespace Intersect.Server.Entities
             base.TryAttack(target, projectile, parentSpell, parentItem, projectileDir);
         }
 
-        public void TryAttack(Entity target)
+        public new void TryAttack(Entity target)
         {
             if (IsCasting)
             {

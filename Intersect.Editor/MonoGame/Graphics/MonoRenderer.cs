@@ -127,7 +127,7 @@ namespace Intersect.Editor.MonoGame.Graphics
             mGameWindow = monoGame.Window;
         }
 
-        public IList<string> ValidVideoModes => GetValidVideoModes();
+        public new IList<string> ValidVideoModes => GetValidVideoModes();
 
         public void UpdateGraphicsState(int width, int height, bool initial = false)
         {
@@ -213,7 +213,7 @@ namespace Intersect.Editor.MonoGame.Graphics
             }
         }
 
-        public void CreateWhiteTexture()
+        public new void CreateWhiteTexture()
         {
             mWhiteTexture = CreateRenderTexture(1, 1);
             mWhiteTexture.Begin();

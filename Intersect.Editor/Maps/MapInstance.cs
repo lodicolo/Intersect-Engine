@@ -448,7 +448,7 @@ namespace Intersect.Editor.Maps
         }
 
         //Helper Functions
-        public MapBase[,] GenerateAutotileGrid()
+        public new MapBase[,] GenerateAutotileGrid()
         {
             var mapBase = new MapBase[3, 3];
             if (Globals.MapGrid != null && Globals.GridMaps.Contains(Id))

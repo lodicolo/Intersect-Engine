@@ -27,7 +27,7 @@ namespace Intersect.Network.Packets.Editor
         public Guid Id { get; set; }
 
         [Key(2)]
-        public string Data { get; set; }
+        public new string Data { get; set; }
 
     }
 

@@ -718,8 +718,6 @@ namespace Intersect.Server.Database.GameData.Migrations
 
                 return decompessed;
             }
-
-            return null;
         }
 
         private partial struct LegacyTileArray

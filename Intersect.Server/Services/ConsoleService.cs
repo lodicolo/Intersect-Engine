@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Intersect.Server.Services.Background;
+namespace Intersect.Server.Services;
 
 using Console = System.Console;
 
@@ -101,7 +101,7 @@ public sealed class ConsoleService
                                 return false;
                             }
 
-                            Logger.LogWarning(error.Exception, "Non-fatal error occurred during command parsing.");
+                            Logger.LogWarning(error.Exception, ConsoleServiceStrings.ConsoleService_NonFatalErrorOccurredDuringCommandParsing);
 
                             Console.WriteLine(error.Message);
                         }
@@ -121,7 +121,7 @@ public sealed class ConsoleService
                                 }
                                 catch (Exception exception)
                                 {
-                                    Logger.LogError(exception, "Non-fatal error occurred during command parsing.");
+                                    Logger.LogError(exception, message: ConsoleServiceStrings.ConsoleService_NonFatalErrorOccurredDuringCommandParsing);
                                 }
 
                                 continue;
