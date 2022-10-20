@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -59,6 +59,12 @@ public abstract class
     /// <inheritdoc />
     public sealed override async Task StopAsync(CancellationToken cancellationToken)
     {
+        if (ExecuteTask == default)
+        {
+            // Service never started, we can skip
+            return;
+        }
+
         if (Interlocked.Exchange(ref _stopping, 1) != 0)
         {
             await _stopTaskCompletionSource.Task.ConfigureAwait(false);
@@ -71,7 +77,13 @@ public abstract class
 
         try
         {
+            await ShutdownServiceAsync(cancellationToken);
             await base.StopAsync(cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            _stopTaskCompletionSource.TrySetException(exception);
+            throw;
         }
         finally
         {
@@ -122,7 +134,6 @@ public abstract class
     {
         await _executionSemaphore.WaitAsync(executionState.StoppingToken).ConfigureAwait(false);
 
-        bool enabled;
         IChangeToken? reloadToken = default;
         var executionTask = executionState.ExecutionTask;
         var executionCancellationTokenSource = executionState.ExecutionCancellationTokenSource;
@@ -151,7 +162,7 @@ public abstract class
 
             Options.Validate();
 
-            enabled = Options.ConfigurationLoader?.Options.Enabled ?? false;
+            var enabled = Options.ConfigurationLoader?.Options.Enabled ?? false;
 
             switch (enabled)
             {
@@ -216,6 +227,12 @@ public abstract class
 
     protected abstract Task ExecuteServiceAsync(CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Triggered when the application host is performing a graceful shutdown.
+    /// </summary>
+    /// <param name="cancellationToken">Indicates that the shutdown process should no longer be graceful.</param>
+    protected virtual Task ShutdownServiceAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
     protected virtual void HandleConfigurationChange() { }
 
     /// <inheritdoc />
@@ -234,19 +251,10 @@ public abstract class
     {
         public CancellationTokenSource ExecutionCancellationTokenSource { get; } = ExecutionCancellationTokenSource;
 
-        public CancellationReason CancellationReason { get; internal set; } = CancellationReason.Default;
-
         public Task? ExecutionTask { get; } = ExecutionTask;
 
         public IntersectBackgroundService<TService, TOptions, TConfigureOptions> Service { get; } = Service;
 
         public CancellationToken StoppingToken { get; } = StoppingToken;
-    }
-
-    private enum CancellationReason
-    {
-        Default,
-
-        ConfigurationChange
     }
 }
