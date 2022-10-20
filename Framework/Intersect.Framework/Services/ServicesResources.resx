@@ -24,10 +24,25 @@
   <data name="ServiceOptions_CopyTo_TypeMismatch" xml:space="preserve">
     <value>Cannot copy from {0} to {1}.</value>
   </data>
-  <data name="IntersectBackgroundService_ExecuteAsync_ServiceShutdownAlreadyBegun" xml:space="preserve">
+  <data name="BackgroundService_ExecuteAsync_ServiceShutdownAlreadyBegun" xml:space="preserve">
     <value>Service shutdown has already begun.</value>
   </data>
-  <data name="IntersectBackgroundService_ExecuteAsync_TServiceAlreadyStarted" xml:space="preserve">
+  <data name="BackgroundService_ExecuteAsync_ServiceAlreadyStarted" xml:space="preserve">
     <value>{0} already started.</value>
+  </data>
+  <data name="BackgroundService_StartingServiceDueToConfigurationChange" xml:space="preserve">
+    <value>Starting {ServiceName} service due to configuration change...</value>
+  </data>
+  <data name="BackgroundService_StoppingService" xml:space="preserve">
+    <value>Stopping {ServiceName} service...</value>
+  </data>
+  <data name="BackgroundService_StartingService" xml:space="preserve">
+    <value>Starting {ServiceName} service...</value>
+  </data>
+  <data name="BackgroundService_StoppingServiceDueToConfigurationChange" xml:space="preserve">
+    <value>Stopping {ServiceName} service due to configuration change...</value>
+  </data>
+  <data name="BackgroundService_ReconfiguringServiceDueToConfigurationChange" xml:space="preserve">
+    <value>Reconfiguring {ServiceName} service due to configuration change...</value>
   </data>
 </root>

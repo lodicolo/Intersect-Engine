@@ -9,12 +9,15 @@ public class LogicService : IntersectBackgroundService<LogicService, LogicServic
     public LogicService(IOptions<LogicServiceOptions> options, ILogger<LogicService> logger) : base(options, logger) { }
 
     /// <inheritdoc />
-    protected override Task ExecuteService(CancellationToken cancellationToken)
+    protected override Task ExecuteServiceAsync(CancellationToken cancellationToken)
     {
         return Task.Run(
             () =>
             {
-                while (!cancellationToken.IsCancellationRequested) { }
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    Thread.Yield();
+                }
             },
             cancellationToken
         );

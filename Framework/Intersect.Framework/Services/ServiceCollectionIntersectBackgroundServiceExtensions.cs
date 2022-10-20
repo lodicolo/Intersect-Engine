@@ -17,7 +17,7 @@ public static class ServiceCollectionIntersectBackgroundServiceExtensions
             services =>
             {
                 services.AddTransient<IConfigureOptions<TOptions>, TConfigureOptions>();
-                services.AddSingleton<TService>();
+                services.AddHostedService<TService>();
             }
         );
     }

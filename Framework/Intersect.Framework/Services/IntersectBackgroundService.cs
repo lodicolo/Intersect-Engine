@@ -23,6 +23,11 @@ public abstract class
     /// </summary>
     protected readonly TOptions Options;
 
+    /// <summary>
+    /// The name of the service. This is the type name with <c>"Service"</c> removed.
+    /// </summary>
+    protected readonly string ServiceName = typeof(TService).Name.Replace("Service", string.Empty);
+
     private readonly SemaphoreSlim _executionSemaphore;
 
     private readonly CancellationTokenSource _stopCancellationTokenSource;
@@ -42,8 +47,14 @@ public abstract class
         _stopTaskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
     }
 
+    private CancellationTokenSource CreateCancellationTokenSource(CancellationToken stoppingToken)
+    {
+        return CancellationTokenSource.CreateLinkedTokenSource(_stopCancellationTokenSource.Token, stoppingToken);
+    }
+
     /// <inheritdoc />
-    public sealed override Task StartAsync(CancellationToken cancellationToken) => base.StartAsync(cancellationToken);
+    public sealed override Task StartAsync(CancellationToken cancellationToken) =>
+        base.StartAsync(cancellationToken: cancellationToken);
 
     /// <inheritdoc />
     public sealed override async Task StopAsync(CancellationToken cancellationToken)
@@ -80,10 +91,7 @@ public abstract class
             if (ExecuteTask != default)
             {
                 throw new InvalidOperationException(
-                    string.Format(
-                        ServicesResources.IntersectBackgroundService_ExecuteAsync_TServiceAlreadyStarted,
-                        typeof(TService).Name
-                    )
+                    string.Format(ServicesResources.BackgroundService_ExecuteAsync_ServiceAlreadyStarted, ServiceName)
                 );
             }
 
@@ -91,8 +99,8 @@ public abstract class
 
             var executionState = new ExecutionState(
                 Service: this,
-                IsRunning: false,
-                ExecutionCancellationTokenSource: CancellationTokenSource.CreateLinkedTokenSource(stoppingToken),
+                ExecutionTask: default,
+                ExecutionCancellationTokenSource: CreateCancellationTokenSource(stoppingToken),
                 StoppingToken: stoppingToken
             );
             await TryBeginExecutionAsync(executionState, true).ConfigureAwait(false);
@@ -114,16 +122,19 @@ public abstract class
     {
         await _executionSemaphore.WaitAsync(executionState.StoppingToken).ConfigureAwait(false);
 
+        bool enabled;
+        IChangeToken? reloadToken = default;
+        var executionTask = executionState.ExecutionTask;
+        var executionCancellationTokenSource = executionState.ExecutionCancellationTokenSource;
+
         try
         {
             if (_stopping != 0)
             {
                 throw new InvalidOperationException(
-                    ServicesResources.IntersectBackgroundService_ExecuteAsync_ServiceShutdownAlreadyBegun
+                    ServicesResources.BackgroundService_ExecuteAsync_ServiceShutdownAlreadyBegun
                 );
             }
-
-            IChangeToken? reloadToken = default;
 
             if (Options.ConfigurationLoader?.ReloadOnChange == true)
             {
@@ -131,42 +142,83 @@ public abstract class
             }
 
             var changed = !initial && (Options.ConfigurationLoader?.Reload() ?? false);
-            var enabled = Options.ConfigurationLoader?.Options.Enabled ?? false;
 
-            var executionCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
-                _stopCancellationTokenSource.Token,
-                executionState.StoppingToken
-            );
-
-            if (enabled)
+            if (!changed && !initial)
             {
-                await ExecuteService(executionCancellationTokenSource.Token);
-            }
-            else if (executionState.IsRunning)
-            {
-                executionState.ExecutionCancellationTokenSource.Cancel();
+                executionTask = executionState.ExecutionTask;
+                return;
             }
 
+            ValidateOptions();
+
+            enabled = Options.ConfigurationLoader?.Options.Enabled ?? false;
+
+            switch (enabled)
+            {
+                case true when executionState.ExecutionTask == default:
+                    Logger.LogInformation(
+                        changed ? ServicesResources.BackgroundService_StartingServiceDueToConfigurationChange
+                            : ServicesResources.BackgroundService_StartingService,
+                        ServiceName
+                    );
+
+                    executionCancellationTokenSource = CreateCancellationTokenSource(executionState.StoppingToken);
+
+                    executionTask = Task.Run(
+                        async () =>
+                        {
+                            await ExecuteServiceAsync(executionCancellationTokenSource.Token);
+                            Logger.LogInformation(
+                                (_stopCancellationTokenSource.IsCancellationRequested ||
+                                 executionState.StoppingToken.IsCancellationRequested)
+                                    ? ServicesResources.BackgroundService_StoppingService
+                                    : ServicesResources.BackgroundService_StoppingServiceDueToConfigurationChange,
+                                ServiceName
+                            );
+                        },
+                        executionCancellationTokenSource.Token
+                    );
+                    break;
+
+                case false when executionState.ExecutionTask != default:
+                    executionState.ExecutionCancellationTokenSource.Cancel();
+                    executionTask = default;
+                    break;
+
+                case true:
+                    Logger.LogInformation(
+                        ServicesResources.BackgroundService_ReconfiguringServiceDueToConfigurationChange,
+                        ServiceName
+                    );
+                    HandleConfigurationChange();
+                    break;
+
+                case false:
+                    break;
+            }
+        }
+        finally
+        {
             // need to pass an execution context so we can cancel
             _configurationChangedRegistration = reloadToken?.RegisterChangeCallback(
                 OnConfigurationChanged,
                 new ExecutionState(
                     Service: this,
-                    IsRunning: enabled,
+                    ExecutionTask: executionTask,
                     ExecutionCancellationTokenSource: executionCancellationTokenSource,
                     StoppingToken: executionState.StoppingToken
                 )
             );
-        }
-        finally
-        {
+
             _executionSemaphore.Release();
         }
     }
 
-    protected abstract Task ExecuteService(CancellationToken cancellationToken);
+    protected abstract Task ExecuteServiceAsync(CancellationToken cancellationToken);
 
     protected virtual void ValidateOptions() { }
+
+    protected virtual void HandleConfigurationChange() { }
 
     /// <inheritdoc />
     public ValueTask DisposeAsync()
@@ -177,17 +229,26 @@ public abstract class
 
     private record ExecutionState(
         IntersectBackgroundService<TService, TOptions, TConfigureOptions> Service,
-        bool IsRunning,
+        Task? ExecutionTask,
         CancellationTokenSource ExecutionCancellationTokenSource,
         CancellationToken StoppingToken
     )
     {
         public CancellationTokenSource ExecutionCancellationTokenSource { get; } = ExecutionCancellationTokenSource;
 
-        public bool IsRunning { get; } = IsRunning;
+        public CancellationReason CancellationReason { get; internal set; } = CancellationReason.Default;
+
+        public Task? ExecutionTask { get; } = ExecutionTask;
 
         public IntersectBackgroundService<TService, TOptions, TConfigureOptions> Service { get; } = Service;
 
         public CancellationToken StoppingToken { get; } = StoppingToken;
+    }
+
+    private enum CancellationReason
+    {
+        Default,
+
+        ConfigurationChange
     }
 }

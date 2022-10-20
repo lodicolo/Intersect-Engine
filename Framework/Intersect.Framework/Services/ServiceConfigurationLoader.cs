@@ -51,7 +51,7 @@ public abstract class ServiceConfigurationLoader
 }
 
 public class ServiceConfigurationLoader<TService, TOptions> : ServiceConfigurationLoader
-    where TOptions : ServiceOptions<TService, TOptions>
+    where TOptions : ServiceOptions<TService, TOptions>, new()
 {
     public ServiceConfigurationLoader(
         ILogger<TService> logger,
@@ -69,10 +69,16 @@ public class ServiceConfigurationLoader<TService, TOptions> : ServiceConfigurati
 
     protected new ServiceOptions<TService, TOptions> Options { get; }
 
+    private static void ConfigureBinderOptions(BinderOptions binderOptions)
+    {
+        binderOptions.BindNonPublicProperties = true;
+        binderOptions.ErrorOnUnknownConfiguration = true;
+    }
+
     public override bool Reload()
     {
-        var reloadedOptions = Configuration.Get<TOptions>();
-        var changed = reloadedOptions.Equals(Options);
+        var reloadedOptions = Configuration.Get<TOptions>(ConfigureBinderOptions) ?? new TOptions();
+        var changed = !reloadedOptions.Equals(Options);
         reloadedOptions.CopyTo(Options);
         return changed;
     }

@@ -8,7 +8,7 @@ namespace Intersect.Framework.Services;
 /// <typeparam name="TService">The type of service <see cref="TOptions"/> belongs to.</typeparam>
 /// <typeparam name="TOptions">The type of <see cref="ServiceOptions"/> this class configures.</typeparam>
 public abstract class ServiceOptionsSetup<TService, TOptions> : IConfigureOptions<TOptions>
-    where TOptions : ServiceOptions<TService, TOptions>
+    where TOptions : ServiceOptions<TService, TOptions>, new()
 {
     private readonly IServiceProvider _services;
 

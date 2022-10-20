@@ -2,7 +2,6 @@
 using Intersect.Framework.Commands.Parsing;
 using Intersect.Framework.Commands.Parsing.Errors;
 using Intersect.Framework.Services;
-using Intersect.Logging;
 using Intersect.Server.Commands;
 using Intersect.Server.Localization;
 using Microsoft.Extensions.Hosting;
@@ -64,7 +63,7 @@ public sealed class ConsoleService
     }
 
     /// <inheritdoc />
-    protected override Task ExecuteService(CancellationToken cancellationToken)
+    protected override Task ExecuteServiceAsync(CancellationToken cancellationToken)
     {
         return Task.Run(
             () =>
@@ -99,10 +98,10 @@ public sealed class ConsoleService
                             fatalError = error.IsFatal;
                             if (error is MissingArgumentError)
                             {
-                                return;
+                                return false;
                             }
 
-                            Log.Warn(error.Exception);
+                            Logger.LogWarning(error.Exception, "Non-fatal error occurred during command parsing.");
 
                             Console.WriteLine(error.Message);
                         }
@@ -117,12 +116,12 @@ public sealed class ConsoleService
 
                                     if (_commandContext.IsShutdownRequested)
                                     {
-                                        return;
+                                        return cancellationToken.WaitHandle.WaitOne();
                                     }
                                 }
                                 catch (Exception exception)
                                 {
-                                    Log.Error(exception);
+                                    Logger.LogError(exception, "Non-fatal error occurred during command parsing.");
                                 }
 
                                 continue;
@@ -173,52 +172,47 @@ public sealed class ConsoleService
                         Strings.Commands.RequiredInfo.ToString().Length
                     );
 
-                    command.UnsortedArguments.ForEach(
-                        argument =>
+                    foreach (var argument in command.UnsortedArguments)
+                    {
+                        var shortName = argument.HasShortName ? argument.ShortName.ToString() : null;
+                        var name = argument.Name;
+
+                        var typeName = argument.ValueType.Name;
+                        if (argument.IsFlag)
                         {
-                            if (argument == null)
-                            {
-                                return;
-                            }
-
-                            var shortName = argument.HasShortName ? argument.ShortName.ToString() : null;
-                            var name = argument.Name;
-
-                            var typeName = argument.ValueType.Name;
-                            if (argument.IsFlag)
-                            {
-                                typeName = Strings.Commands.FlagInfo;
-                            }
-                            else if (Strings.Commands.Parsing.TypeNames.TryGetValue(typeName, out var localizedType))
-                            {
-                                typeName = localizedType;
-                            }
-
-                            if (!argument.IsPositional)
-                            {
-                                shortName = _parser.Settings.PrefixShort + shortName;
-                                name = _parser.Settings.PrefixLong + name;
-                            }
-
-                            var names = string.Join(
-                                ", ",
-                                new[] { shortName, name }.Where(nameString => !string.IsNullOrWhiteSpace(nameString))
-                            );
-
-                            var required = argument.IsRequiredByDefault ? Strings.Commands.RequiredInfo.ToString()
-                                : requiredBuffer;
-
-                            var descriptionSegment = string.IsNullOrEmpty(argument.Description) ? string.Empty
-                                : $@" - {argument.Description}";
-
-                            Console.WriteLine($@"    {names,-16} {typeName,-12} {required}{descriptionSegment}");
+                            typeName = Strings.Commands.FlagInfo;
                         }
-                    );
+                        else if (Strings.Commands.Parsing.TypeNames.TryGetValue(typeName, out var localizedType))
+                        {
+                            typeName = localizedType;
+                        }
+
+                        if (!argument.IsPositional)
+                        {
+                            shortName = _parser.Settings.PrefixShort + shortName;
+                            name = _parser.Settings.PrefixLong + name;
+                        }
+
+                        var names = string.Join(
+                            ", ",
+                            new[] { shortName, name }.Where(nameString => !string.IsNullOrWhiteSpace(nameString))
+                        );
+
+                        var required = argument.IsRequiredByDefault ? Strings.Commands.RequiredInfo.ToString()
+                            : requiredBuffer;
+
+                        var descriptionSegment = string.IsNullOrEmpty(argument.Description) ? string.Empty
+                            : $@" - {argument.Description}";
+
+                        Console.WriteLine($@"    {names,-16} {typeName,-12} {required}{descriptionSegment}");
+                    }
 
                     Console.WriteLine();
 
                     Thread.Yield();
                 }
+
+                return true;
             },
             cancellationToken
         );

@@ -53,7 +53,7 @@ public abstract class ServiceOptions : IEquatable<ServiceOptions>
 
 [Serializable]
 public abstract class ServiceOptions<TService, TOptions> : ServiceOptions
-    where TOptions : ServiceOptions<TService, TOptions>
+    where TOptions : ServiceOptions<TService, TOptions>, new()
 {
     protected ServiceOptions() { }
 
