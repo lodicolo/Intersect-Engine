@@ -47,14 +47,16 @@ jobs:
       with:
         path: |
           Intersect*/bin/Release/**/Intersect*
-        key: ${{ runner.os }}-nuget-${{ hashFiles('Intersect.*/*.csproj') }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('Intersect.*/**/*.cs') }}
 
     - name: Cache NuGet dependencies
       uses: actions/cache@v3.2.6
       id: cache
       if: steps.cache-binaries.outputs.cache-hit != 'true'
       with:
-        path: "~/.nuget/packages"
+        path: |
+          ~/.nuget/packages
+          Intersect*/obj/project.assets.json
         key: ${{ runner.os }}-nuget-${{ hashFiles('Intersect.*/*.csproj') }}
 
     - name: Restore NuGet Packages
