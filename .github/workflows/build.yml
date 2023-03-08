@@ -125,3 +125,4 @@ jobs:
         prerelease: true
         name: ${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}
         tag_name: v${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}
+        target_commitish: ${{ github.sha }}
