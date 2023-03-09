@@ -2,9 +2,9 @@ name: Build Intersect
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "main-net7" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "main-net7" ]
 
 permissions:
   contents: write
