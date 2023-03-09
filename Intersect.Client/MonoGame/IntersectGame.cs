@@ -6,7 +6,6 @@ using Intersect.Client.Framework.Input;
 using Intersect.Client.General;
 using Intersect.Client.Interface.Game;
 using Intersect.Client.Localization;
-using Intersect.Client.MonoGame.Database;
 using Intersect.Client.MonoGame.File_Management;
 using Intersect.Client.MonoGame.Graphics;
 using Intersect.Client.MonoGame.Input;
@@ -22,7 +21,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-
+using Intersect.Client.Framework.Database;
 using Intersect.Utilities;
 
 using MainMenu = Intersect.Client.Interface.Menu.MainMenu;
@@ -94,7 +93,7 @@ namespace Intersect.Client.MonoGame
             Content.RootDirectory = "";
             IsMouseVisible = true;
             Globals.ContentManager = new MonoContentManager();
-            Globals.Database = new MonoDatabase();
+            Globals.Database = new JsonDatabase();
 
             // Load configuration.
             ClientConfiguration.LoadAndSave(ClientConfiguration.DefaultPath);
