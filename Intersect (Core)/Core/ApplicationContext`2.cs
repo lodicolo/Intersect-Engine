@@ -328,7 +328,6 @@ namespace Intersect.Core
         /// </summary>
         public static void AttachHandlers()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += HandleAssemblyResolve;
             AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
             TaskScheduler.UnobservedTaskException += HandleUnobservedTaskException;
         }
@@ -338,7 +337,6 @@ namespace Intersect.Core
         /// </summary>
         public static void DetachHandlers()
         {
-            AppDomain.CurrentDomain.AssemblyResolve -= HandleAssemblyResolve;
             AppDomain.CurrentDomain.UnhandledException -= HandleUnhandledException;
             TaskScheduler.UnobservedTaskException -= HandleUnobservedTaskException;
         }
@@ -432,51 +430,6 @@ namespace Intersect.Core
         }
 
         #endregion Application-Level Exception Handling
-
-        #region Assembly Processing
-
-        private static Assembly HandleAssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            // Ignore missing resources
-            if (args.Name?.Contains(".resources") ?? false)
-            {
-                return null;
-            }
-
-            // check for assemblies already loaded
-            var assembly = AppDomain.CurrentDomain.GetAssemblies()
-                .FirstOrDefault(fodAssembly => fodAssembly?.FullName == args.Name);
-
-            if (assembly != null)
-            {
-                return assembly;
-            }
-
-            var filename = args.Name?.Split(',')[0] + ".dll";
-
-            // Try Loading from libs/server first
-            Debug.Assert(
-                AppDomain.CurrentDomain.SetupInformation.ApplicationBase != null,
-                "AppDomain.CurrentDomain.SetupInformation.ApplicationBase != null"
-            );
-
-            var libsFolder = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "libs", "server");
-            if (File.Exists(Path.Combine(libsFolder, filename)))
-            {
-                return Assembly.LoadFile(Path.Combine(libsFolder, filename));
-            }
-
-            var archSpecificPath = Path.Combine(
-                AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
-                Environment.Is64BitProcess
-                    ? Path.Combine("libs", "server", "x64")
-                    : Path.Combine("libs", "server", "x86"), filename
-            );
-
-            return File.Exists(archSpecificPath) ? Assembly.LoadFile(archSpecificPath) : null;
-        }
-
-        #endregion Assembly Processing
 
         #region Instance Management
 
