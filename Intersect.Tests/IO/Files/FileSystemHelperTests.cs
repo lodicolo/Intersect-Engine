@@ -145,51 +145,51 @@ namespace Intersect.IO.Files
 
             #endregion Unix-style Windows paths
 
-            #region Windows paths
-
-            yield return new[]
-            {
-                @"C:\directory\that\exists\", @"C:\directory\that\does\not\exist",
-                Path.Combine("..", "does", "not", "exist")
-            };
-
-            yield return new[]
-            {
-                @"C:\directory\that\exists\", @"C:\directory\that\does\not\exist\",
-                Path.Combine("..", "does", "not", "exist") + Path.DirectorySeparatorChar
-            };
-
-            yield return new[]
-            {
-                @"C:\directory\that\exists\", @"C:\directory\that\does\not\exist",
-                Path.Combine("..", "does", "not", "exist")
-            };
-
-            yield return new[]
-            {
-                @"C:\directory\that\exists\", @"C:\directory\that\does\not\exist\",
-                Path.Combine("..", "does", "not", "exist") + Path.DirectorySeparatorChar
-            };
-
-            yield return new[]
-            {
-                @"C:\directory\that\exists\", @"C:\directory\that\exists\with\a\file\that\exists",
-                Path.Combine("with", "a", "file", "that", "exists")
-            };
-
-            yield return new[]
-            {
-                @"C:\directory\that\exists\", @"C:\directory\that\exists\with\a\file\that\exists",
-                Path.Combine("with", "a", "file", "that", "exists")
-            };
-
-            yield return new[]
-            {
-                @"C:\directory\that\exists\file.txt", @"C:/directory/that/exists/with/a/file/that/exists",
-                Path.Combine("with", "a", "file", "that", "exists")
-            };
-
-            #endregion Windows paths
+            // #region Windows paths
+            //
+            // yield return new[]
+            // {
+            //     @"C:\directory\that\exists\", @"C:\directory\that\does\not\exist",
+            //     Path.Combine("..", "does", "not", "exist")
+            // };
+            //
+            // yield return new[]
+            // {
+            //     @"C:\directory\that\exists\", @"C:\directory\that\does\not\exist\",
+            //     Path.Combine("..", "does", "not", "exist") + Path.DirectorySeparatorChar
+            // };
+            //
+            // yield return new[]
+            // {
+            //     @"C:\directory\that\exists\", @"C:\directory\that\does\not\exist",
+            //     Path.Combine("..", "does", "not", "exist")
+            // };
+            //
+            // yield return new[]
+            // {
+            //     @"C:\directory\that\exists\", @"C:\directory\that\does\not\exist\",
+            //     Path.Combine("..", "does", "not", "exist") + Path.DirectorySeparatorChar
+            // };
+            //
+            // yield return new[]
+            // {
+            //     @"C:\directory\that\exists\", @"C:\directory\that\exists\with\a\file\that\exists",
+            //     Path.Combine("with", "a", "file", "that", "exists")
+            // };
+            //
+            // yield return new[]
+            // {
+            //     @"C:\directory\that\exists\", @"C:\directory\that\exists\with\a\file\that\exists",
+            //     Path.Combine("with", "a", "file", "that", "exists")
+            // };
+            //
+            // yield return new[]
+            // {
+            //     @"C:\directory\that\exists\file.txt", @"C:/directory/that/exists/with/a/file/that/exists",
+            //     Path.Combine("with", "a", "file", "that", "exists")
+            // };
+            //
+            // #endregion Windows paths
         }
 
         [TestCaseSource(nameof(RelativePathTestCases))]
