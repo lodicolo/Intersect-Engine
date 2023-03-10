@@ -7,6 +7,7 @@ using Intersect.Network.Packets;
 using Intersect.Utilities;
 
 using Lidgren.Network;
+// using Lidgren.Network.Encryption;
 
 namespace Intersect.Network.Lidgren
 {
@@ -61,7 +62,7 @@ namespace Intersect.Network.Lidgren
 
         public RSACryptoServiceProvider Rsa { get; private set; }
 
-        public NetAESEncryption Aes { get; private set; }
+        public NetEncryption Aes { get; private set; }
 
         public override string Ip => NetConnection?.RemoteEndPoint?.Address?.ToString();
 
@@ -85,6 +86,7 @@ namespace Intersect.Network.Lidgren
                 throw new ArgumentNullException();
             }
 
+            // Aes = new NetNoopEncryption(NetConnection.Peer);
             Aes = new NetAESEncryption(NetConnection.Peer, mAesKey, 0, mAesKey.Length);
         }
 
