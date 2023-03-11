@@ -77,7 +77,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Mono.Data.Sqlite.Portable" Version="1.0.3.5" />
-    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
     <PackageReference Include="SharpDX" Version="4.0.1" />
     <PackageReference Include="SharpDX.Direct2D1" Version="4.0.1" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.0.1" />
@@ -404,8 +404,7 @@
     <Compile Update="Forms\Editors\Events\Event Commands\EventCommand_WaitForRouteCompletion.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile
-      Update="Forms\Editors\Events\Event Commands\EventCommand_WaitForRouteCompletion.Designer.cs">
+    <Compile Update="Forms\Editors\Events\Event Commands\EventCommand_WaitForRouteCompletion.Designer.cs">
       <DependentUpon>EventCommand_WaitForRouteCompletion.cs</DependentUpon>
     </Compile>
     <Compile Update="Forms\Editors\Events\Event Commands\EventCommand_Warp.cs">
@@ -423,8 +422,7 @@
     <Compile Update="Forms\Editors\Events\Event Commands\Event_MoveRouteAnimationSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile
-      Update="Forms\Editors\Events\Event Commands\Event_MoveRouteAnimationSelector.Designer.cs">
+    <Compile Update="Forms\Editors\Events\Event Commands\Event_MoveRouteAnimationSelector.Designer.cs">
       <DependentUpon>Event_MoveRouteAnimationSelector.cs</DependentUpon>
     </Compile>
     <Compile Update="Forms\Editors\Events\Event Commands\Event_MoveRouteDesigner.cs">
