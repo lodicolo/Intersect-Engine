@@ -1,32 +1,29 @@
-﻿using Intersect.Core;
-using Intersect.Logging;
-using Intersect.Network;
-using Intersect.Server.Core.Services;
-using Intersect.Server.Database;
-using Intersect.Server.Localization;
-using Intersect.Server.Networking;
-using Intersect.Server.Networking.Helpers;
-using Intersect.Server.Networking.Lidgren;
-using Intersect.Server.Web.RestApi;
-
-using Open.Nat;
-
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-
+using Intersect.Core;
 using Intersect.Factories;
+using Intersect.Logging;
+using Intersect.Network;
 using Intersect.Plugins;
-using Intersect.Server.Plugins;
-using Intersect.Server.General;
-using System.Collections.Generic;
 using Intersect.Plugins.Interfaces;
 using Intersect.Rsa;
+using Intersect.Server.Core.Services;
+using Intersect.Server.Database;
+using Intersect.Server.Database.PlayerData;
 using Intersect.Server.Database.PlayerData.Players;
-
+using Intersect.Server.General;
+using Intersect.Server.Localization;
+using Intersect.Server.Networking;
+using Intersect.Server.Networking.Helpers;
+using Intersect.Server.Networking.Lidgren;
+using Intersect.Server.Plugins;
+using Intersect.Server.Web.RestApi;
+using Open.Nat;
 #if WEBSOCKETS
 using Intersect.Server.Networking.Websockets;
 #endif
@@ -34,13 +31,12 @@ using Intersect.Server.Networking.Websockets;
 namespace Intersect.Server.Core
 {
     /// <summary>
-    /// Implements <see cref="IServerContext"/>.
+    ///     Implements <see cref="IServerContext" />.
     /// </summary>
-    internal sealed partial class ServerContext : ApplicationContext<ServerContext, ServerCommandLineOptions>, IServerContext
+    internal sealed class ServerContext : ApplicationContext<ServerContext, ServerCommandLineOptions>, IServerContext
     {
-        internal ServerContext(ServerCommandLineOptions startupOptions, Logger logger, IPacketHelper packetHelper) : base(
-            startupOptions, logger, packetHelper
-        )
+        internal ServerContext(ServerCommandLineOptions startupOptions, Logger logger, IPacketHelper packetHelper) :
+            base(startupOptions, logger, packetHelper)
         {
             // Register the factory for creating service plugin contexts
             FactoryRegistry<IPluginContext>.RegisterFactory(new ServerPluginContext.Factory());
@@ -114,7 +110,7 @@ namespace Intersect.Server.Core
                 Log.Info("Saving online users/players..." + $" ({stopwatch.ElapsedMilliseconds}ms)");
 
                 var savingTasks = new List<Task>();
-                foreach (var user in Database.PlayerData.User.OnlineList.ToArray())
+                foreach (var user in User.OnlineList.ToArray())
                 {
                     savingTasks.Add(Task.Run(() => user.Save()));
                 }
@@ -194,7 +190,7 @@ namespace Intersect.Server.Core
             base.Dispose(disposing);
             Log.Info("Finished disposing server context." + $" ({stopwatch.ElapsedMilliseconds}ms)");
             Console.WriteLine(Strings.Commands.exited);
-            System.Environment.Exit(-1);
+            Environment.Exit(-1);
         }
 
         #endregion
@@ -226,7 +222,8 @@ namespace Intersect.Server.Core
             {
                 var rsaKey = new RsaKey(stream ?? throw new InvalidOperationException());
                 Debug.Assert(rsaKey != null, "rsaKey != null");
-                network = new ServerNetwork(this, packetHelper, new NetworkConfiguration(Options.ServerPort), rsaKey.Parameters);
+                network = new ServerNetwork(this, packetHelper, new NetworkConfiguration(Options.ServerPort),
+                    rsaKey.Parameters);
             }
 
             #endregion
@@ -297,15 +294,16 @@ namespace Intersect.Server.Core
 
         #region Exception Handling
 
-        protected override void NotifyNonTerminatingExceptionOccurred() =>
+        protected override void NotifyNonTerminatingExceptionOccurred()
+        {
             Console.WriteLine(Strings.Errors.errorlogged);
+        }
 
         internal static void DispatchUnhandledException(Exception exception, bool isTerminating = true)
         {
             var sender = Thread.CurrentThread;
-            Task.Factory.StartNew(
-                () => HandleUnhandledException(sender, new UnhandledExceptionEventArgs(exception, isTerminating))
-            );
+            Task.Factory.StartNew(() =>
+                HandleUnhandledException(sender, new UnhandledExceptionEventArgs(exception, isTerminating)));
         }
 
         #endregion Exception Handling

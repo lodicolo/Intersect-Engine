@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Configurations>Debug;Release;Testing</Configurations>
     <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
@@ -32,7 +32,8 @@
 
   <ItemGroup>
     <PackageReference Include="AscensionGameDev.Intersect.Building" Version="0.8.0.13-beta" GeneratePathProperty="True" />
-    <PackageReference Include="AscensionGameDev.Lidgren.Network" Version="1.9.0.1-beta" />
+    <PackageReference Include="AscensionGameDev.Lidgren.Network" Version="2.0.0.30-beta" />
+<!--    <PackageReference Include="AscensionGameDev.Lidgren.Network" Version="1.9.0.1-beta" />-->
 <!--    <PackageReference Include="AscensionGameDev.Lidgren.Network" Version="1.7.7518.2930-debug" />-->
     <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
   </ItemGroup>

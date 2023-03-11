@@ -843,6 +843,8 @@ namespace Intersect.Server.Localization
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)] public readonly LocalizedString loading = @"Loading, please wait.";
 
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)] public readonly LocalizedString Runtime = @"Runtime {00}";
+
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)] public readonly LocalizedString started = @"Server Started. Using UDP Port #{00}";
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
