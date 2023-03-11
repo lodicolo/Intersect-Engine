@@ -7,12 +7,9 @@ namespace Intersect.Server.Database.PlayerData.Players
 {
     public partial class UserVariable : Variable
     {
-        public UserVariable() : this(Guid.Empty) { }
+        public UserVariable() : base() { }
 
-        public UserVariable(Guid userVariableBaseId)
-        {
-            VariableId = userVariableBaseId;
-        }
+        public UserVariable(Guid id) : base(id) { }
 
         [NotMapped]
         public string VariableName => UserVariableBase.GetName(VariableId);

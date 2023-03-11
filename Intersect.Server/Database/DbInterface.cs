@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using Amib.Threading;
 using Intersect.Collections;
 using Intersect.Config;
@@ -36,7 +35,7 @@ using Intersect.Server.Networking;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace Intersect.Server.Database
 {
@@ -107,12 +106,17 @@ namespace Intersect.Server.Database
         /// </summary>
         /// <param name="readOnly">Defines whether or not the context should initialize with change tracking. If readonly is true then SaveChanges will not work.</param>
         /// <returns></returns>
-        public static PlayerContext CreatePlayerContext(bool readOnly = true)
+        public static PlayerContext CreatePlayerContext(bool readOnly = true, bool explicitLoad = false)
         {
             return new PlayerContext(
                     CreateConnectionStringBuilder(
                         Options.PlayerDb ?? throw new InvalidOperationException(), PlayersDbFilename
-                    ), Options.PlayerDb.Type, readOnly, playerDbLogger, Options.PlayerDb.LogLevel
+                    ),
+                    Options.PlayerDb.Type,
+                    logger: playerDbLogger,
+                    logLevel: Options.PlayerDb.LogLevel,
+                    readOnly: readOnly,
+                    explicitLoad: explicitLoad
                 );
         }
 
@@ -397,15 +401,46 @@ namespace Intersect.Server.Database
             return null;
         }
 
-        public static Player GetUserCharacter(User user, Guid characterId)
+        public static Player GetUserCharacter(User user, Guid playerId, bool explicitLoad = false)
         {
-            if (user == null) return null;
-            foreach (var character in user.Players)
+            if (user == default)
             {
-                if (character.Id == characterId)
+                return default;
+            }
+
+            foreach (var player in user.Players)
+            {
+                if (player.Id != playerId)
                 {
-                    return character;
+                    continue;
                 }
+
+                if (!explicitLoad)
+                {
+                    return player;
+                }
+
+                try
+                {
+                    using var playerContext = CreatePlayerContext(readOnly: true, explicitLoad: false);
+                    var playerEntry = playerContext.Players.Attach(player);
+                    playerEntry.Collection(p => p.Items).Query().Load();
+                    playerEntry.Collection(player => player.Bank).Load();
+                    playerEntry.Collection(player => player.Hotbar).Load();
+                    playerEntry.Collection(player => player.Items).Load();
+                    playerEntry.Collection(player => player.Quests).Load();
+                    playerEntry.Collection(player => player.Spells).Load();
+                    playerEntry.Collection(player => player.Variables).Load();
+                    _ = Player.Validate(player);
+                }
+                catch (Exception exception)
+                {
+                    Debugger.Break();
+                    Log.Error(exception);
+                    throw new Exception($"Error during explicit load of player {BitConverter.ToString(playerId.ToByteArray()).Replace("-", string.Empty)}", exception);
+                }
+
+                return player;
             }
 
             return null;
