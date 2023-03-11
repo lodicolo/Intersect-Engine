@@ -1,4 +1,4 @@
-name: Build Intersect
+name: Build Intersect (.NET 7.0)
 
 on:
   push:
