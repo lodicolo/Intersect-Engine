@@ -59,9 +59,9 @@ public sealed class DebugSinkConfiguration : SinkConfiguration
 {
     public DebugSinkConfiguration() :
 #if DEBUG
-        base()
+        base(true)
 #else
-            base(false)
+        base(false)
 #endif
     {
     }
@@ -90,7 +90,11 @@ public sealed class FileSinkConfiguration : SinkConfiguration
 
 public sealed class IntersectSerilogConfiguration
 {
-    public FileSinkConfiguration FileSink { get; set; }
+    public ConsoleSinkConfiguration Console { get; set; }
+
+    public DebugSinkConfiguration Debug { get; set; }
+
+    public FileSinkConfiguration File { get; set; }
 }
 
 public static class LoggerConfigurationExtensions
@@ -100,14 +104,16 @@ public static class LoggerConfigurationExtensions
         IntersectSerilogConfiguration intersectSerilogConfiguration = default
     )
     {
-        return loggerConfiguration.ConfigureFileSink(intersectSerilogConfiguration.FileSink);
+        return loggerConfiguration.ConfigureConsoleSink(intersectSerilogConfiguration.Console)
+            .ConfigureDebugSink(intersectSerilogConfiguration.Debug)
+            .ConfigureFileSink(intersectSerilogConfiguration.File);
     }
 
     private static LoggerConfiguration ConfigureConsoleSink(
         this LoggerConfiguration loggerConfiguration, ConsoleSinkConfiguration consoleSinkConfiguration
     )
     {
-        if (consoleSinkConfiguration == default || !consoleSinkConfiguration.Enabled)
+        if (consoleSinkConfiguration is not { Enabled: true })
         {
             return loggerConfiguration;
         }
