@@ -32,7 +32,7 @@ namespace Intersect.Server.Database.GameData
             bool readOnly = false,
             Intersect.Logging.Logger logger = null,
             Intersect.Logging.LogLevel logLevel = Intersect.Logging.LogLevel.None
-        ) : base(connectionStringBuilder, databaseType, logger, logLevel, readOnly, false)
+        ) : base(connectionStringBuilder, databaseType, logger, logLevel, readOnly, autoDetectChanges: false)
         {
 
         }
@@ -97,22 +97,22 @@ namespace Intersect.Server.Database.GameData
 
         public override void MigrationsProcessed(string[] migrations)
         {
-            if (migrations.IndexOf("20190611170819_CombiningSwitchesVariables") > -1)
+            if (Array.IndexOf(migrations, "20190611170819_CombiningSwitchesVariables") > -1)
             {
                 Beta6Migration.Run(this);
             }
 
-            if (migrations.IndexOf("20201004032158_EnablingCerasVersionTolerance") > -1)
+            if (Array.IndexOf(migrations, "20201004032158_EnablingCerasVersionTolerance") > -1)
             {
                 CerasVersionToleranceMigration.Run(this);
             }
 
-            if (migrations.IndexOf("20210512071349_BoundItemExtension") > -1)
+            if (Array.IndexOf(migrations, "20210512071349_BoundItemExtension") > -1)
             {
                 BoundItemExtensionMigration.Run(this);
             }
 
-            if (migrations.IndexOf("20211031200145_FixQuestTaskCompletionEvents") > -1)
+            if (Array.IndexOf(migrations, "20211031200145_FixQuestTaskCompletionEvents") > -1)
             {
                 FixQuestTaskCompletionEventsMigration.Run(this);
             }

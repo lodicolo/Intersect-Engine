@@ -6,13 +6,11 @@ using System.IO.Compression;
 using Intersect.Enums;
 using Intersect.GameObjects.Events;
 using Intersect.GameObjects.Events.Commands;
-using Intersect.GameObjects.Maps;
-using Intersect.Network;
 
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
