@@ -77,14 +77,11 @@ jobs:
         mkdir intersect-engine/editor
         mkdir intersect-engine/server
         Copy-Item -Path "Intersect.Client/LICENSE.md" -Destination "intersect-engine/client"
-        Copy-Item -Path "Intersect.Client/bin/Release/**/Intersect Client.exe*" -Destination "intersect-engine/client"
-        Copy-Item -Path "Intersect.Client/bin/Release/**/Intersect Client.pdb" -Destination "intersect-engine/client"
+        Copy-Item -Path "Intersect.Client/bin/Release/**/Intersect Client.*" -Destination "intersect-engine/client"
         Copy-Item -Path "Intersect.Editor/LICENSE.md" -Destination "intersect-engine/editor"
-        Copy-Item -Path "Intersect.Editor/bin/Release/**/Intersect Editor.exe*" -Destination "intersect-engine/editor"
-        Copy-Item -Path "Intersect.Editor/bin/Release/**/Intersect Editor.pdb" "intersect-engine/editor"
+        Copy-Item -Path "Intersect.Editor/bin/Release/**/Intersect Editor.*" -Destination "intersect-engine/editor"
         Copy-Item -Path "Intersect.Server/LICENSE.md" -Destination "intersect-engine/server"
-        Copy-Item -Path "Intersect.Server/bin/Release/**/Intersect Server.exe*" -Destination "intersect-engine/server"
-        Copy-Item -Path "Intersect.Server/bin/Release/**/Intersect Server.pdb" -Destination "intersect-engine/server"
+        Copy-Item -Path "Intersect.Server/bin/Release/**/Intersect Server.*" -Destination "intersect-engine/server"
         Copy-Item -Path "AUTHORS.md" -Destination "intersect-engine"
         Copy-Item -Path "LICENSE.md" -Destination "intersect-engine"
         Copy-Item -Path "README.md" -Destination "intersect-engine"
