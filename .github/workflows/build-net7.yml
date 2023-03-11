@@ -2,16 +2,16 @@ name: Build Intersect
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main-net7" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main-net7" ]
 
 permissions:
   contents: write
 
 env:
   VERSION_PREFIX: 0.7.2
-  VERSION_SUFFIX: -beta.
+  VERSION_SUFFIX: -beta-net7.
 
 jobs:
   build:
