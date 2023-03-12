@@ -22,10 +22,6 @@
     </AssemblyAttribute>
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\Intersect (Core)\Intersect.Core.csproj" />
   </ItemGroup>
