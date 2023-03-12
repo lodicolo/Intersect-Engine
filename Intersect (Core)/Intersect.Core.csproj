@@ -60,7 +60,7 @@
     <PackageReference Include="AscensionGameDev.Intersect.Rsa" Version="0.8.0.9-beta" />
     <PackageReference Include="Ceras" Version="4.1.7" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="K4os.Compression.LZ4" Version="1.1.10" />
+    <PackageReference Include="K4os.Compression.LZ4" Version="1.3.5" />
     <PackageReference Include="MathNet.Numerics" Version="4.9.0" />
     <PackageReference Include="MessagePack" Version="2.4.59" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.4.59">
