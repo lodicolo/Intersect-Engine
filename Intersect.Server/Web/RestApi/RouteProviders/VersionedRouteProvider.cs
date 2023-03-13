@@ -30,50 +30,6 @@ namespace Intersect.Server.Web.RestApi.RouteProviders
 
         public string Prefix { get; }
 
-        protected override IReadOnlyList<IDirectRouteFactory> GetActionRouteFactories(
-            HttpActionDescriptor actionDescriptor
-        )
-        {
-            return base.GetActionRouteFactories(actionDescriptor);
-        }
-
-        protected override IReadOnlyList<RouteEntry> GetActionDirectRoutes(
-            HttpActionDescriptor actionDescriptor,
-            IReadOnlyList<IDirectRouteFactory> factories,
-            IInlineConstraintResolver constraintResolver
-        )
-        {
-            return base.GetActionDirectRoutes(actionDescriptor, factories, constraintResolver);
-        }
-
-        protected override IReadOnlyList<IDirectRouteFactory> GetControllerRouteFactories(
-            HttpControllerDescriptor controllerDescriptor
-        )
-        {
-            return base.GetControllerRouteFactories(controllerDescriptor);
-        }
-
-        public override IReadOnlyList<RouteEntry> GetDirectRoutes(
-            HttpControllerDescriptor controllerDescriptor,
-            IReadOnlyList<HttpActionDescriptor> actionDescriptors,
-            IInlineConstraintResolver constraintResolver
-        )
-        {
-            return base.GetDirectRoutes(controllerDescriptor, actionDescriptors, constraintResolver);
-        }
-
-        protected override IReadOnlyList<RouteEntry> GetControllerDirectRoutes(
-            HttpControllerDescriptor controllerDescriptor,
-            IReadOnlyList<HttpActionDescriptor> actionDescriptors,
-            IReadOnlyList<IDirectRouteFactory> factories,
-            IInlineConstraintResolver constraintResolver
-        )
-        {
-            return base.GetControllerDirectRoutes(
-                controllerDescriptor, actionDescriptors, factories, constraintResolver
-            );
-        }
-
         protected override string GetRoutePrefix(HttpControllerDescriptor controllerDescriptor)
         {
             var prefixBuilder = new StringBuilder(Prefix);

@@ -260,7 +260,9 @@ namespace Intersect.Server.Core
             Console.WriteLine();
 #endif
 
-            RestApi.Start();
+            // RestApi.Start();
+            var webApp = new AspNetCoreWebApp();
+            webApp.Start();
 
             if (!Options.UPnP || Instance.StartupOptions.NoNatPunchthrough)
             {
