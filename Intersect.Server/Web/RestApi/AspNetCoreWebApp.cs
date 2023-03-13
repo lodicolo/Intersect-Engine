@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using Intersect.Logging;
 using Intersect.Security.Claims;
 using Intersect.Server.Database;
@@ -310,6 +311,16 @@ public sealed class PlayerContextFactory : IDbContextFactory<PlayerContext>
     public PlayerContext CreateDbContext() => DbInterface.CreatePlayerContext(false);
 }
 
+public partial class KebabParameterTransformer : IOutboundParameterTransformer
+{
+    public string TransformOutbound(object value) =>
+        // Slugify value
+        value == null ? null : GetCaseChangePattern().Replace(value.ToString(), "$1-$2").ToLower();
+
+    [GeneratedRegex("([a-z])([A-Z])")]
+    private static partial Regex GetCaseChangePattern();
+}
+
 public class AspNetCoreWebApp
 {
     public void Start()
@@ -388,7 +399,10 @@ public class AspNetCoreWebApp
             }
         );
 
-        builder.Services.AddRazorPages();
+        builder.Services.AddRazorPages(
+            razorPagesOptions =>
+                razorPagesOptions.Conventions.Add(new PageRouteTransformerConvention(new KebabParameterTransformer()))
+        );
 
         // builder.Services.AddAuthentication(options =>
         //     {
@@ -432,7 +446,7 @@ public class AspNetCoreWebApp
         builder.Services.AddSwaggerGen();
 
         builder.WebHost.UseStaticWebAssets();
-        
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
