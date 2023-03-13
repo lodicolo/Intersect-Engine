@@ -1,11 +1,7 @@
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
 using Intersect.Enums;
 using Intersect.GameObjects;
 using Intersect.Logging;
@@ -96,20 +92,13 @@ public class User
 
     public string LastIp { get; set; }
 
-    public static User FindOnline(Guid id)
-    {
-        return OnlineUsers.ContainsKey(id) ? OnlineUsers[id] : null;
-    }
+    public static User FindOnline(Guid id) => OnlineUsers.ContainsKey(id) ? OnlineUsers[id] : null;
 
-    public static User FindOnline(string username)
-    {
-        return OnlineUsers.Values.FirstOrDefault(s => s.Name.ToLower().Trim() == username.ToLower().Trim());
-    }
+    public static User FindOnline(string username) =>
+        OnlineUsers.Values.FirstOrDefault(s => s.Name.ToLower().Trim() == username.ToLower().Trim());
 
-    public static User FindOnlineFromEmail(string email)
-    {
-        return OnlineUsers.Values.FirstOrDefault(s => s.Email.ToLower().Trim() == email.ToLower().Trim());
-    }
+    public static User FindOnlineFromEmail(string email) =>
+        OnlineUsers.Values.FirstOrDefault(s => s.Email.ToLower().Trim() == email.ToLower().Trim());
 
     public static void Login(User user, string ip)
     {
@@ -160,10 +149,8 @@ public class User
         return string.Equals(Password, saltedPasswordHash, StringComparison.Ordinal);
     }
 
-    public bool TryChangePassword(string oldPassword, string newPassword)
-    {
-        return IsPasswordValid(oldPassword) && TrySetPassword(newPassword);
-    }
+    public bool TryChangePassword(string oldPassword, string newPassword) =>
+        IsPasswordValid(oldPassword) && TrySetPassword(newPassword);
 
     public bool TrySetPassword(string passwordHash)
     {
@@ -224,7 +211,8 @@ public class User
         {
             Log.Error(ex, "Failed to save user while adding character: " + Name);
             ServerContext.DispatchUnhandledException(
-                new Exception("Failed to save user, shutting down to prevent rollbacks!"));
+                new Exception("Failed to save user, shutting down to prevent rollbacks!")
+            );
         }
     }
 
@@ -261,7 +249,8 @@ public class User
         {
             Log.Error(ex, "Failed to save user while deleting character: " + Name);
             ServerContext.DispatchUnhandledException(
-                new Exception("Failed to save user, shutting down to prevent rollbacks!"));
+                new Exception("Failed to save user, shutting down to prevent rollbacks!")
+            );
         }
     }
 
@@ -291,16 +280,24 @@ public class User
         {
             Log.Error(ex, "Failed to delete user: " + Name);
             ServerContext.DispatchUnhandledException(
-                new Exception("Failed to delete user, shutting down to prevent rollbacks!"));
+                new Exception("Failed to delete user, shutting down to prevent rollbacks!")
+            );
         }
     }
 
-    public void Save(bool force = false)
+    public async Task SaveAsync(bool force = false, PlayerContext? playerContext = default, CancellationToken cancellationToken = default)
+    {
+        Save(playerContext, force);
+    }
+
+    public void Save(bool force = false) => Save(default, force);
+    
+    public void Save(PlayerContext? playerContext, bool force = false)
     {
         //No passing in custom contexts here.. they may already have this user in the change tracker and things just get weird.
         //The cost of making a new context is almost nil.
         var lockTaken = false;
-        PlayerContext context = null;
+        PlayerContext? createdContext = default;
         try
         {
             if (force)
@@ -313,28 +310,34 @@ public class User
                 Monitor.TryEnter(mSavingLock, 0, ref lockTaken);
             }
 
-            if (lockTaken)
+            if (!lockTaken)
             {
-                context = DbInterface.CreatePlayerContext(false);
-
-                context.Users.Update(this);
-
-                context.ChangeTracker.DetectChanges();
-
-                context.StopTrackingUsersExcept(this);
-
-                if (UserBan != null)
-                {
-                    context.Entry(UserBan).State = EntityState.Detached;
-                }
-
-                if (UserMute != null)
-                {
-                    context.Entry(UserMute).State = EntityState.Detached;
-                }
-
-                context.SaveChanges();
+                return;
             }
+
+            if (playerContext == null)
+            {
+                createdContext = DbInterface.CreatePlayerContext(false);
+                playerContext = createdContext;
+            }
+
+            playerContext.Users.Update(this);
+
+            playerContext.ChangeTracker.DetectChanges();
+
+            playerContext.StopTrackingUsersExcept(this);
+
+            if (UserBan != null)
+            {
+                playerContext.Entry(UserBan).State = EntityState.Detached;
+            }
+
+            if (UserMute != null)
+            {
+                playerContext.Entry(UserMute).State = EntityState.Detached;
+            }
+
+            playerContext.SaveChanges();
         }
         catch (DbUpdateConcurrencyException ex)
         {
@@ -351,7 +354,8 @@ public class User
                 foreach (var property in proposedValues.Properties)
                 {
                     concurrencyErrors.AppendLine(
-                        $"{property.Name} (Token: {property.IsConcurrencyToken}): Proposed: {proposedValues[property]}  Original Value: {entry.OriginalValues[property]}  Database Value: {(databaseValues != null ? databaseValues[property] : "null")}");
+                        $"{property.Name} (Token: {property.IsConcurrencyToken}): Proposed: {proposedValues[property]}  Original Value: {entry.OriginalValues[property]}  Database Value: {(databaseValues != null ? databaseValues[property] : "null")}"
+                    );
                 }
 
                 concurrencyErrors.AppendLine("");
@@ -361,19 +365,21 @@ public class User
             Log.Error(ex, "Jackpot! Concurrency Bug For " + Name);
             Log.Error(concurrencyErrors.ToString());
             ServerContext.DispatchUnhandledException(
-                new Exception("Failed to save user, shutting down to prevent rollbacks!"));
+                new Exception("Failed to save user, shutting down to prevent rollbacks!")
+            );
         }
         catch (Exception ex)
         {
             Log.Error(ex, "Failed to save user: " + Name);
             ServerContext.DispatchUnhandledException(
-                new Exception("Failed to save user, shutting down to prevent rollbacks!"));
+                new Exception("Failed to save user, shutting down to prevent rollbacks!")
+            );
         }
         finally
         {
             if (lockTaken)
             {
-                context?.Dispose();
+                createdContext?.Dispose();
                 Monitor.Exit(mSavingLock);
             }
         }
@@ -396,7 +402,7 @@ public class User
     {
         var client = Globals.Clients.Find(queryClient => userId == queryClient?.User?.Id);
 
-        return new Tuple<Client, User>(client, client?.User ?? Find(userId));
+        return new Tuple<Client, User>(client, client?.User ?? FindById(userId));
     }
 
     public static Tuple<Client, User> Fetch(string userName)
@@ -442,7 +448,13 @@ public class User
         return null;
     }
 
-    public static User Find(Guid userId)
+    public static User FindById(Guid userId)
+    {
+        using var playerContext = DbInterface.CreatePlayerContext();
+        return FindById(userId, playerContext);
+    }
+
+    public static User FindById(Guid userId, PlayerContext playerContext)
     {
         if (userId == Guid.Empty)
         {
@@ -458,10 +470,8 @@ public class User
 
         try
         {
-            using (var context = DbInterface.CreatePlayerContext())
-            {
-                return PostLoad(QueryUserById(context, userId));
-            }
+            using var context = DbInterface.CreatePlayerContext();
+            return QueryUserByIdShallow(playerContext, userId);
         }
         catch (Exception ex)
         {
@@ -486,10 +496,9 @@ public class User
 
         try
         {
-            using (var context = DbInterface.CreatePlayerContext())
-            {
-                return PostLoad(QueryUserByName(context, username));
-            }
+            using var context = DbInterface.CreatePlayerContext();
+            var queriedUser = QueryUserByNameShallow(context, username);
+            return queriedUser;
         }
         catch (Exception ex)
         {
@@ -499,6 +508,12 @@ public class User
     }
 
     public static User FindFromNameOrEmail(string nameOrEmail)
+    {
+        using var playerContext = DbInterface.CreatePlayerContext();
+        return FindByNameOrEmail(nameOrEmail, playerContext);
+    }
+
+    public static User FindByNameOrEmail(string nameOrEmail, PlayerContext playerContext)
     {
         if (string.IsNullOrWhiteSpace(nameOrEmail))
         {
@@ -519,10 +534,8 @@ public class User
 
         try
         {
-            using (var context = DbInterface.CreatePlayerContext())
-            {
-                return PostLoad(QueryUserByName(context, nameOrEmail));
-            }
+            var queriedUser = QueryUserByNameOrEmailShallow(playerContext, nameOrEmail);
+            return queriedUser;
         }
         catch (Exception ex)
         {
@@ -531,7 +544,13 @@ public class User
         }
     }
 
-    public static User FindFromEmail(string email)
+    public static User FindByEmail(string email)
+    {
+        using var context = DbInterface.CreatePlayerContext();
+        return FindByEmail(email);
+    }
+
+    public static User FindByEmail(string email, PlayerContext playerContext)
     {
         if (string.IsNullOrWhiteSpace(email))
         {
@@ -547,10 +566,7 @@ public class User
 
         try
         {
-            using (var context = DbInterface.CreatePlayerContext())
-            {
-                return PostLoad(QueryUserByEmail(context, email));
-            }
+            return QueryUserByEmailShallow(playerContext, email);
         }
         catch (Exception ex)
         {
@@ -755,7 +771,12 @@ public class User
     }
 
     public static IList<User> List(
-        string query, string sortBy, SortDirection sortDirection, int skip, int take, out int total
+        string query,
+        string sortBy,
+        SortDirection sortDirection,
+        int skip,
+        int take,
+        out int total
     )
     {
         try
@@ -771,9 +792,9 @@ public class User
                 }
 
                 var compiledQuery = string.IsNullOrWhiteSpace(query)
-                    ? context.Users.Include(p => p.Ban).Include(p => p.Mute)
-                    : context.Users.Where(u =>
-                        EF.Functions.Like(u.Name, $"%{query}%") || EF.Functions.Like(u.Email, $"%{query}%"));
+                    ? context.Users.Include(p => p.Ban).Include(p => p.Mute) : context.Users.Where(
+                        u => EF.Functions.Like(u.Name, $"%{query}%") || EF.Functions.Like(u.Email, $"%{query}%")
+                    );
 
                 total = compiledQuery.Count();
 
@@ -818,50 +839,25 @@ public class User
 
     #region Compiled Queries
 
-    private static readonly Func<PlayerContext, string, User> QueryUserByName = EF.CompileQuery(
+    private static readonly Func<PlayerContext, string, User> QueryUserByNameShallow = EF.CompileQuery(
             // ReSharper disable once SpecifyStringComparison
             (PlayerContext context, string username) => context.Users.Where(u => u.Name == username)
                 .Include(p => p.Ban)
                 .Include(p => p.Mute)
                 .Include(p => p.Players)
-                .ThenInclude(c => c.Bank)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Hotbar)
-                .Include(p => p.Players)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Quests)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Variables)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Items)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Spells)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Bank)
-                .Include(p => p.Variables)
-                .FirstOrDefault()) ??
+                .FirstOrDefault()
+        ) ??
         throw new InvalidOperationException();
 
-    private static readonly Func<PlayerContext, string, string, User> QueryUserByNameAndPassword = EF.CompileQuery(
+    private static readonly Func<PlayerContext, string, User> QueryUserByNameOrEmailShallow = EF.CompileQuery(
             // ReSharper disable once SpecifyStringComparison
-            (PlayerContext context, string username, string password) => context.Users
-                .Where(u => u.Name == username && u.Password == password)
+            (PlayerContext context, string usernameOrEmail) => context.Users
+                .Where(u => u.Name == usernameOrEmail || u.Email == usernameOrEmail)
                 .Include(p => p.Ban)
                 .Include(p => p.Mute)
                 .Include(p => p.Players)
-                .ThenInclude(c => c.Bank)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Hotbar)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Items)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Quests)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Spells)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Variables)
-                .Include(p => p.Variables)
-                .FirstOrDefault()) ??
+                .FirstOrDefault()
+        ) ??
         throw new InvalidOperationException();
 
     private static readonly Func<PlayerContext, string, string, User> QueryUserByNameAndPasswordShallow =
@@ -872,96 +868,39 @@ public class User
                 .Include(p => p.Ban)
                 .Include(p => p.Mute)
                 .Include(p => p.Players)
-                .FirstOrDefault()) ??
+                .FirstOrDefault()
+        ) ??
         throw new InvalidOperationException();
 
-    private static readonly Func<PlayerContext, string, string, User> QueryUserByNameAndPasswordNoLoad =
-        EF.CompileQuery(
-            // ReSharper disable once SpecifyStringComparison
-            (PlayerContext context, string username, string password) => context.Users
-                .Where(u => u.Name == username && u.Password == password)
-                .FirstOrDefault()) ??
-        throw new InvalidOperationException();
-
-    private static readonly Func<PlayerContext, Guid, User> QueryUserById = EF.CompileQuery(
-                                                                                (PlayerContext context, Guid id) =>
-                                                                                    context.Users.Where(u => u.Id == id)
-                                                                                        .Include(p => p.Ban)
-                                                                                        .Include(p => p.Mute)
-                                                                                        .Include(p => p.Players)
-                                                                                        .ThenInclude(c => c.Bank)
-                                                                                        .Include(p => p.Players)
-                                                                                        .ThenInclude(c => c.Hotbar)
-                                                                                        .Include(p => p.Players)
-                                                                                        .Include(p => p.Players)
-                                                                                        .ThenInclude(c => c.Quests)
-                                                                                        .Include(p => p.Players)
-                                                                                        .ThenInclude(c => c.Variables)
-                                                                                        .Include(p => p.Players)
-                                                                                        .ThenInclude(c => c.Items)
-                                                                                        .Include(p => p.Players)
-                                                                                        .ThenInclude(c => c.Spells)
-                                                                                        .Include(p => p.Players)
-                                                                                        .ThenInclude(c => c.Bank)
-                                                                                        .Include(p => p.Variables)
-                                                                                        .FirstOrDefault()) ??
-                                                                            throw new InvalidOperationException();
-
-    private static readonly Func<PlayerContext, string, User> QueryUserByNameOrEmail = EF.CompileQuery(
-            // ReSharper disable once SpecifyStringComparison
-            (PlayerContext context, string nameOrEmail) => context.Users
-                .Where(u => u.Name == nameOrEmail || u.Email == nameOrEmail)
+    private static readonly Func<PlayerContext, Guid, User> QueryUserByIdShallow = EF.CompileQuery(
+            (PlayerContext context, Guid id) => context.Users.Where(u => u.Id == id)
                 .Include(p => p.Ban)
                 .Include(p => p.Mute)
                 .Include(p => p.Players)
-                .ThenInclude(c => c.Bank)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Hotbar)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Quests)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Variables)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Items)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Spells)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Bank)
-                .Include(p => p.Variables)
-                .FirstOrDefault()) ??
+                .FirstOrDefault()
+        ) ??
         throw new InvalidOperationException();
 
     private static readonly Func<PlayerContext, string, bool> AnyUserByNameOrEmail = EF.CompileQuery(
         // ReSharper disable once SpecifyStringComparison
         (PlayerContext context, string nameOrEmail) =>
-            context.Users.Where(u => u.Name == nameOrEmail || u.Email == nameOrEmail).Any());
+            context.Users.Where(u => u.Name == nameOrEmail || u.Email == nameOrEmail).Any()
+    );
 
     private static readonly Func<PlayerContext, string, string> SaltByName = EF.CompileQuery(
         // ReSharper disable once SpecifyStringComparison
         (PlayerContext context, string userName) =>
-            context.Users.Where(u => u.Name == userName).Select(u => u.Salt).FirstOrDefault());
+            context.Users.Where(u => u.Name == userName).Select(u => u.Salt).FirstOrDefault()
+    );
 
-    private static readonly Func<PlayerContext, string, User> QueryUserByEmail = EF.CompileQuery(
+    private static readonly Func<PlayerContext, string, User> QueryUserByEmailShallow = EF.CompileQuery(
             // ReSharper disable once SpecifyStringComparison
             (PlayerContext context, string email) => context.Users.Where(u => u.Email == email)
                 .Include(p => p.Ban)
                 .Include(p => p.Mute)
                 .Include(p => p.Players)
-                .ThenInclude(c => c.Bank)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Hotbar)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Quests)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Variables)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Items)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Spells)
-                .Include(p => p.Players)
-                .ThenInclude(c => c.Bank)
-                .Include(p => p.Variables)
-                .FirstOrDefault()) ??
+                .FirstOrDefault()
+        ) ??
         throw new InvalidOperationException();
 
     #endregion
