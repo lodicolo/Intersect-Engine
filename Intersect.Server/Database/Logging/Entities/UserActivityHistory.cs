@@ -40,7 +40,11 @@ namespace Intersect.Server.Database.Logging.Entities
         {
             Client,
 
-            Editor
+            Editor,
+            
+            Api,
+            
+            Web
         }
 
         public enum UserAction

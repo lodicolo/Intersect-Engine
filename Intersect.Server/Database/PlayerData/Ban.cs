@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using Intersect.Logging;
 using Intersect.Server.Localization;
 using Intersect.Server.Networking;
@@ -241,6 +243,12 @@ namespace Intersect.Server.Database.PlayerData
                 : Strings.Account.banstatus.ToString(ban.StartTime, ban.Banner, ban.EndTime, ban.Reason);
         }
 
+        public static bool IsBanned(IPAddress ipAddress, [NotNullWhen(true)] out string? message)
+        {
+            message = CheckBan(ipAddress.ToString());
+            return message != default;
+        }
+        
         public static string CheckBan(string ip) => CheckBan(null, ip);
 
         public static Ban Find(User user) => Find(user.Id);

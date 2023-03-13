@@ -34,14 +34,14 @@ public sealed class IntersectUserManager : UserManager<User>
 
     public override string GetUserName(ClaimsPrincipal principal)
     {
-        Debugger.Break();
-        return base.GetUserName(principal);
+        var userName = base.GetUserName(principal);
+        return userName;
     }
 
     public override string GetUserId(ClaimsPrincipal principal)
     {
-        Debugger.Break();
-        return base.GetUserId(principal);
+        var userId = base.GetUserId(principal);
+        return userId;
     }
 
     public override async Task<User> GetUserAsync(ClaimsPrincipal principal)
@@ -289,7 +289,6 @@ public sealed class IntersectUserManager : UserManager<User>
 
     public override Task UpdateNormalizedEmailAsync(User user)
     {
-        Debugger.Break();
         return base.UpdateNormalizedEmailAsync(user);
     }
 
@@ -299,16 +298,16 @@ public sealed class IntersectUserManager : UserManager<User>
         return base.GenerateEmailConfirmationTokenAsync(user);
     }
 
-    public override Task<IdentityResult> ConfirmEmailAsync(User user, string token)
+    public override async Task<IdentityResult> ConfirmEmailAsync(User user, string token)
     {
-        Debugger.Break();
-        return base.ConfirmEmailAsync(user, token);
+        var identityResult = await base.ConfirmEmailAsync(user, token);
+        return identityResult;
     }
 
-    public override Task<bool> IsEmailConfirmedAsync(User user)
+    public override async Task<bool> IsEmailConfirmedAsync(User user)
     {
-        Debugger.Break();
-        return base.IsEmailConfirmedAsync(user);
+        var isEmailConfirmed = await base.IsEmailConfirmedAsync(user);
+        return isEmailConfirmed;
     }
 
     public override Task<string> GenerateChangeEmailTokenAsync(User user, string newEmail)
@@ -323,10 +322,10 @@ public sealed class IntersectUserManager : UserManager<User>
         return base.ChangeEmailAsync(user, newEmail, token);
     }
 
-    public override Task<string> GetPhoneNumberAsync(User user)
+    public override async Task<string> GetPhoneNumberAsync(User user)
     {
-        Debugger.Break();
-        return base.GetPhoneNumberAsync(user);
+        var phoneNumber = await base.GetPhoneNumberAsync(user);
+        return phoneNumber;
     }
 
     public override Task<IdentityResult> SetPhoneNumberAsync(User user, string phoneNumber)
@@ -359,10 +358,10 @@ public sealed class IntersectUserManager : UserManager<User>
         return base.VerifyChangePhoneNumberTokenAsync(user, token, phoneNumber);
     }
 
-    public override Task<bool> VerifyUserTokenAsync(User user, string tokenProvider, string purpose, string token)
+    public override async Task<bool> VerifyUserTokenAsync(User user, string tokenProvider, string purpose, string token)
     {
-        Debugger.Break();
-        return base.VerifyUserTokenAsync(user, tokenProvider, purpose, token);
+        var verifiedUserToken = await base.VerifyUserTokenAsync(user, tokenProvider, purpose, token);
+        return verifiedUserToken;
     }
 
     public override Task<string> GenerateUserTokenAsync(User user, string tokenProvider, string purpose)
@@ -547,10 +546,10 @@ public sealed class IntersectUserManager : UserManager<User>
         return base.UpdatePasswordHash(user, newPassword, validatePassword);
     }
 
-    protected override Task<IdentityResult> UpdateUserAsync(User user)
+    protected override async Task<IdentityResult> UpdateUserAsync(User user)
     {
-        Debugger.Break();
-        return base.UpdateUserAsync(user);
+        var identityResult = await base.UpdateUserAsync(user);
+        return identityResult;
     }
 
     public override bool Equals(object obj)

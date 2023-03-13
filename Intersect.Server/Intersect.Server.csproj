@@ -23,11 +23,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Networking\IntersectNetworkServer.cs" />
-    <Compile Remove="Networking\IntersectNetworkSocket.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>Intersect.Tests.Server</_Parameter1>
     </AssemblyAttribute>
@@ -40,6 +35,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Networking\IntersectNetworkServer.cs" />
+    <Compile Remove="Networking\IntersectNetworkSocket.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -48,10 +52,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
+    <EmbeddedResource Update="Pages\Shared\SkipToContentPartialResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>_SkipToContentPartial.cshtml.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Compile Update="Pages\Shared\SkipToContentPartialResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SkipToContentPartialResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

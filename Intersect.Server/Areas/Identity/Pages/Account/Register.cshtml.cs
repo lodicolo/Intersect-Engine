@@ -4,8 +4,10 @@
 #nullable disable
 
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
+using Intersect.Server.Database.Logging.Entities;
 using Intersect.Server.Database.PlayerData;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -76,67 +78,56 @@ public class RegisterModel : PageModel
     {
         returnUrl ??= Url.Content("~/");
         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            var user = CreateUser();
-
-            await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-            await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-            var result = await _userManager.CreateAsync(user, Input.Password);
-
-            if (result.Succeeded)
-            {
-                _logger.LogInformation("User created a new account with password.");
-
-                var userId = await _userManager.GetUserIdAsync(user);
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = Url.Page(
-                    "/Account/ConfirmEmail",
-                    null,
-                    new { area = "Identity", userId, code, returnUrl },
-                    Request.Scheme
-                );
-
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."
-                );
-
-                if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                {
-                    return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
-                }
-
-                await _signInManager.SignInAsync(user, false);
-                return LocalRedirect(returnUrl);
-            }
-
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
+            return Page();
         }
 
-        // If we got this far, something failed, redisplay form
-        return Page();
-    }
+        var passwordBytes = Encoding.UTF8.GetBytes(Input.Password);
+        var hashedPasswordBytes = SHA256.HashData(passwordBytes);
+        var hashedPassword = Convert.ToHexString(hashedPasswordBytes);
 
-    private User CreateUser()
-    {
-        try
+        if (!Database.PlayerData.User.TryRegister(
+                new User.RegistrationActor(
+                    Request.HttpContext.Connection.RemoteIpAddress ?? default,
+                    UserActivityHistory.PeerType.Web
+                ),
+                Input.UserName,
+                Input.Email,
+                hashedPassword,
+                out var error,
+                out var user
+            ))
         {
-            return Activator.CreateInstance<User>();
+            ModelState.AddModelError(string.Empty, error);
+            return Page();
         }
-        catch
+
+        _logger.LogDebug("User created a new account with password.");
+
+        var userId = await _userManager.GetUserIdAsync(user);
+        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        var callbackUrl = Url.Page(
+            "/Account/ConfirmEmail",
+            null,
+            new { area = "Identity", userId, code, returnUrl },
+            Request.Scheme
+        );
+
+        await _emailSender.SendEmailAsync(
+            Input.Email,
+            "Confirm your email",
+            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."
+        );
+
+        if (_userManager.Options.SignIn.RequireConfirmedAccount)
         {
-            throw new InvalidOperationException(
-                $"Can't create an instance of '{nameof(User)}'. " +
-                $"Ensure that '{nameof(User)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml"
-            );
+            return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
         }
+
+        await _signInManager.SignInAsync(user, false);
+        return LocalRedirect(returnUrl);
     }
 
     private IUserEmailStore<User> GetEmailStore()
@@ -155,11 +146,15 @@ public class RegisterModel : PageModel
     /// </summary>
     public class InputModel
     {
+        [Required]
+        [StringLength(32, MinimumLength = 4)]
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
+        
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
@@ -172,7 +167,7 @@ public class RegisterModel : PageModel
         [StringLength(
             100,
             ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
-            MinimumLength = 6
+            MinimumLength = 4
         )]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]

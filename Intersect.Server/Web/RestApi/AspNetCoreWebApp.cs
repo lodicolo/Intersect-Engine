@@ -355,6 +355,14 @@ public class AspNetCoreWebApp
             {
                 identityOptions.Stores.MaxLengthForKeys = 128;
                 identityOptions.SignIn.RequireConfirmedAccount = true;
+#if DEBUG
+                identityOptions.Password.RequireDigit = false;
+                identityOptions.Password.RequiredLength = 4;
+                identityOptions.Password.RequireLowercase = false;
+                identityOptions.Password.RequireNonAlphanumeric = false;
+                identityOptions.Password.RequireUppercase = false;
+                identityOptions.Password.RequiredUniqueChars = 0;
+#endif
             }
         );
 
@@ -423,6 +431,8 @@ public class AspNetCoreWebApp
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        builder.WebHost.UseStaticWebAssets();
+        
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
