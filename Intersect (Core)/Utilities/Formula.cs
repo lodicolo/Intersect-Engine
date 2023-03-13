@@ -79,7 +79,7 @@ namespace Intersect.Utilities
 
                 if (!Load())
                 {
-                    Log.Warn($"Error loading formula from {mSource}.");
+                    Log.Warning($"Error loading formula from {mSource}.");
                 }
                 else
                 {

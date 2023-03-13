@@ -144,7 +144,7 @@ namespace Intersect.Plugins.Loaders
                         ManifestType.Assembly.Location, mismatchedType.Assembly.Location, StringComparison.Ordinal
                     ))
                     {
-                        Log.Warn(
+                        Log.Warning(
                             $"Manifest loaded the core library from the wrong location." +
                             $"\n\tExpected: {ManifestType.Assembly.Location}" +
                             $"\n\t  Actual: {mismatchedType.Assembly.Location}"

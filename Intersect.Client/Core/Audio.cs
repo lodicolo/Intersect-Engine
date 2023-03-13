@@ -198,7 +198,7 @@ namespace Intersect.Client.Core
 
             if (sMyMusic != null)
             {
-                Log.Warn($"Trying to start '{filename}' without properly closing '{sCurrentSong}'.");
+                Log.Warning($"Trying to start '{filename}' without properly closing '{sCurrentSong}'.");
             }
 
             sMyMusic = music.CreateInstance();

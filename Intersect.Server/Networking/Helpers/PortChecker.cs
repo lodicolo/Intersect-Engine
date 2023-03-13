@@ -33,7 +33,7 @@ namespace Intersect.Server.Networking.Helpers
                             externalIp = response.Headers["ip"];
                         }
 
-                        if (response.Headers.Contains("players"))
+                        if (response.Headers.AllKeys.Contains("players"))
                         {
                             if (int.Parse(response.Headers["players"]) > -1)
                             {

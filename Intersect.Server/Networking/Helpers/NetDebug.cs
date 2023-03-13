@@ -214,7 +214,7 @@ namespace Intersect.Server.Networking.Helpers
             }
             catch (Exception exception)
             {
-                Log.Warn(exception);
+                Log.Warning(exception);
             }
             finally
             {

@@ -882,7 +882,7 @@ namespace Intersect.Client.Framework.Gwen.Control
         {
             if (string.IsNullOrWhiteSpace(Name))
             {
-                Log.Warn($"Attempted to load layout for nameless {GetType().FullName}");
+                Log.Warning($"Attempted to load layout for nameless {GetType().FullName}");
                 return;
             }
 

@@ -161,7 +161,7 @@ namespace Intersect.Network.Packets
             }
             catch (Exception exception)
             {
-                Log.Warn(exception);
+                Log.Warning(exception);
                 return false;
             }
         }

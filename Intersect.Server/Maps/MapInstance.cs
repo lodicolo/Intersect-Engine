@@ -732,7 +732,7 @@ namespace Intersect.Server.Maps
         {
             if (item == null)
             {
-                Log.Warn($"Tried to spawn {amount} of a null item at ({x}, {y}) in map {Id}.");
+                Log.Warning($"Tried to spawn {amount} of a null item at ({x}, {y}) in map {Id}.");
 
                 return;
             }
@@ -740,7 +740,7 @@ namespace Intersect.Server.Maps
             var itemDescriptor = ItemBase.Get(item.ItemId);
             if (itemDescriptor == null)
             {
-                Log.Warn($"No item found for {item.ItemId}.");
+                Log.Warning($"No item found for {item.ItemId}.");
 
                 return;
             }

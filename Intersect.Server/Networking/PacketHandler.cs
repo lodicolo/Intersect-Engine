@@ -254,7 +254,7 @@ namespace Intersect.Server.Networking
                         sanitizationBuilder.AppendLine();
                     }
 
-                    Log.Warn(sanitizationBuilder.ToString());
+                    Log.Warning(sanitizationBuilder.ToString());
                 }
             }
             catch (Exception exception)
@@ -1879,13 +1879,13 @@ namespace Intersect.Server.Networking
 
             if (!CraftBase.TryGet(packet.CraftId, out var craftDescriptor))
             {
-                Log.Warn($"Player {player.Id} tried to craft {packet.CraftId} which does not exist.");
+                Log.Warning($"Player {player.Id} tried to craft {packet.CraftId} which does not exist.");
                 return;
             }
 
             if (player.OpenCraftingTableId == default)
             {
-                Log.Warn($"Player {player.Id} tried to craft {packet.CraftId} without having opened a table yet.");
+                Log.Warning($"Player {player.Id} tried to craft {packet.CraftId} without having opened a table yet.");
                 return;
             }
 
@@ -2462,7 +2462,7 @@ namespace Intersect.Server.Networking
             }
             catch (Exception exception)
             {
-                Log.Warn(exception);
+                Log.Warning(exception);
                 PacketSender.SendError(client, Strings.Account.loadfail);
                 client.Logout();
             }

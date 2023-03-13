@@ -628,7 +628,7 @@ namespace Intersect.Server.Entities
 
             if (spellBase.Combat == null)
             {
-                Log.Warn($"Combat data missing for {spellBase.Id}.");
+                Log.Warning($"Combat data missing for {spellBase.Id}.");
             }
 
             // Check if we are even allowed to cast this spell.

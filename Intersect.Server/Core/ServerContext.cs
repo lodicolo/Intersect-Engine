@@ -100,14 +100,14 @@ namespace Intersect.Server.Core
 #endif
 
                 // Except this line, this line is fine.
-                Log.Info("Disposing network..." + $" ({stopwatch.ElapsedMilliseconds}ms)");
+                Log.Information("Disposing network..." + $" ({stopwatch.ElapsedMilliseconds}ms)");
                 Network.Dispose();
 
-                Log.Info("Saving updated server variable values");
+                Log.Information("Saving updated server variable values");
                 DbInterface.SaveUpdatedServerVariables();
 
                 // TODO: This probably also needs to not be a global, but will require more work to clean up.
-                Log.Info("Saving online users/players..." + $" ({stopwatch.ElapsedMilliseconds}ms)");
+                Log.Information("Saving online users/players..." + $" ({stopwatch.ElapsedMilliseconds}ms)");
 
                 var savingTasks = new List<Task>();
                 foreach (var user in User.OnlineList.ToArray())
@@ -118,7 +118,7 @@ namespace Intersect.Server.Core
                 Task.WaitAll(savingTasks.ToArray());
 
 
-                Log.Info("Saving loaded guilds....");
+                Log.Information("Saving loaded guilds....");
 
                 savingTasks.Clear();
                 //Should we send out guild updates?
@@ -130,7 +130,7 @@ namespace Intersect.Server.Core
                 Task.WaitAll(savingTasks.ToArray());
 
                 // TODO: This probably also needs to not be a global, but will require more work to clean up.
-                Log.Info("Online users/players saved." + $" ({stopwatch.ElapsedMilliseconds}ms)");
+                Log.Information("Online users/players saved." + $" ({stopwatch.ElapsedMilliseconds}ms)");
 
 
                 //Disconnect All Clients
@@ -146,14 +146,14 @@ namespace Intersect.Server.Core
 
 
                 // TODO: This needs to not be a global. I'm also in the middle of rewriting the API anyway.
-                Log.Info("Shutting down the API..." + $" ({stopwatch.ElapsedMilliseconds}ms)");
+                Log.Information("Shutting down the API..." + $" ({stopwatch.ElapsedMilliseconds}ms)");
                 RestApi.Dispose();
 
                 #endregion
 
                 if (ThreadConsole?.IsAlive ?? false)
                 {
-                    Log.Info("Shutting down the console thread..." + $" ({stopwatch.ElapsedMilliseconds}ms)");
+                    Log.Information("Shutting down the console thread..." + $" ({stopwatch.ElapsedMilliseconds}ms)");
                     if (!ThreadConsole.Join(1000))
                     {
                         try
@@ -169,7 +169,7 @@ namespace Intersect.Server.Core
 
                 if (ThreadLogic?.IsAlive ?? false)
                 {
-                    Log.Info("Shutting down the logic thread..." + $" ({stopwatch.ElapsedMilliseconds}ms)");
+                    Log.Information("Shutting down the logic thread..." + $" ({stopwatch.ElapsedMilliseconds}ms)");
                     if (!ThreadLogic.Join(10000))
                     {
                         try
@@ -186,9 +186,9 @@ namespace Intersect.Server.Core
                 PacketHelper.HandlerRegistry.Dispose();
             }
 
-            Log.Info("Base dispose." + $" ({stopwatch.ElapsedMilliseconds}ms)");
+            Log.Information("Base dispose." + $" ({stopwatch.ElapsedMilliseconds}ms)");
             base.Dispose(disposing);
-            Log.Info("Finished disposing server context." + $" ({stopwatch.ElapsedMilliseconds}ms)");
+            Log.Information("Finished disposing server context." + $" ({stopwatch.ElapsedMilliseconds}ms)");
             Console.WriteLine(Strings.Commands.exited);
             Environment.Exit(-1);
         }

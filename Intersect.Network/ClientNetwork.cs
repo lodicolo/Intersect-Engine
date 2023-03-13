@@ -100,26 +100,26 @@ namespace Intersect.Network
 
         protected virtual void HandleInterfaceOnConnected(INetworkLayerInterface sender, ConnectionEventArgs connectionEventArgs)
         {
-            Log.Info($"Connected [{connectionEventArgs.Connection?.Guid}].");
+            Log.Information($"Connected [{connectionEventArgs.Connection?.Guid}].");
             IsConnected = true;
             OnConnected?.Invoke(sender, connectionEventArgs);
         }
 
         protected virtual void HandleInterfaceOnConnectonApproved(INetworkLayerInterface sender, ConnectionEventArgs connectionEventArgs)
         {
-            Log.Info($"Connection approved [{connectionEventArgs.Connection?.Guid}].");
+            Log.Information($"Connection approved [{connectionEventArgs.Connection?.Guid}].");
             OnConnectionApproved?.Invoke(sender, connectionEventArgs);
         }
 
         protected virtual void HandleInterfaceOnConnectonDenied(INetworkLayerInterface sender, ConnectionEventArgs connectionEventArgs)
         {
-            Log.Info($"Connection denied [{connectionEventArgs.Connection?.Guid}].");
+            Log.Information($"Connection denied [{connectionEventArgs.Connection?.Guid}].");
             OnConnectionDenied?.Invoke(sender, connectionEventArgs);
         }
 
         protected virtual void HandleInterfaceOnDisconnected(INetworkLayerInterface sender, ConnectionEventArgs connectionEventArgs)
         {
-            Log.Info($"Disconnected [{connectionEventArgs.Connection?.Guid ?? Guid.Empty}].");
+            Log.Information($"Disconnected [{connectionEventArgs.Connection?.Guid ?? Guid.Empty}].");
             IsConnected = false;
             OnDisconnected?.Invoke(sender, connectionEventArgs);
         }

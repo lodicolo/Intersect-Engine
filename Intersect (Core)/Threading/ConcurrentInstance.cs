@@ -27,24 +27,24 @@ namespace Intersect.Threading
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            Log.Info($@"Acquiring context lock... ({stopwatch.ElapsedMilliseconds}ms)");
+            Log.Information($@"Acquiring context lock... ({stopwatch.ElapsedMilliseconds}ms)");
             Acquire();
-            Log.Info($@"Acquired. ({stopwatch.ElapsedMilliseconds}ms)");
+            Log.Information($@"Acquired. ({stopwatch.ElapsedMilliseconds}ms)");
 
             if (mInstance != instance)
             {
-                Log.Info($@"Exiting lock... ({stopwatch.ElapsedMilliseconds}ms)");
+                Log.Information($@"Exiting lock... ({stopwatch.ElapsedMilliseconds}ms)");
                 Monitor.Exit(mLock);
             }
 
             action.Invoke();
 
-            Log.Info($@"Clearing instance... ({stopwatch.ElapsedMilliseconds}ms)");
+            Log.Information($@"Clearing instance... ({stopwatch.ElapsedMilliseconds}ms)");
             Clear(instance);
 
-            Log.Info($@"Releasing context lock... ({stopwatch.ElapsedMilliseconds}ms)");
+            Log.Information($@"Releasing context lock... ({stopwatch.ElapsedMilliseconds}ms)");
             Release();
-            Log.Info($@"Released. ({stopwatch.ElapsedMilliseconds}ms)");
+            Log.Information($@"Released. ({stopwatch.ElapsedMilliseconds}ms)");
         }
 
         public void Acquire()
