@@ -46,6 +46,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Update="Pages\PrivacyPolicyResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PrivacyPolicyResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Update="Pages\PrivacyPolicyResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PrivacyPolicyResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
