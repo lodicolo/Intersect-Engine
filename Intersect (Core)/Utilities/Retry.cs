@@ -32,7 +32,7 @@ namespace Intersect.Utilities
 
             if (retryInterval.TotalMilliseconds < 2000)
             {
-                Log.Warn("You should probably not be using Retry if you need such short intervals.");
+                Log.Warning("You should probably not be using Retry if you need such short intervals.");
             }
 
             if (action == null)

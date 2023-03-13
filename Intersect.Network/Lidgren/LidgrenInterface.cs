@@ -121,7 +121,7 @@ namespace Intersect.Network.Lidgren
                         if (OnPacketAvailable == null)
                         {
                             Log.Debug("Unhandled inbound Lidgren message.");
-                            Log.Diagnostic($"Unhandled message: {TryHandleInboundMessage()}");
+                            Log.Verbose($"Unhandled message: {TryHandleInboundMessage()}");
 
                             return;
                         }
@@ -173,7 +173,7 @@ namespace Intersect.Network.Lidgren
                 throw new InvalidOperationException("Server interfaces cannot use Connect().");
             }
 
-            Log.Info($"Connecting to {mNetwork.Configuration.Host}:{mNetwork.Configuration.Port}...");
+            Log.Information($"Connecting to {mNetwork.Configuration.Host}:{mNetwork.Configuration.Port}...");
 
             var handshakeSecret = new byte[32];
             mRng.GetNonZeroBytes(handshakeSecret);
@@ -291,7 +291,7 @@ namespace Intersect.Network.Lidgren
 
             if (!(connection is LidgrenConnection lidgrenConnection))
             {
-                Log.Diagnostic("Tried to send to a non-Lidgren connection.");
+                Log.Verbose("Tried to send to a non-Lidgren connection.");
 
                 return false;
             }
@@ -304,7 +304,7 @@ namespace Intersect.Network.Lidgren
 
             if (packet == null)
             {
-                Log.Diagnostic("Tried to send a null packet.");
+                Log.Verbose("Tried to send a null packet.");
 
                 return false;
             }
@@ -337,7 +337,7 @@ namespace Intersect.Network.Lidgren
 
             if (packet == null)
             {
-                Log.Diagnostic("Tried to send a null packet.");
+                Log.Verbose("Tried to send a null packet.");
 
                 return false;
             }
@@ -395,7 +395,7 @@ namespace Intersect.Network.Lidgren
             }
             else
             {
-                Log.Diagnostic("No lidgren connections, skipping...");
+                Log.Verbose("No lidgren connections, skipping...");
             }
 
             return true;
@@ -491,7 +491,7 @@ namespace Intersect.Network.Lidgren
                         case NetConnectionStatus.ReceivedInitiation:
                         case NetConnectionStatus.RespondedAwaitingApproval:
                         case NetConnectionStatus.RespondedConnect:
-                            Log.Diagnostic($"{message.MessageType}: {message} [{senderConnection?.Status}]");
+                            Log.Verbose($"{message.MessageType}: {message} [{senderConnection?.Status}]");
 
                             break;
 
@@ -556,7 +556,7 @@ namespace Intersect.Network.Lidgren
                             }
                             else
                             {
-                                Log.Diagnostic($"{message.MessageType}: {message} [{senderConnection?.Status}]");
+                                Log.Verbose($"{message.MessageType}: {message} [{senderConnection?.Status}]");
                                 if (!mGuidLookup.TryGetValue(lidgrenId, out var guid))
                                 {
                                     Log.Error($"Unknown client connected ({lidgrenIdHex}).");
@@ -626,7 +626,7 @@ namespace Intersect.Network.Lidgren
                             }
                             catch (Exception exception)
                             {
-                                Log.Diagnostic(exception);
+                                Log.Verbose(exception);
                                 networkStatus = NetworkStatus.Unknown;
                             }
 
@@ -694,7 +694,7 @@ namespace Intersect.Network.Lidgren
 
                 case NetIncomingMessageType.UnconnectedData:
                     OnUnconnectedMessage?.Invoke(mPeer, message);
-                    Log.Diagnostic($"Net Incoming Message: {message.MessageType}: {message}");
+                    Log.Verbose($"Net Incoming Message: {message.MessageType}: {message}");
 
                     break;
 
@@ -705,7 +705,7 @@ namespace Intersect.Network.Lidgren
                         var hail = MessagePacker.Instance.Deserialize(message.Data) as HailPacket;
                         if (!(hail?.Decrypt(mRsa) ?? false))
                         {
-                            Log.Warn($"Failed to read hail, denying connection [{lidgrenIdHex}].");
+                            Log.Warning($"Failed to read hail, denying connection [{lidgrenIdHex}].");
                             senderConnection?.Deny(NetworkStatus.HandshakeFailure.ToString());
 
                             break;
@@ -729,7 +729,7 @@ namespace Intersect.Network.Lidgren
                         // Check if we've got more connections than we're allowed to handle!
                         if (mNetwork.ConnectionCount >= Options.MaxConnections)
                         {
-                            Log.Info($"Connection limit reached, denying connection [{lidgrenIdHex}].");
+                            Log.Information($"Connection limit reached, denying connection [{lidgrenIdHex}].");
                                 senderConnection?.Deny(NetworkStatus.ServerFull.ToString());
                             break;
                         }
@@ -749,7 +749,7 @@ namespace Intersect.Network.Lidgren
 
                         if (!OnConnectionRequested(this, client))
                         {
-                            Log.Warn($"Connection blocked due to ban or ip filter!");
+                            Log.Warning($"Connection blocked due to ban or ip filter!");
                             senderConnection?.Deny(NetworkStatus.Failed.ToString());
 
                             break;
@@ -795,7 +795,7 @@ namespace Intersect.Network.Lidgren
                 }
 
                 case NetIncomingMessageType.VerboseDebugMessage:
-                    Log.Diagnostic($"Net Incoming Message: {message.MessageType}: {message.ReadString()}");
+                    Log.Verbose($"Net Incoming Message: {message.MessageType}: {message.ReadString()}");
 
                     break;
 
@@ -805,7 +805,7 @@ namespace Intersect.Network.Lidgren
                     break;
 
                 case NetIncomingMessageType.WarningMessage:
-                    Log.Warn($"Net Incoming Message: {message.MessageType}: {message.ReadString()}");
+                    Log.Warning($"Net Incoming Message: {message.MessageType}: {message.ReadString()}");
 
                     break;
 
@@ -816,19 +816,19 @@ namespace Intersect.Network.Lidgren
                     break;
 
                 case NetIncomingMessageType.Receipt:
-                    Log.Info($"Net Incoming Message: {message.MessageType}: {message.ReadString()}");
+                    Log.Information($"Net Incoming Message: {message.MessageType}: {message.ReadString()}");
 
                     break;
 
                 case NetIncomingMessageType.DiscoveryRequest:
                 case NetIncomingMessageType.DiscoveryResponse:
                 case NetIncomingMessageType.NatIntroductionSuccess:
-                    Log.Diagnostic($"Net Incoming Message: {message.MessageType}: {message}");
+                    Log.Verbose($"Net Incoming Message: {message.MessageType}: {message}");
                     break;
 
                 case NetIncomingMessageType.ConnectionLatencyUpdated:
                 {
-                    Log.Diagnostic($"Net Incoming Message: {message.MessageType}: {message}");
+                    Log.Verbose($"Net Incoming Message: {message.MessageType}: {message}");
                     var rtt = message.ReadFloat();
                     var connection = FindConnection(senderConnection);
                     if (connection != null)

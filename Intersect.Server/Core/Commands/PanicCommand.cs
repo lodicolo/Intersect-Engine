@@ -36,7 +36,7 @@ namespace Intersect.Server.Core.Commands
                     break;
 
                 default:
-                    Log.Warn($"'{PanicType}' is not an implemented panic type.", panicType);
+                    Log.Warning($"'{PanicType}' is not an implemented panic type.", panicType);
                     break;
             }
         }
@@ -136,7 +136,7 @@ namespace Intersect.Server.Core.Commands
                 }
             }
 
-            Log.Warn(dumpBuilder.ToString());
+            Log.Warning(dumpBuilder.ToString());
         }
     }
 }

@@ -81,7 +81,7 @@ namespace Intersect.Configuration
             }
             catch (Exception exception)
             {
-                Log.Warn(exception);
+                Log.Warning(exception);
             }
             finally
             {

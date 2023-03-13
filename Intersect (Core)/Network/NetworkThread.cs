@@ -80,7 +80,7 @@ namespace Intersect.Network
                 //Log.Debug($"Dispatching packet '{packet.GetType().Name}' (size={(packet as BinaryPacket)?.Buffer?.Length() ?? -1}).");
                 if (!mDispatcher.Dispatch(packet))
                 {
-                    Log.Warn($"Failed to dispatch packet '{packet}'.");
+                    Log.Warning($"Failed to dispatch packet '{packet}'.");
                 }
 
 #if DIAGNOSTIC

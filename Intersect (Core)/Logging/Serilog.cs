@@ -140,7 +140,7 @@ public static class LoggerConfigurationExtensions
         this LoggerConfiguration loggerConfiguration, DebugSinkConfiguration debugSinkConfiguration
     )
     {
-        if (debugSinkConfiguration == default || !debugSinkConfiguration.Enabled)
+        if (debugSinkConfiguration is not { Enabled: true })
         {
             return loggerConfiguration;
         }
@@ -166,7 +166,7 @@ public static class LoggerConfigurationExtensions
         this LoggerConfiguration loggerConfiguration, FileSinkConfiguration fileSinkConfiguration
     )
     {
-        if (fileSinkConfiguration == default || !fileSinkConfiguration.Enabled)
+        if (fileSinkConfiguration is not { Enabled: true })
         {
             return loggerConfiguration;
         }

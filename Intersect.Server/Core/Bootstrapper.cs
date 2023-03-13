@@ -23,6 +23,7 @@ using Intersect.Server.Networking;
 using Intersect.Server.Networking.Helpers;
 using Intersect.Threading;
 using Intersect.Utilities;
+using Serilog.Events;
 
 namespace Intersect.Server.Core
 {
@@ -89,7 +90,7 @@ namespace Intersect.Server.Core
                 action.Invoke();
             }
 
-            Log.Diagnostic("Bootstrapper exited.");
+            Log.Verbose("Bootstrapper exited.");
 
             // At this point dbs should be saved and all threads should be killed. Give a message saying that the server has shutdown and to press any key to exit.
             // Having the message and the console.readline() allows the server to exit properly if the console has crashed, and it allows us to know that the server context has shutdown.
@@ -305,6 +306,13 @@ namespace Intersect.Server.Core
 
         private static void PrintIntroduction()
         {
+            Log.Information($"Framework: {RuntimeInformation.FrameworkDescription}");
+            Log.Information($"OS: {RuntimeInformation.OSDescription}");
+            Log.Information($"Arch: {RuntimeInformation.OSArchitecture}");
+            
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            Log.Information($"Intersect Version: {version}");
+            
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine(@"  _____       _                          _   ");
@@ -315,8 +323,7 @@ namespace Intersect.Server.Core
             Console.WriteLine(@" |_____|_| |_|\__\___|_|  |___/\___|\___|\__|");
             Console.WriteLine(Strings.Intro.tagline);
             Console.WriteLine(@"Copyright (C) 2023 Ascension Game Dev");
-            Console.WriteLine(Strings.Intro.Runtime.ToString(RuntimeInformation.FrameworkDescription));
-            Console.WriteLine(Strings.Intro.version.ToString(Assembly.GetExecutingAssembly().GetName().Version));
+            Console.WriteLine(Strings.Intro.version.ToString(version));
             Console.WriteLine(Strings.Intro.support);
             Console.WriteLine(Strings.Intro.loading);
         }

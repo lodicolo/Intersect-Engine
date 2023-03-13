@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Intersect.Properties;
 using Intersect.Plugins.Interfaces;
 using Intersect.Network;
+using AssemblyExtensions = Intersect.Reflection.AssemblyExtensions;
 
 namespace Intersect.Core
 {
@@ -254,7 +255,7 @@ namespace Intersect.Core
             lock (mShutdownLock)
             {
                 Monitor.Wait(mShutdownLock);
-                Log.Diagnostic(DeveloperStrings.ApplicationContextExited);
+                Log.Verbose(DeveloperStrings.ApplicationContextExited);
             }
 
             #endregion Wait for application thread
@@ -488,11 +489,11 @@ namespace Intersect.Core
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            Log.Info($@"Beginning context dispose. ({stopwatch.ElapsedMilliseconds}ms)");
+            Log.Information($@"Beginning context dispose. ({stopwatch.ElapsedMilliseconds}ms)");
             Dispose(true);
-            Log.Info($@"GC.SuppressFinalize ({stopwatch.ElapsedMilliseconds}ms)");
+            Log.Information($@"GC.SuppressFinalize ({stopwatch.ElapsedMilliseconds}ms)");
             GC.SuppressFinalize(this);
-            Log.Info($@"InternalDispose() completed. ({stopwatch.ElapsedMilliseconds}ms)");
+            Log.Information($@"InternalDispose() completed. ({stopwatch.ElapsedMilliseconds}ms)");
 
             IsDisposed = true;
         }

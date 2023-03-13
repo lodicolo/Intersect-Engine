@@ -60,7 +60,7 @@ namespace Intersect.Factories
             }
             catch (InvalidOperationException exception)
             {
-                Log.Warn(exception);
+                Log.Warning(exception);
             }
             catch (Exception exception)
             {

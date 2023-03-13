@@ -6,11 +6,24 @@ using System.Runtime.CompilerServices;
 
 using Intersect.Logging.Formatting;
 using Intersect.Logging.Output;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Intersect.Logging
 {
     public static partial class Log
     {
+        public static Serilog.Core.Logger Logger { get; } = new LoggerConfiguration().ConfigureIntersect(new()
+        {
+            Console = new()
+            {
+                Enabled = true,
+                Theme = SystemConsoleTheme.Literate
+            },
+            Debug = new(),
+            File = new()
+        }).CreateLogger();
+        
         internal static readonly DateTime Initial = DateTime.Now;
 
         private static string ExecutableName =>
@@ -57,183 +70,111 @@ namespace Intersect.Logging
         public static Logger Default { get; internal set; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Write(LogLevel logLevel, string message)
+        public static void Fatal(string message)
         {
-            Default.Write(logLevel, message);
+            Logger.Fatal(message);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Write(LogLevel logLevel, string format, params object[] args)
+        public static void Fatal(string format, params object[] args)
         {
-            Default.Write(logLevel, format, args);
+            Logger.Fatal(format, args);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Write(LogLevel logLevel, Exception exception, string message = null)
+        public static void Fatal(Exception exception, string message = null)
         {
-            Default.Write(logLevel, exception);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Write(string message)
-        {
-            Default.Write(message);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Write(string format, params object[] args)
-        {
-            Default.Write(format, args);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Write(Exception exception, string message = null)
-        {
-            Default.Write(exception, message);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void All(string message)
-        {
-            Default.All(message);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void All(string format, params object[] args)
-        {
-            Default.All(format, args);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void All(Exception exception, string message = null)
-        {
-            Default.All(exception, message);
+            Logger.Fatal(exception, message);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Error(string message)
         {
-            Default.Error(message);
+            Logger.Error(message);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Error(string format, params object[] args)
         {
-            Default.Error(format, args);
+            Logger.Error(format, args);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Error(Exception exception, string message = null)
         {
-            Default.Error(exception, message);
+            Logger.Error(exception, message);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Warn(string message)
+        public static void Warning(string message)
         {
-            Default.Warn(message);
+            Logger.Warning(message);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Warn(string format, params object[] args)
+        public static void Warning(string format, params object[] args)
         {
-            Default.Warn(format, args);
+            Logger.Warning(format, args);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Warn(Exception exception, string message = null)
+        public static void Warning(Exception exception, string message = null)
         {
-            Default.Warn(exception, message);
+            Logger.Warning(exception, message);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Info(string message)
+        public static void Information(string message)
         {
-            Default.Info(message);
+            Logger.Information(message);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Info(string format, params object[] args)
+        public static void Information(string format, params object[] args)
         {
-            Default.Info(format, args);
+            Logger.Information(format, args);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Info(Exception exception, string message = null)
+        public static void Information(Exception exception, string message = null)
         {
-            Default.Info(exception, message);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Trace(string message)
-        {
-            Default.Trace(message);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Trace(string format, params object[] args)
-        {
-            Default.Trace(format, args);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Trace(Exception exception, string message = null)
-        {
-            Default.Trace(exception, message);
+            Logger.Information(exception, message);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Debug(string message)
         {
-            Default.Debug(message);
+            Logger.Debug(message);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Debug(string format, params object[] args)
         {
-            Default.Debug(format, args);
+            Logger.Debug(format, args);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Debug(Exception exception, string message = null)
         {
-            Default.Debug(exception, message);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Diagnostic(string message)
-        {
-            Default.Diagnostic(message);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Diagnostic(string format, params object[] args)
-        {
-            Default.Diagnostic(format, args);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Diagnostic(Exception exception, string message = null)
-        {
-            Default.Diagnostic(exception, message);
+            Logger.Debug(exception, message);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Verbose(string message)
         {
-            Default.Verbose(message);
+            Logger.Verbose(message);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Verbose(string format, params object[] args)
         {
-            Default.Verbose(format, args);
+            Logger.Verbose(format, args);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Verbose(Exception exception, string message = null)
         {
-            Default.Verbose(exception, message);
+            Logger.Verbose(exception, message);
         }
 
         #endregion

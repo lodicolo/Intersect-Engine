@@ -1006,7 +1006,7 @@ namespace Intersect.Server.Entities
                         break;
 
                     default:
-                        Log.Warn(
+                        Log.Warning(
                             new ArgumentOutOfRangeException(nameof(moveDir), $@"Bogus move attempt in direction {moveDir}.")
                         );
 

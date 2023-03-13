@@ -128,7 +128,7 @@ namespace Intersect.Client
             }
             catch (Exception exception)
             {
-                Log.Warn(exception);
+                Log.Warning(exception);
                 return string.Empty;
             }
         }

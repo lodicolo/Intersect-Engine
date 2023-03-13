@@ -36,7 +36,7 @@ namespace Intersect.Logging.Output
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    Log.Warn("Cannot set FileOutput to an empty file name.");
+                    Log.Warning("Cannot set FileOutput to an empty file name.");
 
                     return;
                 }

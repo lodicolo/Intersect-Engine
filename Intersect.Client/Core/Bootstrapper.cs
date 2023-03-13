@@ -62,7 +62,7 @@ namespace Intersect.Client.Core
                 }
                 else
                 {
-                    Log.Warn($"Failed to set working directory to '{workingDirectory}', path does not exist: {resolvedWorkingDirectory}");
+                    Log.Warning($"Failed to set working directory to '{workingDirectory}', path does not exist: {resolvedWorkingDirectory}");
                 }
             }
 
@@ -93,7 +93,7 @@ namespace Intersect.Client.Core
             }
             else
             {
-                Log.Warn(exception);
+                Log.Warning(exception);
             }
 
             return default;

@@ -44,7 +44,7 @@ namespace Intersect.Server.Web.RestApi.Authentication.OAuth.Providers
 
             if (!Guid.TryParse(identity.FindFirst(IntersectClaimTypes.ClientId)?.Value, out var clientId))
             {
-                Log.Diagnostic(
+                Log.Verbose(
                     "Received invalid client id '{0}'.", identity.FindFirst(IntersectClaimTypes.UserId)?.Value
                 );
             }

@@ -133,7 +133,7 @@ namespace Intersect.Network
                 return connection;
             }
 
-            Log.Diagnostic($"Could not find connection {guid}.");
+            Log.Verbose($"Could not find connection {guid}.");
 
             return null;
         }

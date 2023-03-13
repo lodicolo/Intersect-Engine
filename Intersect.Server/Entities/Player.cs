@@ -2030,7 +2030,7 @@ namespace Intersect.Server.Entities
             EventLookup.Clear();
             EventBaseIdLookup.Clear();
             Log.Debug($"Player {Name} has joined instance {MapInstanceId} of map: {newMap.Name}");
-            Log.Info($"Previous instance was {PreviousMapInstanceId}");
+            Log.Information($"Previous instance was {PreviousMapInstanceId}");
             // We changed maps AND instance layers - remove from the old instance
             PacketSender.SendEntityLeaveInstanceOfMap(this, oldMap.Id, PreviousMapInstanceId);
             // Remove any trace of our player from the old instance's processing

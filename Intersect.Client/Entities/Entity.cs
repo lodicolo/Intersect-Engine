@@ -416,7 +416,7 @@ namespace Intersect.Client.Entities
 
             if (packet.StatusEffects == null)
             {
-                Log.Warn($"'{nameof(packet)}.{nameof(packet.StatusEffects)}' is null.");
+                Log.Warning($"'{nameof(packet)}.{nameof(packet.StatusEffects)}' is null.");
             }
             else
             {
@@ -443,7 +443,7 @@ namespace Intersect.Client.Entities
             //Status effects box update
             if (Globals.Me == null)
             {
-                Log.Warn($"'{nameof(Globals.Me)}' is null.");
+                Log.Warning($"'{nameof(Globals.Me)}' is null.");
             }
             else
             {
@@ -451,13 +451,13 @@ namespace Intersect.Client.Entities
                 {
                     if (Interface.Interface.GameUi == null)
                     {
-                        Log.Warn($"'{nameof(Interface.Interface.GameUi)}' is null.");
+                        Log.Warning($"'{nameof(Interface.Interface.GameUi)}' is null.");
                     }
                     else
                     {
                         if (Interface.Interface.GameUi.PlayerBox == null)
                         {
-                            Log.Warn($"'{nameof(Interface.Interface.GameUi.PlayerBox)}' is null.");
+                            Log.Warning($"'{nameof(Interface.Interface.GameUi.PlayerBox)}' is null.");
                         }
                         else
                         {
@@ -469,7 +469,7 @@ namespace Intersect.Client.Entities
                 {
                     if (Globals.Me.TargetBox == null)
                     {
-                        Log.Warn($"'{nameof(Globals.Me.TargetBox)}' is null.");
+                        Log.Warning($"'{nameof(Globals.Me.TargetBox)}' is null.");
                     }
                     else
                     {
