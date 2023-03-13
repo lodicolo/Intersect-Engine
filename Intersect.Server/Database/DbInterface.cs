@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Data.Common;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -447,6 +448,46 @@ namespace Intersect.Server.Database
             return null;
         }
 
+        public static bool TryRegister(
+            string username,
+            string email,
+            string password,
+            [NotNullWhen(true)] out User? user
+        )
+        {
+            try
+            {
+                var rawSaltData = RandomNumberGenerator.GetBytes(20);
+                var rawSalt = Convert.ToBase64String(rawSaltData);
+                var encodedSaltData = Encoding.UTF8.GetBytes(rawSalt);
+                var saltData = SHA256.HashData(encodedSaltData);
+                var salt = BitConverter.ToString(saltData).Replace("-", string.Empty);
+
+                user = new User
+                {
+                    Name = username,
+                    Email = email,
+                    Salt = salt,
+                    Password = User.SaltPasswordHash(password, salt),
+                    Power = UserRights.None,
+                };
+
+                if (User.Count() == 0)
+                {
+                    user.Power = UserRights.Admin;
+                }
+
+                user.Save(create: true);
+                return true;
+            }
+            catch (Exception exception)
+            {
+                Log.Error(exception);
+                user = default;
+                return false;
+            }
+        }
+
         public static void CreateAccount(
             Client client,
             string username,
@@ -454,32 +495,10 @@ namespace Intersect.Server.Database
             string email
         )
         {
-            var sha = new SHA256Managed();
-
-            //Generate a Salt
-            var rng = new RNGCryptoServiceProvider();
-            var buff = new byte[20];
-            rng.GetBytes(buff);
-            var salt = BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(Convert.ToBase64String(buff))))
-                .Replace("-", "");
-
-            var user = new User
+            if (TryRegister(username, email, password, out var user))
             {
-                Name = username,
-                Email = email,
-                Salt = salt,
-                Password = User.SaltPasswordHash(password, salt),
-                Power = UserRights.None,
-            };
-
-            if (User.Count() == 0)
-            {
-                user.Power = UserRights.Admin;
+                client?.SetUser(user);
             }
-
-            user.Save();
-
-            client?.SetUser(user);
         }
 
         public static void ResetPass(User user, string password)

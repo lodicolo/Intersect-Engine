@@ -4,6 +4,8 @@
 #nullable disable
 
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
+using System.Text;
 using Intersect.Server.Database.PlayerData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -66,7 +68,11 @@ public class DeletePersonalDataModel : PageModel
         RequirePassword = await _userManager.HasPasswordAsync(user);
         if (RequirePassword)
         {
-            if (!await _userManager.CheckPasswordAsync(user, Input.Password))
+            var passwordBytes = Encoding.UTF8.GetBytes(Input.Password);
+            var hashedPasswordBytes = SHA256.HashData(passwordBytes);
+            var hashedPassword = Convert.ToHexString(hashedPasswordBytes);
+            
+            if (!await _userManager.CheckPasswordAsync(user, hashedPassword))
             {
                 ModelState.AddModelError(string.Empty, "Incorrect password.");
                 return Page();

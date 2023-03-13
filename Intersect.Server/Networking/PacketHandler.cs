@@ -28,7 +28,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace Intersect.Server.Networking
@@ -1366,82 +1368,48 @@ namespace Intersect.Server.Networking
 
             client.ResetTimeout();
 
-            if (Options.BlockClientRegistrations)
+            if (!User.TryRegister(
+                    new User.RegistrationActor(
+                        IPAddress.Parse(client.GetIp()),
+                        UserActivityHistory.PeerType.Client
+                    ),
+                    packet.Username,
+                    packet.Email,
+                    packet.Password,
+                    out var error,
+                    out var user
+                ))
             {
-                PacketSender.SendError(client, Strings.Account.registrationsblocked);
-
+                PacketSender.SendError(client, error);
                 return;
             }
 
-            if (!FieldChecking.IsValidUsername(packet.Username, Strings.Regex.username))
-            {
-                PacketSender.SendError(client, Strings.Account.invalidname);
+            client.SetUser(user);
+            
+            //Logged In
+            client.PacketFloodingThreshholds = Options.Instance.SecurityOpts.PacketOpts.PlayerThreshholds;
 
-                return;
+            if (client.User.Power.IsAdmin || client.User.Power.IsModerator)
+            {
+                client.PacketFloodingThreshholds = Options.Instance.SecurityOpts.PacketOpts.ModAdminThreshholds;
             }
 
-            if (!FieldChecking.IsWellformedEmailAddress(packet.Email, Strings.Regex.email))
-            {
-                PacketSender.SendError(client, Strings.Account.invalidemail);
+            PacketSender.SendServerConfig(client);
 
-                return;
-            }
-
-            //Check for ban
-            var isBanned = Ban.CheckBan(client.GetIp());
-            if (isBanned != null)
+            //Check that server is in admin only mode
+            if (Options.AdminOnly)
             {
-                PacketSender.SendError(client, isBanned);
-
-                return;
-            }
-
-            if (User.UserExists(packet.Username))
-            {
-                PacketSender.SendError(client, Strings.Account.exists);
-            }
-            else
-            {
-                if (User.UserExists(packet.Email))
+                if (client.Power == UserRights.None)
                 {
-                    PacketSender.SendError(client, Strings.Account.emailexists);
-                }
-                else
-                {
+                    PacketSender.SendError(client, Strings.Account.adminonly);
 
-                    UserActivityHistory.LogActivity(client.User?.Id ?? Guid.Empty, Guid.Empty, client?.GetIp(), UserActivityHistory.PeerType.Client, UserActivityHistory.UserAction.Create, client?.Name);
-
-                    DbInterface.CreateAccount(client, packet.Username, packet.Password, packet.Email);
-
-                    if (client.User != null)
-                    {
-                        //Logged In
-                        client.PacketFloodingThreshholds = Options.Instance.SecurityOpts.PacketOpts.PlayerThreshholds;
-
-                        if (client.User.Power.IsAdmin || client.User.Power.IsModerator)
-                        {
-                            client.PacketFloodingThreshholds = Options.Instance.SecurityOpts.PacketOpts.ModAdminThreshholds;
-                        }
-                    }
-
-                    PacketSender.SendServerConfig(client);
-
-                    //Check that server is in admin only mode
-                    if (Options.AdminOnly)
-                    {
-                        if (client.Power == UserRights.None)
-                        {
-                            PacketSender.SendError(client, Strings.Account.adminonly);
-
-                            return;
-                        }
-                    }
-
-                    //Start the character creation process for the newly created account.
-                    PacketSender.SendGameObjects(client, GameObjectType.Class);
-                    PacketSender.SendCreateCharacter(client);
+                    return;
                 }
             }
+
+            //Start the character creation process for the newly created account.
+            PacketSender.SendGameObjects(client, GameObjectType.Class);
+            PacketSender.SendCreateCharacter(client);
         }
 
         //CreateCharacterPacket

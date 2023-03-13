@@ -93,16 +93,22 @@ public sealed class IntersectUserStore
         throw new NotImplementedException();
     }
 
-    public Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
+    public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
     {
-        Debugger.Break();
-        throw new NotImplementedException();
+        try
+        {
+            user.SaveAsync(playerContext: _playerContext, cancellationToken: cancellationToken);
+            return IdentityResult.Success;
+        }
+        catch (Exception exception)
+        {
+            throw;
+        }
     }
 
-    public Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
+    public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
     {
-        Debugger.Break();
-        throw new NotImplementedException();
+        return user.TryDelete() ? IdentityResult.Success : IdentityResult.Failed();
     }
 
     public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
