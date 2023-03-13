@@ -184,8 +184,6 @@ namespace Intersect.Editor.Forms.DockingElements
             if (!Globals.MapEditorWindow.DockPanel.Focused)
             {
                 Globals.MapEditorWindow.DockPanel.Focus();
-
-                return;
             }
 
             if (Globals.EditingLight != null)
