@@ -261,8 +261,15 @@ namespace Intersect.Server.Core
 #endif
 
             // RestApi.Start();
-            var webApp = new AspNetCoreWebApp();
-            webApp.Start();
+            try
+            {
+                var webApp = new AspNetCoreWebApp();
+                webApp.Start();
+            }
+            catch (Exception)
+            {
+                Debugger.Break();
+            }
 
             if (!Options.UPnP || Instance.StartupOptions.NoNatPunchthrough)
             {

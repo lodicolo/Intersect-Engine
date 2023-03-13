@@ -36,6 +36,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 using MySqlConnector;
+using LogLevel = Intersect.Logging.LogLevel;
 
 namespace Intersect.Server.Database
 {
@@ -393,7 +394,7 @@ namespace Intersect.Server.Database
 
         public static string UsernameFromEmail(string email)
         {
-            var user = User.FindFromEmail(email);
+            var user = User.FindByEmail(email);
             if (user != null)
             {
                 return user.Name;
