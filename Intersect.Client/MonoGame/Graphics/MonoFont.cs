@@ -28,7 +28,7 @@ namespace Intersect.Client.MonoGame.Graphics
             }
             catch (Exception ex)
             {
-                Log.Trace(ex);
+                Log.Verbose(ex);
             }
         }
 

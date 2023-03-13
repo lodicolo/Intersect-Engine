@@ -861,11 +861,11 @@ namespace Intersect.Client.Interface.Game.EntityPanel
                     {
                         if (PaperdollPanels == null)
                         {
-                            Log.Warn($@"{nameof(PaperdollPanels)} is null.");
+                            Log.Warning($@"{nameof(PaperdollPanels)} is null.");
                         }
                         else if (PaperdollPanels[i] == null)
                         {
-                            Log.Warn($@"{nameof(PaperdollPanels)}[{i}] is null.");
+                            Log.Warning($@"{nameof(PaperdollPanels)}[{i}] is null.");
                         }
 
                         PaperdollPanels?[i]?.Hide();

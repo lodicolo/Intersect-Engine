@@ -109,7 +109,7 @@ namespace Intersect.Server.Web.RestApi.Authentication.OAuth.Providers
 
             if (!Guid.TryParse(context.ClientId, out var clientId))
             {
-                Log.Diagnostic("Received invalid client id '{0}'.", context.ClientId);
+                Log.Verbose("Received invalid client id '{0}'.", context.ClientId);
             }
 
             var ticketId = Guid.NewGuid();

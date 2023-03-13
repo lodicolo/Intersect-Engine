@@ -16,7 +16,7 @@ namespace Intersect.Server.Database.GameData.Migrations
 
         public static void FixQuestTaskCompletionEvents(GameContext context)
         {
-            Log.Info("Checking for broken Quest Task Completion Events, this process might take several minutes depending on your quest count!");
+            Log.Information("Checking for broken Quest Task Completion Events, this process might take several minutes depending on your quest count!");
 
             // Go through each and every quest to check if all the tasks have valid events.
             foreach (var quest in context.Quests)
@@ -37,14 +37,14 @@ namespace Intersect.Server.Database.GameData.Migrations
                         EventBase.Lookup.Set(ev.Id, ev);
                         task.CompletionEventId = task.Id;
 
-                        Log.Info($"Fixed quest {quest.Name} ({quest.Id}) task {task.Id}, created new event {task.Id}.");
+                        Log.Information($"Fixed quest {quest.Name} ({quest.Id}) task {task.Id}, created new event {task.Id}.");
                     }
                     // if the Event ID is incorrect but we CAN find the event, link it!
                     else if (incorrectEventId && foundEvent != null)
                     {
                         task.CompletionEventId = foundEvent.Id;
 
-                        Log.Info($"Fixed quest {quest.Name} ({quest.Id}) task {task.Id}, linked up old event {foundEvent.Id}.");
+                        Log.Information($"Fixed quest {quest.Name} ({quest.Id}) task {task.Id}, linked up old event {foundEvent.Id}.");
                     }
                 }
             }

@@ -313,7 +313,7 @@ namespace Intersect.Client.Interface.Menu
 
         void ExitButton_Clicked(Base sender, ClickedEventArgs arguments)
         {
-            Log.Info("User clicked exit button.");
+            Log.Information("User clicked exit button.");
             Globals.IsRunning = false;
         }
 

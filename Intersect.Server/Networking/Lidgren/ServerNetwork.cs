@@ -69,7 +69,7 @@ namespace Intersect.Server.Networking.Lidgren
             ConnectionEventArgs connectionEventArgs
         )
         {
-            Log.Info($"Connected [{connectionEventArgs.Connection?.Guid}].");
+            Log.Information($"Connected [{connectionEventArgs.Connection?.Guid}].");
             Client.CreateBeta4Client(Context, connectionEventArgs.Connection);
             OnConnected?.Invoke(sender, connectionEventArgs);
         }
@@ -79,7 +79,7 @@ namespace Intersect.Server.Networking.Lidgren
             ConnectionEventArgs connectionEventArgs
         )
         {
-            Log.Info($"Connection approved [{connectionEventArgs.Connection?.Guid}].");
+            Log.Information($"Connection approved [{connectionEventArgs.Connection?.Guid}].");
             OnConnectionApproved?.Invoke(sender, connectionEventArgs);
         }
 
@@ -88,7 +88,7 @@ namespace Intersect.Server.Networking.Lidgren
             ConnectionEventArgs connectionEventArgs
         )
         {
-            Log.Info($"Disconnected [{connectionEventArgs.Connection?.Guid}].");
+            Log.Information($"Disconnected [{connectionEventArgs.Connection?.Guid}].");
             Client.RemoveBeta4Client(connectionEventArgs.Connection);
             OnDisconnected?.Invoke(sender, connectionEventArgs);
         }

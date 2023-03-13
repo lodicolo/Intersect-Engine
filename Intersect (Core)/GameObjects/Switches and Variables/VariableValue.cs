@@ -123,7 +123,7 @@ namespace Intersect.GameObjects.Switches_and_Variables
                     return true;
                 }
 
-                Log.Warn(new ArgumentNullException(nameof(jObject), @"Invalid variable value stored in the database."));
+                Log.Warning(new ArgumentNullException(nameof(jObject), @"Invalid variable value stored in the database."));
             }
             catch (Exception exception)
             {
@@ -131,7 +131,7 @@ namespace Intersect.GameObjects.Switches_and_Variables
 #if DEBUG
                 /* Only log in DEBUG in case the variable contains
                  * sensitive information. */
-                Log.Warn(exception);
+                Log.Warning(exception);
 #endif
             }
 

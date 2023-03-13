@@ -128,7 +128,7 @@ public class JsonDatabase : GameDatabase
             return token.Value<string>();
         }
 
-        Log.Warn($"Found invalid type {token.Type} stored in {key} instead of {JTokenType.String}.");
+        Log.Warning($"Found invalid type {token.Type} stored in {key} instead of {JTokenType.String}.");
         return string.Empty;
     }
 

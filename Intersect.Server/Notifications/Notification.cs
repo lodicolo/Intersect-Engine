@@ -79,7 +79,7 @@ namespace Intersect.Server.Notifications
                 }
                 else
                 {
-                    Log.Warn(
+                    Log.Warning(
                         "Failed to send email (Subject: " +
                         Subject +
                         ") to " +
@@ -91,7 +91,7 @@ namespace Intersect.Server.Notifications
             }
             else
             {
-                Log.Warn(
+                Log.Warning(
                     "Failed to send email (Subject: " + Subject + ") to " + ToAddress + ". Reason: SMTP not configured!"
                 );
                 return false;
@@ -119,7 +119,7 @@ namespace Intersect.Server.Notifications
             }
             else
             {
-                Log.Warn(
+                Log.Warning(
                     "Failed to load email template (Subject: " +
                     Subject +
                     ") for " +

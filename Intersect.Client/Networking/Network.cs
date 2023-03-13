@@ -104,7 +104,7 @@ namespace Intersect.Client.Networking
             }
             catch (Exception exception)
             {
-                Log.Trace(exception);
+                Log.Verbose(exception);
             }
         }
 

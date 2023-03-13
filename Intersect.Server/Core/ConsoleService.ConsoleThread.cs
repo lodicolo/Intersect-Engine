@@ -128,7 +128,7 @@ namespace Intersect.Server.Core
 
                                     if (error.Exception != null)
                                     {
-                                        Log.Warn(error.Exception);
+                                        Log.Warning(error.Exception);
                                     }
 
                                     Console.WriteLine(error.Message);

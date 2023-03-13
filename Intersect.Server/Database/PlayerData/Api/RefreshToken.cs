@@ -315,7 +315,7 @@ namespace Intersect.Server.Database.PlayerData.Api
                     return false;
                 }
 
-                Log.Diagnostic($"Attempted to remove {tokens.Count} tokens but only {unblockedTokens.Length} were available to remove.");
+                Log.Verbose($"Attempted to remove {tokens.Count} tokens but only {unblockedTokens.Length} were available to remove.");
 
                 using (var context = DbInterface.CreatePlayerContext(readOnly: false))
                 {

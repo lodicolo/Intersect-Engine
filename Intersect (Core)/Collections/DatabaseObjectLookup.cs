@@ -61,7 +61,7 @@ namespace Intersect.Collections
                     }
                     catch (Exception exception)
                     {
-                        Log.Warn(
+                        Log.Warning(
                             exception,
                             $@"{StoredType.Name}[Count={mIdMap.Count},NullCount={mIdMap.Count(pair => pair.Value == null)}]"
                         );

@@ -80,14 +80,14 @@ public static class UpnP
             {
                 case Protocol.Tcp:
                     Log.Pretty.Warn(Strings.Upnp.failedforwardingtcp.ToString(port));
-                    Log.Warn("UPnP Could Not Open TCP Port " + port + Environment.NewLine + ex);
+                    Log.Warning("UPnP Could Not Open TCP Port " + port + Environment.NewLine + ex);
                     sLog.AppendLine("UPnP Could Not Open TCP Port " + port + Environment.NewLine + ex);
 
                     break;
 
                 case Protocol.Udp:
                     Log.Pretty.Warn(Strings.Upnp.failedforwardingudp.ToString(port));
-                    Log.Warn("UPnP Could Not Open UDP Port " + port + Environment.NewLine + ex);
+                    Log.Warning("UPnP Could Not Open UDP Port " + port + Environment.NewLine + ex);
                     sLog.AppendLine("UPnP Could Not Open UDP Port " + port + Environment.NewLine + ex);
 
                     break;
