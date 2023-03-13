@@ -4,6 +4,7 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -65,15 +66,6 @@
     <PackageReference Include="DockPanelSuite.ThemeVS2015" Version="3.1.0" />
     <PackageReference Include="Mono.Data.Sqlite.Portable" Version="1.0.3.5" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
-    <PackageReference Include="SharpDX" Version="4.0.1" />
-    <PackageReference Include="SharpDX.Direct2D1" Version="4.0.1" />
-    <PackageReference Include="SharpDX.Direct3D11" Version="4.0.1" />
-    <PackageReference Include="SharpDX.Direct3D9" Version="4.0.1" />
-    <PackageReference Include="SharpDX.DXGI" Version="4.0.1" />
-    <PackageReference Include="SharpDX.Mathematics" Version="4.0.1" />
-    <PackageReference Include="SharpDX.MediaFoundation" Version="4.0.1" />
-    <PackageReference Include="SharpDX.XAudio2" Version="4.0.1" />
-    <PackageReference Include="SharpDX.XInput" Version="4.0.1" />
     <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
   </ItemGroup>
 
@@ -391,8 +383,7 @@
     <Compile Update="Forms\Editors\Events\Event Commands\EventCommand_WaitForRouteCompletion.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile
-      Update="Forms\Editors\Events\Event Commands\EventCommand_WaitForRouteCompletion.Designer.cs">
+    <Compile Update="Forms\Editors\Events\Event Commands\EventCommand_WaitForRouteCompletion.Designer.cs">
       <DependentUpon>EventCommand_WaitForRouteCompletion.cs</DependentUpon>
     </Compile>
     <Compile Update="Forms\Editors\Events\Event Commands\EventCommand_Warp.cs">
@@ -410,8 +401,7 @@
     <Compile Update="Forms\Editors\Events\Event Commands\Event_MoveRouteAnimationSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile
-      Update="Forms\Editors\Events\Event Commands\Event_MoveRouteAnimationSelector.Designer.cs">
+    <Compile Update="Forms\Editors\Events\Event Commands\Event_MoveRouteAnimationSelector.Designer.cs">
       <DependentUpon>Event_MoveRouteAnimationSelector.cs</DependentUpon>
     </Compile>
     <Compile Update="Forms\Editors\Events\Event Commands\Event_MoveRouteDesigner.cs">
