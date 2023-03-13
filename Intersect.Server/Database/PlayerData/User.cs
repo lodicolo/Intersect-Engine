@@ -1,5 +1,7 @@
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using Intersect.Enums;
@@ -7,13 +9,16 @@ using Intersect.GameObjects;
 using Intersect.Logging;
 using Intersect.Security;
 using Intersect.Server.Core;
+using Intersect.Server.Database.Logging.Entities;
 using Intersect.Server.Database.PlayerData.Api;
 using Intersect.Server.Database.PlayerData.Players;
 using Intersect.Server.Database.PlayerData.Security;
 using Intersect.Server.Entities;
 using Intersect.Server.General;
+using Intersect.Server.Localization;
 using Intersect.Server.Networking;
 using Intersect.Server.Web.RestApi.Payloads;
+using Intersect.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using VariableValue = Intersect.GameObjects.Switches_and_Variables.VariableValue;
@@ -41,6 +46,7 @@ public class User
 
     [Column(Order = 0)]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
     public Guid Id { get; private set; } = Guid.NewGuid();
 
     [Column(Order = 1)] public string Name { get; set; }
@@ -254,7 +260,7 @@ public class User
         }
     }
 
-    public void Delete()
+    public bool TryDelete()
     {
         //No passing in custom contexts here.. they may already have this user in the change tracker and things just get weird.
         //The cost of making a new context is almost nil.
@@ -262,18 +268,19 @@ public class User
         {
             lock (mSavingLock)
             {
-                using (var context = DbInterface.CreatePlayerContext(false))
-                {
-                    context.Users.Remove(this);
+                using var context = DbInterface.CreatePlayerContext(false);
 
-                    context.ChangeTracker.DetectChanges();
+                context.Users.Remove(this);
 
-                    context.StopTrackingUsersExcept(this);
+                context.ChangeTracker.DetectChanges();
 
-                    context.Entry(this).State = EntityState.Deleted;
+                context.StopTrackingUsersExcept(this);
 
-                    context.SaveChanges();
-                }
+                context.Entry(this).State = EntityState.Deleted;
+
+                context.SaveChanges();
+
+                return true;
             }
         }
         catch (Exception ex)
@@ -282,17 +289,26 @@ public class User
             ServerContext.DispatchUnhandledException(
                 new Exception("Failed to delete user, shutting down to prevent rollbacks!")
             );
+            return false;
         }
     }
-
-    public async Task SaveAsync(bool force = false, PlayerContext? playerContext = default, CancellationToken cancellationToken = default)
+    
+    public void Delete()
     {
-        Save(playerContext, force);
+        TryDelete();
     }
 
-    public void Save(bool force = false) => Save(default, force);
+    public async Task SaveAsync(
+        bool force = false,
+        PlayerContext? playerContext = default,
+        CancellationToken cancellationToken = default
+    ) => Save(playerContext, force);
+
+    public void Save(bool force) => Save(force: force, create: false);
     
-    public void Save(PlayerContext? playerContext, bool force = false)
+    public void Save(bool force = false, bool create = false) => Save(default, force, create);
+
+    public void Save(PlayerContext? playerContext, bool force = false, bool create = false)
     {
         //No passing in custom contexts here.. they may already have this user in the change tracker and things just get weird.
         //The cost of making a new context is almost nil.
@@ -321,7 +337,12 @@ public class User
                 playerContext = createdContext;
             }
 
-            playerContext.Users.Update(this);
+            var entityEntry = playerContext.Users.Update(this);
+
+            if (create)
+            {
+                entityEntry.State = EntityState.Added;
+            }
 
             playerContext.ChangeTracker.DetectChanges();
 
@@ -721,6 +742,74 @@ public class User
             }
         }
     }
+
+    public static bool TryRegister(
+        RegistrationActor actor,
+        string username,
+        string email,
+        string password,
+        [NotNullWhen(false)] out string error,
+        [NotNullWhen(true)] out User user
+    )
+    {
+        error = default;
+        user = default;
+
+        if (Options.BlockClientRegistrations)
+        {
+            error = Strings.Account.registrationsblocked;
+            return false;
+        }
+
+        if (!FieldChecking.IsValidUsername(username, Strings.Regex.username))
+        {
+            error = Strings.Account.invalidname;
+            return false;
+        }
+
+        if (!FieldChecking.IsWellformedEmailAddress(email, Strings.Regex.email))
+        {
+            error = Strings.Account.invalidemail;
+            return false;
+        }
+
+        if (Ban.IsBanned(actor.IpAddress, out var message))
+        {
+            error = message;
+            return false;
+        }
+
+        if (UserExists(username))
+        {
+            error = Strings.Account.exists;
+            return false;
+        }
+
+        if (UserExists(email))
+        {
+            error = Strings.Account.emailexists;
+            return false;
+        }
+
+        UserActivityHistory.LogActivity(
+            Guid.Empty,
+            Guid.Empty,
+            actor.IpAddress.ToString(),
+            actor.PeerType,
+            UserActivityHistory.UserAction.Create,
+            string.Empty
+        );
+
+        if (DbInterface.TryRegister(username, email, password, out user))
+        {
+            return true;
+        }
+
+        error = Strings.Account.UnknownError;
+        return false;
+    }
+
+    public sealed record RegistrationActor(IPAddress IpAddress, UserActivityHistory.PeerType PeerType);
 
     #region Instance Variables
 

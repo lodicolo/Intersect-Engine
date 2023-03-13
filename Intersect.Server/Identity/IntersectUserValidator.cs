@@ -6,10 +6,10 @@ namespace Intersect.Server.Identity;
 
 public sealed class IntersectUserValidator : IUserValidator<User>
 {
-    public Task<IdentityResult> ValidateAsync(UserManager<User> manager, User user)
+    public async Task<IdentityResult> ValidateAsync(UserManager<User> manager, User user)
     {
-        Debugger.Break();
-        return Task.FromResult(IdentityResult.Success);
+        var identityResult = await Task.FromResult(IdentityResult.Success);
+        return identityResult;
     }
     
     // public virtual async Task<IdentityResult> ValidateAsync(UserManager<TUser> manager, TUser user)
