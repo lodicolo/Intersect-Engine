@@ -13,17 +13,13 @@ namespace Intersect.Server.Web.RestApi.Services
     {
 
         public AuthorizedRoutesService(
-            ApiConfiguration apiConfiguration,
-            HttpConfiguration httpConfiguration
+            ApiConfiguration apiConfiguration
         )
         {
-            ApiExplorer = httpConfiguration.Services.GetApiExplorer() ?? throw new InvalidOperationException();
             Routes = apiConfiguration.RouteAuthorization;
         }
 
         private IReadOnlyDictionary<string, object> Routes { get; }
-
-        public IApiExplorer ApiExplorer { get; }
 
         /// <inheritdoc />
         public bool RequiresAuthorization(string endpoint, string method)
