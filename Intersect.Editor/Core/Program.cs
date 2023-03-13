@@ -23,7 +23,7 @@ namespace Intersect.Editor
         [STAThread]
         public static void Main()
         {
-            Log.Diagnostic("Starting editor...");
+            Log.Verbose("Starting editor...");
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Application.ThreadException += Application_ThreadException;
@@ -31,7 +31,7 @@ namespace Intersect.Editor
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Log.Diagnostic("Unpacking libraries...");
+            Log.Verbose("Unpacking libraries...");
 
             //Place sqlite3.dll where it's needed.
             var dllname = Environment.Is64BitProcess ? "sqlite3x64.dll" : "sqlite3x86.dll";
@@ -47,15 +47,15 @@ namespace Intersect.Editor
                 }
             }
 
-            Log.Diagnostic("Libraries unpacked.");
+            Log.Verbose("Libraries unpacked.");
 
-            Log.Diagnostic("Creating forms...");
+            Log.Verbose("Creating forms...");
             Globals.UpdateForm = new FrmUpdate();
             Globals.LoginForm = new FrmLogin();
             Globals.MainForm = new FrmMain();
-            Log.Diagnostic("Forms created.");
+            Log.Verbose("Forms created.");
 
-            Log.Diagnostic("Starting application.");
+            Log.Verbose("Starting application.");
             Application.Run(Globals.UpdateForm);
         }
 
