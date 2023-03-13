@@ -132,18 +132,18 @@ namespace Intersect.Editor.Forms.Editors.Quest
             {
                 if (item == null)
                 {
-                    Log.Warn($"Unexpected null: {nameof(FrmQuest)}.{nameof(btnCancel_Click)}() {nameof(item)}");
+                    Log.Warning($"Unexpected null: {nameof(FrmQuest)}.{nameof(btnCancel_Click)}() {nameof(item)}");
                 }
                 else
                 {
                     if (item.StartEvent == null)
                     {
-                        Log.Warn($"Unexpected null: {nameof(FrmQuest)}.{nameof(btnCancel_Click)}() {nameof(item)}.{nameof(item.StartEvent)}");
+                        Log.Warning($"Unexpected null: {nameof(FrmQuest)}.{nameof(btnCancel_Click)}() {nameof(item)}.{nameof(item.StartEvent)}");
                     }
 
                     if (item.EndEvent == null)
                     {
-                        Log.Warn($"Unexpected null: {nameof(FrmQuest)}.{nameof(btnCancel_Click)}() {nameof(item)}.{nameof(item.EndEvent)}");
+                        Log.Warning($"Unexpected null: {nameof(FrmQuest)}.{nameof(btnCancel_Click)}() {nameof(item)}.{nameof(item.EndEvent)}");
                     }
                 }
 

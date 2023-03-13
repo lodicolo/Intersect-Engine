@@ -185,7 +185,8 @@ namespace Intersect.Editor.Forms.DockingElements
             {
                 Globals.MapEditorWindow.DockPanel.Focus();
 
-                return;
+                // TODO: Figure out if this was ever needed, or if it was only needed in .NET Framework and not .NET 7.0
+                // return;
             }
 
             if (Globals.EditingLight != null)

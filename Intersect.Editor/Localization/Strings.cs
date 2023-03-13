@@ -553,7 +553,7 @@ namespace Intersect.Editor.Localization
                                 var jsonString = (string)serializedValue;
                                 if (jsonString == default)
                                 {
-                                    Log.Warn($"{groupType.Name}.{fieldInfo.Name} is null.");
+                                    Log.Warning($"{groupType.Name}.{fieldInfo.Name} is null.");
                                     missingStrings.Add($"{groupType.Name}.{fieldInfo.Name} (string)");
                                     serializedGroup[fieldInfo.Name] = (string)localizedString;
                                 }
@@ -606,13 +606,13 @@ namespace Intersect.Editor.Localization
 
                 if (missingStrings.Count > 0)
                 {
-                    Log.Warn($"Missing strings, overwriting strings file:\n\t{string.Join(",\n\t", missingStrings)}");
+                    Log.Warning($"Missing strings, overwriting strings file:\n\t{string.Join(",\n\t", missingStrings)}");
                     SaveSerialized(serialized);
                 }
             }
             catch (Exception exception)
             {
-                Log.Warn(exception);
+                Log.Warning(exception);
                 Save();
             }
 

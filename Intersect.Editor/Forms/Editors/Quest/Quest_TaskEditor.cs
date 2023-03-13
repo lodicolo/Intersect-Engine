@@ -26,12 +26,12 @@ namespace Intersect.Editor.Forms.Editors.Quest
         {
             if (refQuest == null)
             {
-                Log.Warn($@"{nameof(refQuest)} is null.");
+                Log.Warning($@"{nameof(refQuest)} is null.");
             }
 
             if (refTask == null)
             {
-                Log.Warn($@"{nameof(refTask)} is null.");
+                Log.Warning($@"{nameof(refTask)} is null.");
             }
 
             InitializeComponent();
@@ -40,7 +40,7 @@ namespace Intersect.Editor.Forms.Editors.Quest
 
             if (mMyTask?.EditingEvent == null)
             {
-                Log.Warn($@"{nameof(mMyTask.EditingEvent)} is null.");
+                Log.Warning($@"{nameof(mMyTask.EditingEvent)} is null.");
             }
 
             mEventBackup = mMyTask?.EditingEvent?.JsonData;
