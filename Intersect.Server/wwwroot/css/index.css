@@ -5,6 +5,8 @@
 @import url("./parts/footer.css");
 @import url("./parts/sidebar.css");
 @import url("./parts/content.css");
+@import url("./parts/modal.css");
+@import url("./parts/form.css");
 
 :root {
 	--user-font-scale: 1rem - 1rem;
