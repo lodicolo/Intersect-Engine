@@ -37,6 +37,36 @@
   <ItemGroup>
     <Compile Remove="Networking\IntersectNetworkServer.cs" />
     <Compile Remove="Networking\IntersectNetworkSocket.cs" />
+    <Compile Update="Areas\Identity\Pages\Account\LoginResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>LoginResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Areas\Identity\Pages\Account\ResendEmailConfirmationResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ResendEmailConfirmationResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Areas\Identity\Pages\Account\ForgotPasswordResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ForgotPasswordResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\TermsOfServiceResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TermsOfServiceResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Areas\Identity\Pages\Account\RegisterResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RegisterResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Areas\Identity\IdentityResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IdentityResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -58,6 +88,30 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>PrivacyPolicyResources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Update="Areas\Identity\Pages\Account\LoginResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Login.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Areas\Identity\Pages\Account\ResendEmailConfirmationResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResendEmailConfirmationResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Areas\Identity\Pages\Account\ForgotPasswordResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ForgotPasswordResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\TermsOfServiceResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TermsOfServiceResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Areas\Identity\Pages\Account\RegisterResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RegisterResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Areas\Identity\IdentityResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>IdentityResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
