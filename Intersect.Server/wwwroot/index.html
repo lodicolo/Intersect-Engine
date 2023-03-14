@@ -1,0 +1,141 @@
+<html class="theme-dark" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home page - Intersect</title>
+
+
+    <!--link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css"/-->
+    <link rel="stylesheet" href="css/index.css">
+
+
+
+    <script>
+        const root = document.documentElement;
+        const theme = localStorage.getItem("theme");
+        if (
+            theme === "dark" ||
+            (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+            root.classList.add("theme-dark");
+        } else {
+            root.classList.remove("theme-dark");
+        }
+
+    </script>
+
+
+</head>
+
+<body>
+<ul id="nav-access" class="a11y-nav">
+    <li>
+        <a id="skip-page-content" href="#page-content">
+            Skip to page content
+        </a>
+    </li>
+    <li>
+        <a id="skip-site-search" href="#site-search">
+            Skip to search
+        </a>
+    </li>
+    <li>
+        <a id="skip-language-select" href="#language-select">
+            Skip to select language
+        </a>
+    </li>
+</ul>
+
+<a href="#article" class="sr-only focus-not-sr-only skiplink">
+    <span>Skip to Content</span>
+</a>
+<header>
+    <div class="logo">
+        <a class="navbar-brand" href="/">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="intersect-logo-2022" data-name="intersect-logo-2022" width="512" height="512" viewBox="0 0 512 512">
+                <defs>
+                    <linearGradient id="linear" gradientTransform="rotate(90 0 0)">
+                        <stop offset="0%" stop-color="#39669f"></stop>
+                        <stop offset="100%" stop-color="#1d3b6d"></stop>
+                    </linearGradient>
+                </defs>
+                <path data-name="logo" fill="url(#linear)" d="M388.4,332.8h0a875.94,875.94,0,0,0-265.8,0h0A877.741,877.741,0,0,0,255.5,102.4h0A877.717,877.717,0,0,0,388.4,332.8ZM104.052,373.247L34,384,255.5,512,477,384l-70.052-10.753A998.191,998.191,0,0,0,104.052,373.247ZM78.329,328.654L34,384V128L255.5,0,229.778,66.1A1000.23,1000.23,0,0,1,78.329,328.654ZM281.223,66.1L255.5,0,477,128V384l-44.33-55.346A1000.192,1000.192,0,0,1,281.223,66.1Z" transform="translate(0.5)"></path>
+            </svg>
+            <span class="blockquote" site-name="">Intersect</span>
+        </a>
+    </div>
+    <nav class="site">
+        <ul class="horizontal" style="flex: initial;">
+            <li>
+                <a href="/identity/account/login">Login</a>
+            </li>
+        </ul>
+    </nav>
+    <section class="user">
+        <nav>
+            <ul class="horizontal" style="flex: initial;">
+                <li>
+                    <a href="/identity/account/login">
+                        <span>Login</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </section>
+</header>
+
+<main>
+    <aside id="sidebar-left" class="sidebar left">
+    </aside>
+    <aside id="sidebar-right" class="sidebar right">
+    </aside>
+    <article class="modal small">
+        <h1>Log In</h1>
+        <form id="account" method="post" novalidate="novalidate">
+            <input name="__RequestVerificationToken" type="hidden" value="CfDJ8Ik1_5EKZ-xCok3MDcvQ9VF0XhtFhHKWzV_dkgGYiRb7Hagh2Natm-qRUiqE37WV4_vg3Ho1_zqeMMgPFqUL_2FafsHVmWu_59keVelAfaSrWO6EENuNAS08MFG2p9ggDCBa66YGRJHezRGiolmNWLQ" />
+            <fieldset>
+                <input class="form-control" autocomplete="username" aria-required="true" placeholder type="text" data-val="true" data-val-required="The UsernameOrEmail field is required." id="Input_UsernameOrEmail" name="Input.UsernameOrEmail" value="">
+                <label class="form-label" for="Input_UsernameOrEmail">Username</label>
+                <span class="text-danger field-validation-valid" data-valmsg-for="Input.UsernameOrEmail" data-valmsg-replace="true"></span>
+            </fieldset>
+            <fieldset>
+                <input class="form-control" autocomplete="current-password" aria-required="true" placeholder type="password" data-val="true" data-val-required="The Password field is required." id="Input_Password" name="Input.Password">
+                <label class="form-label" for="Input_Password">Password</label>
+                <span class="text-danger field-validation-valid" data-valmsg-for="Input.Password" data-valmsg-replace="true"></span>
+            </fieldset>
+            <fieldset>
+                <input class="form-check-input" type="checkbox" data-val="true" data-val-required="The RememberMe field is required." id="Input_RememberMe" name="Input.RememberMe" value="true">
+                <label class="form-label" for="Input_RememberMe">
+                    Remember Me
+                </label>
+            </fieldset>
+            <fieldset class="center">
+                <button id="login-submit" type="submit" title="Log In">Log In</button>
+            </fieldset>
+        </form>
+        <aside>
+            <a id="forgot-password" href="/identity/account/forgot-password">Forgot username or password?</a>
+            <a href="/identity/account/register?returnUrl=%2F">Register</a>
+            <a id="resend-confirmation" href="/identity/account/resend-email-confirmation">Resend email confirmation</a>
+        </aside>
+    </article>
+</main>
+
+<footer>
+    <section>
+        <span>Copyright © 2023 Intersect</span>
+    </section>
+    <section>
+        <a href="/privacy-policy">Privacy Policy</a>
+    </section>
+</footer>
+
+<script src="/lib/jquery/dist/jquery.min.js"></script>
+<script src="/js/site.js?v=4Ds5eoHJhqnJscDxTmnu9p7m9F7-5BucMaeRLqrRvnY"></script>
+
+
+
+</body>
+
+</html>
