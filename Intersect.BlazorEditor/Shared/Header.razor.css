@@ -1,0 +1,9 @@
+header {
+	background-color: var(--theme-bg-accent);
+	display: flex;
+	z-index: 100;
+}
+
+header>::deep menu {
+	height: 100%;
+}

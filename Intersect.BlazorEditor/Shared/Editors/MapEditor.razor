@@ -1,0 +1,91 @@
+<h3>MapEditor</h3>
+
+<BECanvas Width="800" Height="600" @ref="_canvasReference"/>
+
+@code {
+    private WebGL2Context _gl;
+    private BECanvasComponent _canvasReference;
+    private ElementReference dialogTest;
+
+    private static readonly float[] vertices = { -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f };
+    private static readonly ushort[] indices = { 0, 1, 2 };
+    private WebGLBuffer _vertexBuffer;
+    private WebGLBuffer _indexBuffer;
+    private WebGLShader _vertexShader;
+    private WebGLShader _fragmentShader;
+    private WebGLProgram _shaderProgram;
+
+        private const string vertexShaderSource = @"#version 300 es
+
+in vec3 aPos;
+in vec3 aColor;
+out vec3 vColor;
+
+void main(void) {
+    gl_Position = vec4(aPos, 1.0);
+    vColor = aColor;
+}
+";
+
+        private const string fragmentShaderSource = @"#version 300 es
+
+precision mediump float;
+in vec3 vColor;
+out vec4 fragColor;
+
+void main(void) {
+    fragColor = vec4(vColor, 1.0);
+}
+";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        _gl = await _canvasReference.CreateWebGL2Async(new WebGLContextAttributes { PowerPreference = WebGLContextAttributes.POWER_PREFERENCE_HIGH_PERFORMANCE });
+
+        _vertexBuffer = await _gl.CreateBufferAsync();
+        await _gl.BindBufferAsync(BufferType.ARRAY_BUFFER, _vertexBuffer);
+        await _gl.BufferDataAsync(BufferType.ARRAY_BUFFER, vertices, BufferUsageHint.STATIC_DRAW);
+        await _gl.BindBufferAsync(BufferType.ARRAY_BUFFER, default);
+
+        _indexBuffer = await _gl.CreateBufferAsync();
+        await _gl.BindBufferAsync(BufferType.ELEMENT_ARRAY_BUFFER, _indexBuffer);
+        await _gl.BufferDataAsync(BufferType.ELEMENT_ARRAY_BUFFER, indices, BufferUsageHint.STATIC_DRAW);
+        await _gl.BindBufferAsync(BufferType.ELEMENT_ARRAY_BUFFER, default);
+
+        _vertexShader = await _gl.CreateShaderAsync(ShaderType.VERTEX_SHADER);
+        await _gl.ShaderSourceAsync(_vertexShader, vertexShaderSource);
+        await _gl.CompileShaderAsync(_vertexShader);
+
+        _fragmentShader = await _gl.CreateShaderAsync(ShaderType.FRAGMENT_SHADER);
+        await _gl.ShaderSourceAsync(_fragmentShader, fragmentShaderSource);
+        await _gl.CompileShaderAsync(_fragmentShader);
+
+        _shaderProgram = await _gl.CreateProgramAsync();
+        await _gl.AttachShaderAsync(_shaderProgram, _vertexShader);
+        await _gl.AttachShaderAsync(_shaderProgram, _fragmentShader);
+        await _gl.LinkProgramAsync(_shaderProgram);
+        await _gl.UseProgramAsync(_shaderProgram);
+
+        await _gl.BindBufferAsync(BufferType.ARRAY_BUFFER, _vertexBuffer);
+        await _gl.BindBufferAsync(BufferType.ELEMENT_ARRAY_BUFFER, _indexBuffer);
+
+        await _gl.VertexAttribPointerAsync(0, 3, DataType.FLOAT, false, 6 * sizeof(float), 0);
+        await _gl.VertexAttribPointerAsync(1, 3, DataType.FLOAT, false, 6 * sizeof(float), 3 * sizeof(float));
+        await _gl.EnableVertexAttribArrayAsync(0);
+        await _gl.EnableVertexAttribArrayAsync(1);
+
+        await _gl.ClearColorAsync(0, 0, 0, 1);
+        await _gl.ClearAsync(BufferBits.COLOR_BUFFER_BIT);
+
+    // await _gl.ViewportAsync(0, 0, _canvasReference.Width, _canvasReference.Height);
+
+        await _gl.UseProgramAsync(_shaderProgram);
+    // await _gl.BindBufferAsync(BufferType.ARRAY_BUFFER, _vertexBuffer);
+    // await _gl.BindBufferAsync(BufferType.ELEMENT_ARRAY_BUFFER, _indexBuffer);
+    // await _gl.DrawArraysAsync(Primitive.TRIANGLES, 0, 3);
+        await _gl.DrawElementsAsync(Primitive.TRIANGLES, indices.Length, DataType.UNSIGNED_SHORT, 0);
+        var error = await _gl.GetErrorAsync();
+        Console.WriteLine($"error={error}");
+    }
+
+}

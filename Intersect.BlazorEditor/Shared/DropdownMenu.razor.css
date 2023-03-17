@@ -1,0 +1,156 @@
+menu {
+	background-color: var(--theme-bg-accent);
+	margin: 0;
+	padding: 0;
+}
+
+menu.horizontal {
+	align-items: baseline;
+	display: flex;
+	justify-content: start;
+	line-height: 2rem;
+}
+
+menu.vertical {
+	border: 0.5px solid var(--theme-bg-accent-hover);
+	display: none;
+	gap: 0;
+	position: absolute;
+	top: 100%;
+}
+
+header>menu>* {
+	display: block;
+	height: calc(2rem);
+}
+
+li {
+	background-color: inherit;
+	height: 100%;
+	list-style: none;
+	overflow: visible;
+	position: relative;
+	user-select: none;
+	width: 100%;
+}
+
+menu.horizontal>li {
+	background-color: inherit;
+	display: flex;
+}
+
+menu.vertical>li {
+	display: contents;
+}
+
+.separator.horizontal {
+	align-self: center;
+	border-left: 1px solid var(--theme-bg-accent-hover);
+	height: calc(100% - 0.5em);
+	margin: 0 1px;
+	width: 0;
+}
+
+.separator.vertical {
+	border-top: 1px solid var(--theme-bg-accent-hover);
+	grid-column: 1 / span 5;
+	height: 0;
+	margin: 1px 0.25em;
+	width: calc(100% - 0.5em);
+}
+
+li > * {
+	display: block;
+}
+
+li>menu>li,
+.item-container {
+	display: contents;
+}
+
+li>menu>li>menu {
+	left: 100%;
+	top: 0;
+}
+
+menu.horizontal>li>.item-container {
+	display: block;
+	height: 2rem;
+	padding: 0 1rem;
+	width: 100%;
+}
+
+menu.vertical>li>.item-container {
+	display: contents;
+	position: relative;
+}
+
+menu.vertical>li>.item-container>::deep * {
+	line-height: 1rem;
+	padding: 0.5rem;
+}
+
+
+li:hover>.item-container,
+menu.horizontal>li>.item-container:hover,
+menu.vertical>li>.item-container:hover>::deep *{
+	background-color: var(--theme-bg-accent-hover);
+}
+
+li:hover > menu,
+li:hover > .item-container > .chevron > menu {
+	display: grid;
+}
+
+menu.has-toggle {
+	min-width: calc(8em + 1rem);
+}
+
+input[type=checkbox].hide-toggle {
+	visibility: hidden;
+}
+
+::deep i.material-icons {
+	font-size: 1em;
+	width: 1rem;
+}
+
+.toggle {
+	padding: 0.3rem 0.5rem 0.7rem !important;
+	height: 1rem;
+	width: 1rem;
+	grid-column-start: 1;
+}
+
+::deep .icon {
+	grid-column-start: 2;
+}
+
+.label {
+	grid-column-start: 3;
+	white-space: nowrap;
+}
+
+.label,
+.accelerator {
+	padding: 0.6rem 0.5rem 0.4rem !important;
+}
+
+.accelerator {
+	color: var(--theme-text-secondary);
+	font-size: 0.875em;
+	grid-column-start: 4;
+	text-align: right;
+	white-space: nowrap;
+}
+
+::deep .chevron {
+	grid-column-start: 5;
+	height: 1rem;
+	position: relative;
+}
+
+.chevron > menu {
+	top: 0;
+	left: 100%;
+}

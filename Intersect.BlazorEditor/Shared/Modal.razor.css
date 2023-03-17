@@ -1,0 +1,20 @@
+diaglog::backdrop {
+	background-color: rgba(0, 0, 0, 0.75);
+}
+
+dialog {
+	max-height: 90vh;
+	max-width: 90vw;
+	padding: 0;
+}
+
+dialog > header {
+	display: flex;
+	height: 1.5em;
+	width: 100%;
+}
+
+dialog > header > span {
+	padding: 0.25em;
+}
+

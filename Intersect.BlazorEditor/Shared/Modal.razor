@@ -1,0 +1,49 @@
+@inject IJSRuntime js;
+
+<dialog id="@_domId" @ref="_dialogReference">
+    <header>
+        <span>Test</span>
+        <section>
+            <button class="collapse">-</button>
+            <button class="maximize">[]</button>
+            <button class="close" @onclick="Close">X</button>
+        </section>
+    </header>
+    <section class="body">
+        <p>Test content</p>
+    </section>
+    <footer></footer>
+</dialog>
+
+@code {
+    private ElementReference _dialogReference;
+    private string _domId;
+    private string _id;
+
+    [Parameter]
+    public required string Id
+    {
+        get => _id;
+        set
+        {
+            _id = value;
+            _domId = $"modal-{_id}";
+        }
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        Console.WriteLine(_dialogReference.Id);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    public Task Close()
+    {
+        return js.InvokeVoidAsync("window.interop.modal.close", _domId).AsTask();
+    }
+
+    public Task Show()
+    {
+        return js.InvokeVoidAsync("window.interop.modal.show", _domId).AsTask();
+    }
+}

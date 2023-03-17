@@ -1,0 +1,182 @@
+@inject INativeInterop _interop;
+
+<header>
+    <DropdownMenu Items="@_menuItems"/>
+</header>
+
+@code {
+    private List<DropdownMenu.Item> _menuItems;
+
+    protected override Task OnInitializedAsync()
+    {
+        _menuItems = new List<DropdownMenu.Item>
+        {
+            new DropdownMenu.Submenu("File")
+            {
+                Items = new List<DropdownMenu.Item>
+                {
+                    new DropdownMenu.Actionable("Close")
+                    {
+                        Click = _interop.Close,
+                        Icon = "exit_to_app"
+                    }
+                }
+            },
+            new DropdownMenu.Separator(),
+            new DropdownMenu.Submenu("Edit")
+            {
+                Items = new List<DropdownMenu.Item>
+                {
+                    new DropdownMenu.Actionable("Undo")
+                    {
+                        Accelerator = "Ctrl + Z",
+                        Icon = "undo"
+                    },
+                    new DropdownMenu.Actionable("Redo")
+                    {
+                        Accelerator = "Shift + Ctrl + Z",
+                        Icon = "redo"
+                    },
+                    new DropdownMenu.Separator(),
+                    new DropdownMenu.Actionable("Cut")
+                    {
+                        Accelerator = "Ctrl + X",
+                        Icon = "content_cut"
+                    },
+                    new DropdownMenu.Actionable("Copy")
+                    {
+                        Accelerator = "Ctrl + C",
+                        Icon = "content_copy"
+                    },
+                    new DropdownMenu.Actionable("Paste")
+                    {
+                        Accelerator = "Ctrl + V",
+                        Icon = "content_paste"
+                    },
+                    new DropdownMenu.Separator(),
+                    new DropdownMenu.Actionable("Fill")
+                    {
+                        Icon = "format_color_fill"
+                    },
+                    new DropdownMenu.Actionable("Erase")
+                    {
+                        Icon = "delete"
+                    }
+                }
+            },
+            new DropdownMenu.Separator(),
+            new DropdownMenu.Submenu("View")
+            {
+                Items = new List<DropdownMenu.Item>
+                {
+                    new DropdownMenu.Toggleable("Darkness")
+                    {
+                        Icon = "dark_mode",
+                        State = new DropdownMenu.ToggleState()
+                    },
+                    new DropdownMenu.Toggleable("Fog")
+                    {
+                        State = new DropdownMenu.ToggleState()
+                    },
+                    new DropdownMenu.Toggleable("Overlay")
+                    {
+                        State = new DropdownMenu.ToggleState()
+                    },
+                    new DropdownMenu.Toggleable("Tile Preview")
+                    {
+                        State = new DropdownMenu.ToggleState()
+                    },
+                    new DropdownMenu.Toggleable("Resources")
+                    {
+                        State = new DropdownMenu.ToggleState()
+                    },
+                    new DropdownMenu.Toggleable("Map Grid")
+                    {
+                        Icon = "grid_4x4",
+                        State = new DropdownMenu.ToggleState()
+                    },
+                    new DropdownMenu.Toggleable("Events")
+                    {
+                        State = new DropdownMenu.ToggleState()
+                    },
+                    new DropdownMenu.Submenu("Layers")
+                    {
+                        Icon = "layers",
+                        Items = new List<DropdownMenu.Item>
+                        {
+                            new DropdownMenu.Toggleable("Ground")
+                            {
+                                State = new DropdownMenu.ToggleState()
+                            },
+                            new DropdownMenu.Toggleable("Mask 1")
+                            {
+                                State = new DropdownMenu.ToggleState()
+                            },
+                            new DropdownMenu.Toggleable("Mask 2")
+                            {
+                                State = new DropdownMenu.ToggleState()
+                            },
+                            new DropdownMenu.Toggleable("Fringe 1")
+                            {
+                                State = new DropdownMenu.ToggleState()
+                            },
+                            new DropdownMenu.Toggleable("Fringe 2")
+                            {
+                                State = new DropdownMenu.ToggleState()
+                            }
+                        }
+                    }
+                }
+            },
+            new DropdownMenu.Separator(),
+            new DropdownMenu.Submenu("Select")
+            {
+                Items = new List<DropdownMenu.Item>
+                {
+                    new DropdownMenu.Actionable("Select All")
+                    {
+                        Icon = "select_all"
+                    },
+                    new DropdownMenu.Actionable("Select None")
+                    {
+                        Icon = "deselect"
+                    },
+                    new DropdownMenu.Separator(),
+                    new DropdownMenu.Actionable("Fill")
+                    {
+                        Icon = "format_color_fill"
+                    },
+                    new DropdownMenu.Actionable("Copy"),
+                    new DropdownMenu.Actionable("Paste"),
+                    new DropdownMenu.Separator(),
+                    new DropdownMenu.Separator(),
+                    new DropdownMenu.Actionable("Close")
+                }
+            },
+            new DropdownMenu.Separator(),
+            new DropdownMenu.Submenu("Help")
+            {
+                Items = new List<DropdownMenu.Item>
+                {
+                    new DropdownMenu.Link("Report a Bug", "https://github.com/AscensionGameDev/Intersect-Engine/issues/new/choose")
+                    {
+                        Icon = "bug_report"
+                    },
+                    new DropdownMenu.Separator(),
+                    new DropdownMenu.Link("Community Forum", "https://www.ascensiongamedev.com/forum/53-questions-answers/")
+                    {
+                        Icon = "forum"
+                    },
+                    new DropdownMenu.Link("Discord", "https://discord.gg/qaJ8kRmdKA")
+                    {
+                        Icon = "discord"
+                    },
+                    new DropdownMenu.Separator(),
+                    new DropdownMenu.Actionable("About")
+                }
+            }
+        };
+        return base.OnInitializedAsync();
+    }
+
+}

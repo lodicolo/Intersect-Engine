@@ -1,0 +1,51 @@
+﻿@page "/backup"
+
+@using Intersect.BlazorEditor.Shared.Editors
+
+@inject INativeInterop _interop;
+
+<PageTitle>Index</PageTitle>
+
+
+<a href="/WebGL">View WebGL page</a><br>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+Runtime Version: @RuntimeVersion
+<br/>
+<button class="btn btn-primary" @onclick="SendTestNotification">
+    Show notification
+</button>
+
+<button @onclick="OpenTestModal">Open test modal</button>
+
+<Modal Id="test" @ref="_testModal" />
+
+<MapEditor />
+
+@code {
+
+    private string? RuntimeVersion { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        RuntimeVersion = await _interop.RuntimeVersion;
+    }
+
+    protected Task SendTestNotification()
+    {
+        return _interop.SendNotification("testing the notification service");
+    }
+
+    private Modal _testModal;
+    
+    private Task OpenTestModal()
+    {
+        return _testModal.Show();
+    }
+
+}
+
+<SurveyPrompt Title="How is Blazor working for you?"/>

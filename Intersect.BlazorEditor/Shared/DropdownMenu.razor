@@ -1,0 +1,180 @@
+@inject INativeInterop _interop;
+
+<CascadingValue Value="Items">
+    <menu class="@DirectionClass" style="@MenuGrid">
+        @foreach (var item in Items)
+        {
+            @if (item is Separator)
+            {
+                <div class="@item.Class @DirectionClass"></div>
+                continue;
+            }
+
+            <li class="@item.Class @DirectionClass" onclick="@((MouseEventArgs args) => HandleClick(args, item))" @onclick:stopPropagation="true">
+                @if (item is Labeled labeled)
+                {
+                    <div class="item-container">
+                        @if (HasToggle)
+                        {
+                            <div class="toggle">
+                                @if (labeled is Toggleable toggleable)
+                                {
+                                    <input type="checkbox" checked="@toggleable.State?.CurrentValue" />
+                                }
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(labeled.Icon))
+                        {
+                            <MBIcon class="icon" IconName="@labeled.Icon" IconFoundry="@MBIconHelper.MIFoundry()"/>
+                        }
+                        else if (HasIcon)
+                        {
+                            <div class="icon"></div>
+                        }
+                        <span class="label">@labeled.Title</span>
+                        @if (labeled is Actionable actionable && !string.IsNullOrWhiteSpace(actionable.Accelerator))
+                        {
+                            <span class="accelerator">@actionable.Accelerator</span>
+                        }
+                        else if (HasAccelerator)
+                        {
+                            <div class="accelerator"></div>
+                        }
+                        @if (Direction == LayoutDirection.Vertical && labeled is Submenu { Items.Count: > 0 } verticalSubmenu)
+                        {
+                            <div class="chevron">
+                                <MBIcon IconName="arrow_right" />
+                                <DropdownMenu Direction="@LayoutDirection.Vertical" Items="@verticalSubmenu.Items"/>
+                            </div>
+                        }
+                        else if (HasSubmenu)
+                        {
+                            <div class="chevron"></div>
+                        }
+                    </div>
+
+                    @if (Direction != LayoutDirection.Vertical && labeled is Submenu { Items.Count: > 0 } horizontalSubmenu)
+                    {
+                        <DropdownMenu Direction="@LayoutDirection.Vertical" Items="@horizontalSubmenu.Items"/>
+                    }
+                }
+            </li>
+        }
+    </menu>
+</CascadingValue>
+
+@code {
+    private string DirectionClass => Direction.ToString().ToLowerInvariant();
+
+    private string MenuGrid => Direction == LayoutDirection.Horizontal
+        ? string.Empty
+        : $"grid-template-columns: {(HasToggle ? "2rem" : "0")} {(HasIcon ? "2rem" : "0")} minmax(auto, 2fr) {(HasAccelerator ? "minmax(auto, 0.5fr)" : "0")} {(HasSubmenu ? "2rem" : "0")};";
+
+    private bool HasAccelerator => Items.Any(item => item is Actionable { Accelerator: not null });
+
+    private bool HasIcon => Items.Any(item => item is Labeled { Icon: not null });
+
+    private bool HasSubmenu => Items.Any(item => item is Submenu { Items.Count: > 0 });
+
+    private bool HasToggle => Items.Any(item => item is Toggleable { State: not null });
+
+    private async Task HandleClick(MouseEventArgs mouseEventArgs, Item item)
+    {
+        switch (item)
+        {
+            case Actionable actionable:
+                actionable.OnClick(mouseEventArgs, item);
+                break;
+            case Link link:
+                link.OnClick(_interop);
+                break;
+            case Submenu submenu:
+                submenu.OnClick(mouseEventArgs, item);
+                break;
+        }
+    }
+
+    [Parameter]
+    public LayoutDirection Direction { get; set; }
+
+    [Parameter]
+    public List<Item> Items { get; set; } = new();
+
+    public abstract record Item
+    {
+        public abstract string Class { get; }
+    }
+
+    public enum LayoutDirection
+    {
+        Horizontal,
+        Vertical
+    }
+
+    public abstract record Labeled(string Title) : Item
+    {
+        public string? Icon { get; init; }
+    }
+
+    public record Actionable(string Title) : Labeled(Title)
+    {
+        public Func<Task>? Click;
+
+        public string? Accelerator { get; init; }
+
+        public override string Class => string.Empty;
+
+        public void OnClick(MouseEventArgs mouseEventArgs, Item item)
+        {
+            Console.WriteLine($"Title={Title}, Click={Click}, menuItem={item}");
+        }
+    }
+
+    public record Link(string Title, string Url) : Labeled(Title)
+    {
+        public override string Class => string.Empty;
+
+        public void OnClick(INativeInterop nativeInterop)
+        {
+            nativeInterop.Open(Url);
+        }
+    }
+
+    public record Submenu(string Title) : Labeled(Title)
+    {
+        public override string Class => string.Empty;
+
+        public List<Item>? Items { get; init; }
+
+        public void OnClick(MouseEventArgs mouseEventArgs, Item item)
+        {
+            Console.WriteLine($"Title={Title}, menuItem={item}");
+        }
+    }
+
+    public record Toggleable(string Title) : Labeled(Title)
+    {
+        public override string Class => string.Empty;
+        
+        public ToggleState? State { get; init; }
+    }
+
+    public record Separator : Item
+    {
+        public override string Class => "separator";
+    }
+
+    public record ToggleState
+    {
+        private bool? _currentValue;
+
+        public bool CurrentValue
+        {
+            get => _currentValue ?? InitialState;
+            set => _currentValue = value;
+        }
+
+        public bool InitialState { get; set; }
+    }
+
+}

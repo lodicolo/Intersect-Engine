@@ -1,0 +1,24 @@
+<li @ref="_li" class="@Class" onclick="@HandleClick">
+    @ChildContent
+</li>
+
+@code {
+    private ElementReference _li;
+
+    private void HandleClick(MouseEventArgs mouseEventArgs)
+    {
+        OnClick?.Invoke(this, mouseEventArgs, MenuItem);
+    }
+    
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string? Class { get; set; }
+    
+    [Parameter]
+    public DropdownMenu.Item MenuItem { get; set; }
+    
+    [Parameter]
+    public Func<DropdownMenuItem, MouseEventArgs, DropdownMenu.Item, Task>? OnClick { get; set; }
+}
