@@ -1,0 +1,19 @@
+:root {
+	--theme-bg: hsl(0deg, 0%, 95%);
+
+	--theme-text: hsl(0deg, 0%, 5%);
+	--theme-text-secondary: hsl(0deg, 0%, 40%);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--theme-bg: hsl(0deg, 0%, 5%);
+		--theme-bg-hover: hsl(0deg, 0%, 10%);
+
+		--theme-bg-accent: hsl(0deg, 0%, 15%);
+		--theme-bg-accent-hover: hsl(0deg, 0%, 25%);
+
+		--theme-text: hsl(0deg, 0%, 95%);
+		--theme-text-secondary: hsla(0, 0%, 60%);
+	}
+}

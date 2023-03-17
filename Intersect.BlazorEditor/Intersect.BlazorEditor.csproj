@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <RootNamespace>Intersect.BlazorEditor</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Excubo.Blazor.Canvas" Version="3.2.16" />
+        <PackageReference Include="Material.Blazor" Version="3.3.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.3" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+      <Content Remove="src-tauri\target\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="src-tauri\**\*" />
+      <None Include="src-tauri\**\*">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </None>
+      <None Remove="src-tauri\target\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\blazor\Canvas\src\Blazor.Extensions.Canvas\Blazor.Extensions.Canvas.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="src-tauri\dist\webapp-helper\web.config" />
+    </ItemGroup>
+
+</Project>
