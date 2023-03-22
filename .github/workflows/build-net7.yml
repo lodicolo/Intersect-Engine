@@ -43,7 +43,7 @@ jobs:
 
     - name: Cache binaries
       uses: actions/cache@v3.2.6
-      id: cache-binaries
+      id: cache-binaries-net7
       with:
         path: |
           Intersect*/bin/Release/**/Intersect*
@@ -51,7 +51,7 @@ jobs:
 
     - name: Cache NuGet dependencies
       uses: actions/cache@v3.2.6
-      id: cache
+      id: cache-nuget-net7
       if: steps.cache-binaries.outputs.cache-hit != 'true'
       with:
         path: |
