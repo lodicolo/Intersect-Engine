@@ -1,11 +1,13 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: '@intersect-engine/action-release-bundler'
+description: 'Action to bundle releases for the Intersect game engine'
+author: 'Ascension Game Dev'
 inputs:
-  milliseconds: # change this
+  bundle:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'Path to bundle descriptors in .json files, can be a glob path'
+  version:
+    required: true
+    description: 'The version identifier'
 runs:
   using: 'node16'
   main: 'dist/index.js'
