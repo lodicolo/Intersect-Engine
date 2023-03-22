@@ -39,6 +39,10 @@
 		{
 			"source": "Intersect.Server/bin/Release/net462/Intersect Server.pdb*",
 			"target": "Server"
+		},
+		{
+			"source": "Documentation/Intersect Documentation.url",
+			"target": "Intersect Documentation.url"
 		}
 	],
 	"name": "patch"
