@@ -71,25 +71,32 @@ jobs:
       run: msbuild Intersect.sln /p:Configuration=Release /p:PackageVersion=${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }} /p:Version=0.7.2.${{ github.run_number }}
 
     - name: Package artifacts
-      run: |
-        mkdir intersect-engine
-        mkdir intersect-engine/client
-        mkdir intersect-engine/editor
-        mkdir intersect-engine/server
-        Copy-Item -Path "Intersect.Client/LICENSE.md" -Destination "intersect-engine/client"
-        Copy-Item -Path "Intersect.Client/bin/Release/**/Intersect Client.exe*" -Destination "intersect-engine/client"
-        Copy-Item -Path "Intersect.Client/bin/Release/**/Intersect Client.pdb" -Destination "intersect-engine/client"
-        Copy-Item -Path "Intersect.Editor/LICENSE.md" -Destination "intersect-engine/editor"
-        Copy-Item -Path "Intersect.Editor/bin/Release/**/Intersect Editor.exe*" -Destination "intersect-engine/editor"
-        Copy-Item -Path "Intersect.Editor/bin/Release/**/Intersect Editor.pdb" "intersect-engine/editor"
-        Copy-Item -Path "Intersect.Server/LICENSE.md" -Destination "intersect-engine/server"
-        Copy-Item -Path "Intersect.Server/bin/Release/**/Intersect Server.exe*" -Destination "intersect-engine/server"
-        Copy-Item -Path "Intersect.Server/bin/Release/**/Intersect Server.pdb" -Destination "intersect-engine/server"
-        Copy-Item -Path "AUTHORS.md" -Destination "intersect-engine"
-        Copy-Item -Path "LICENSE.md" -Destination "intersect-engine"
-        Copy-Item -Path "README.md" -Destination "intersect-engine"
-        Copy-Item -Path "Documentation" -Destination "intersect-engine" -Recurse
-        Compress-Archive -Path "intersect-engine" -DestinationPath "intersect-${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }}.zip"
+      uses: lodicolo/Intersect-Engine@8e0f88d0171145a2531bd15e91608878cec679a2
+      with:
+        bundle: .github/bundles/*.json
+        version: ${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }}
+
+    # - name: Package artifacts
+    #   run: |
+    #     mkdir dist
+    #     mkdir intersect-engine
+    #     mkdir intersect-engine/client
+    #     mkdir intersect-engine/editor
+    #     mkdir intersect-engine/server
+    #     Copy-Item -Path "Intersect.Client/LICENSE.md" -Destination "intersect-engine/client"
+    #     Copy-Item -Path "Intersect.Client/bin/Release/**/Intersect Client.exe*" -Destination "intersect-engine/client"
+    #     Copy-Item -Path "Intersect.Client/bin/Release/**/Intersect Client.pdb" -Destination "intersect-engine/client"
+    #     Copy-Item -Path "Intersect.Editor/LICENSE.md" -Destination "intersect-engine/editor"
+    #     Copy-Item -Path "Intersect.Editor/bin/Release/**/Intersect Editor.exe*" -Destination "intersect-engine/editor"
+    #     Copy-Item -Path "Intersect.Editor/bin/Release/**/Intersect Editor.pdb" "intersect-engine/editor"
+    #     Copy-Item -Path "Intersect.Server/LICENSE.md" -Destination "intersect-engine/server"
+    #     Copy-Item -Path "Intersect.Server/bin/Release/**/Intersect Server.exe*" -Destination "intersect-engine/server"
+    #     Copy-Item -Path "Intersect.Server/bin/Release/**/Intersect Server.pdb" -Destination "intersect-engine/server"
+    #     Copy-Item -Path "AUTHORS.md" -Destination "intersect-engine"
+    #     Copy-Item -Path "LICENSE.md" -Destination "intersect-engine"
+    #     Copy-Item -Path "README.md" -Destination "intersect-engine"
+    #     Copy-Item -Path "Documentation" -Destination "intersect-engine" -Recurse
+    #     Compress-Archive -Path "intersect-engine" -DestinationPath "intersect-${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }}.zip"
 
     # - name: Upload artifacts
     #   uses: actions/upload-artifact@v3.1.2
@@ -120,7 +127,7 @@ jobs:
     - name: Publish Release
       uses: softprops/action-gh-release@v0.1.15
       with:
-        files: "intersect-${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }}.zip"
+        files: "dist/*.zip"
         generate_release_notes: true
         prerelease: true
         name: ${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}
