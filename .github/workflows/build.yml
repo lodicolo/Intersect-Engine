@@ -93,7 +93,7 @@ jobs:
         token: ${{ secrets.INTERSECTBOT_ACCESS_TOKEN }}
 
     - name: Package artifacts
-      uses: lodicolo/Intersect-Engine@67baebb1c2e7bc38ff69e54cd9e1f8a782e87008
+      uses: lodicolo/Intersect-Engine@7db9ee95426beeba3a8fb6b84e3774e5d534cc20
       with:
         bundle: .github/bundles/*.json
         version: ${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }}
