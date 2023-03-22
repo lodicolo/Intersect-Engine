@@ -18,7 +18,7 @@
 		},
 		{
 			"source": "Intersect.Editor/LICENSE.md",
-			"target": "Client and Editor/LICENSE.client.md"
+			"target": "Client and Editor/LICENSE.editor.md"
 		},
 		{
 			"source": "Intersect.Editor/bin/Release/**/Intersect Editor.exe*",
