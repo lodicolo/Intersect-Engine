@@ -72,7 +72,7 @@ jobs:
     - run: ls -R
 
     - name: Package artifacts
-      uses: lodicolo/Intersect-Engine@f051d3d2be996de932f2f38699d1b600b2ef1e5c
+      uses: lodicolo/Intersect-Engine@fc794c8491ccd13f1f49212e8591491997e7f5c9
       with:
         bundle: .github/bundles/*.json
         version: ${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }}
