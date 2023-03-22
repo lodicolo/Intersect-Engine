@@ -52,7 +52,6 @@ jobs:
     - name: Cache NuGet dependencies
       uses: actions/cache@v3.2.6
       id: cache
-      if: steps.cache-binaries.outputs.cache-hit != 'true'
       with:
         path: |
           ~/.nuget/packages
