@@ -69,8 +69,10 @@ jobs:
       if: steps.cache-binaries.outputs.cache-hit != 'true'
       run: msbuild Intersect.sln /p:Configuration=Release /p:PackageVersion=${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }} /p:Version=0.7.2.${{ github.run_number }}
 
+    - run: ls -R
+
     - name: Package artifacts
-      uses: lodicolo/Intersect-Engine@10f8e598e0d188d09cc2fc17aaa048397c074764
+      uses: lodicolo/Intersect-Engine@ebb2c0ca99f49847e971fe707ad92048738e297a
       with:
         bundle: .github/bundles/*.json
         version: ${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }}
