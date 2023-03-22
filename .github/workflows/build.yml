@@ -70,7 +70,7 @@ jobs:
       run: msbuild Intersect.sln /p:Configuration=Release /p:PackageVersion=${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }} /p:Version=0.7.2.${{ github.run_number }}
 
     - name: Package artifacts
-      uses: lodicolo/Intersect-Engine@c41fb4efdd3d70b536185d8aa5a7b437224eedaa
+      uses: lodicolo/Intersect-Engine@6a7c80afba8cfee13e97ab952154bbefec160cfc
       with:
         bundle: .github/bundles/*.json
         version: ${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }}
