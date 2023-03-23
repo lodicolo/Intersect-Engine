@@ -1,35 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Web.Http.Routing;
+﻿using Intersect.Enums;
 
-using Intersect.Enums;
+namespace Intersect.Server.Web.RestApi.Constraints;
 
-namespace Intersect.Server.Web.RestApi.Constraints
+internal sealed class AdminActionsConstraint : IRouteConstraint
 {
-
-    internal sealed partial class AdminActionsConstraint : IHttpRouteConstraint
+    public bool Match(
+        HttpContext httpContext,
+        IRouter route,
+        string routeKey,
+        RouteValueDictionary values,
+        RouteDirection routeDirection
+    )
     {
-
-        /// <inheritdoc />
-        public bool Match(
-            HttpRequestMessage request,
-            IHttpRoute route,
-            string parameterName,
-            IDictionary<string, object> values,
-            HttpRouteDirection routeDirection
-        )
+        if (!values.TryGetValue(routeKey, out var value) || value == null)
         {
-            if (!values.TryGetValue(parameterName, out var value) || value == null)
-            {
-                return false;
-            }
-
-            var stringValue = value as string ?? Convert.ToString(value);
-
-            return Enum.TryParse<AdminAction>(stringValue, out _);
+            return false;
         }
 
-    }
+        var stringValue = value as string ?? Convert.ToString(value);
 
+        return Enum.TryParse<AdminAction>(stringValue, out _);
+    }
 }

@@ -1,0 +1,16 @@
+<Project>
+
+  <PropertyGroup Condition="'$(IntersectDeveloperTargetsImported)' == ''">
+    <IntersectRepoPath>$(MSBuildProjectDirectory)\..\..</IntersectRepoPath>
+  </PropertyGroup>
+
+  <Import Project="..\Directory.Build.props"/>
+
+  <PropertyGroup Label="Language Properties">
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latestMajor</LangVersion>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+</Project>

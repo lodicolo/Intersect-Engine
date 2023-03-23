@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Intersect.Enums;
 using Intersect.GameObjects;
+using Intersect.GameObjects.Switches_and_Variables;
 using Intersect.Logging;
 using Intersect.Security;
 using Intersect.Server.Core;
