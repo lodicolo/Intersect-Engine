@@ -6,7 +6,9 @@
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development",
 				"DOTNET_ENVIRONMENT": "Development",
-				"LD_LIBRARY_PATH": "."
+				"LD_LIBRARY_PATH": ".",
+				"INTERSECT_BINARY_DIR": "$(ProjectDir)$(OutDir)",
+				"INTERSECT_EMBEDDEDRESOURCEUNPACKER_OVERWRITEBEHAVIOR": "OverwriteWithBackup"
 			},
 			"workingDirectory": "$(ProjectDir)../assets/development/server"
 		},

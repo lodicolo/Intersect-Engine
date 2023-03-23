@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using Intersect.Core;
 using Intersect.Factories;
 using Intersect.Logging;
-using Intersect.Network;
 using Intersect.Plugins;
 using Intersect.Plugins.Interfaces;
 using Intersect.Rsa;
@@ -35,9 +29,20 @@ namespace Intersect.Server.Core
     /// </summary>
     internal sealed class ServerContext : ApplicationContext<ServerContext, ServerCommandLineOptions>, IServerContext
     {
-        internal ServerContext(ServerCommandLineOptions startupOptions, Logger logger, IPacketHelper packetHelper) :
-            base(startupOptions, logger, packetHelper)
+        private readonly IHostApplicationLifetime _hostApplicationLifetime;
+
+        private readonly CancellationToken _cancellationToken;
+
+        internal ServerContext(
+            ServerCommandLineOptions startupOptions,
+            Logger logger,
+            IPacketHelper packetHelper,
+            IHostApplicationLifetime hostApplicationLifetime,
+            CancellationToken cancellationToken
+        ) : base(startupOptions, logger, packetHelper)
         {
+            _hostApplicationLifetime = hostApplicationLifetime;
+            _cancellationToken = cancellationToken;
             // Register the factory for creating service plugin contexts
             FactoryRegistry<IPluginContext>.RegisterFactory(new ServerPluginContext.Factory());
 
@@ -46,9 +51,13 @@ namespace Intersect.Server.Core
                 Options.ServerPort = startupOptions.Port;
             }
 
-            RestApi = new RestApi(startupOptions.ApiPort);
-
             Network = CreateNetwork(packetHelper);
+        }
+
+        public override void RequestShutdown(bool join = false)
+        {
+            base.RequestShutdown(join);
+            _hostApplicationLifetime.StopApplication();
         }
 
         public IConsoleService ConsoleService => GetExpectedService<IConsoleService>();
@@ -144,11 +153,6 @@ namespace Intersect.Server.Core
                     }
                 }
 
-
-                // TODO: This needs to not be a global. I'm also in the middle of rewriting the API anyway.
-                Log.Information("Shutting down the API..." + $" ({stopwatch.ElapsedMilliseconds}ms)");
-                RestApi.Dispose();
-
                 #endregion
 
                 if (ThreadConsole?.IsAlive ?? false)
@@ -222,8 +226,7 @@ namespace Intersect.Server.Core
             {
                 var rsaKey = new RsaKey(stream ?? throw new InvalidOperationException());
                 Debug.Assert(rsaKey != null, "rsaKey != null");
-                network = new ServerNetwork(this, packetHelper, new NetworkConfiguration(Options.ServerPort),
-                    rsaKey.Parameters);
+                network = new(this, packetHelper, new(Options.ServerPort), rsaKey.Parameters);
             }
 
             #endregion
@@ -260,17 +263,6 @@ namespace Intersect.Server.Core
             Console.WriteLine();
 #endif
 
-            // RestApi.Start();
-            try
-            {
-                var webApp = new AspNetCoreWebApp();
-                webApp.Start();
-            }
-            catch (Exception)
-            {
-                Debugger.Break();
-            }
-
             if (!Options.UPnP || Instance.StartupOptions.NoNatPunchthrough)
             {
                 return;
@@ -284,14 +276,6 @@ namespace Intersect.Server.Core
 #endif
             UpnP.OpenServerPort(Options.ServerPort, Protocol.Udp).Wait(5000);
 
-            if (RestApi.IsStarted)
-            {
-                RestApi.Configuration.Ports.ToList()
-                    .ForEach(port => UpnP.OpenServerPort(port, Protocol.Tcp).Wait(5000));
-            }
-
-            Console.WriteLine();
-
             Bootstrapper.CheckNetwork();
 
             Console.WriteLine();
@@ -303,16 +287,13 @@ namespace Intersect.Server.Core
 
         #region Exception Handling
 
-        protected override void NotifyNonTerminatingExceptionOccurred()
-        {
+        protected override void NotifyNonTerminatingExceptionOccurred() =>
             Console.WriteLine(Strings.Errors.errorlogged);
-        }
 
         internal static void DispatchUnhandledException(Exception exception, bool isTerminating = true)
         {
             var sender = Thread.CurrentThread;
-            Task.Factory.StartNew(() =>
-                HandleUnhandledException(sender, new UnhandledExceptionEventArgs(exception, isTerminating)));
+            Task.Factory.StartNew(() => HandleUnhandledException(sender, new(exception, isTerminating)));
         }
 
         #endregion Exception Handling

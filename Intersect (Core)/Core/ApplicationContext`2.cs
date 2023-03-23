@@ -287,7 +287,7 @@ namespace Intersect.Core
         /// Request shutdown of the application.
         /// </summary>
         /// <param name="join">optionally join the current thread, default false</param>
-        public void RequestShutdown(bool join = false)
+        public virtual void RequestShutdown(bool join = false)
         {
             Task disposeTask;
 

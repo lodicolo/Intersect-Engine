@@ -1,10 +1,6 @@
-using System;
 using System.Net;
 using System.Text.Json.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
 using Intersect.Server.Database.PlayerData.Api;
-using Intersect.Server.Web.RestApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +8,7 @@ namespace Intersect.Server.Web.RestApi.Routes;
 
 [ApiController]
 [Route("oauth")]
-[CoreConfigurableAuthorize]
+[Authorize]
 public sealed class OAuthController : IntersectControllerBase
 {
     [HttpDelete]
@@ -45,7 +41,12 @@ public sealed class OAuthController : IntersectControllerBase
             return Problem();
         }
 
-        return Ok(new UsernameAndTokenResponse { TokenId = tokenId });
+        return Ok(
+            new UsernameAndTokenResponse
+            {
+                TokenId = tokenId
+            }
+        );
     }
 
     [Authorize]
@@ -77,7 +78,12 @@ public sealed class OAuthController : IntersectControllerBase
         }
 
         var success = await RefreshToken.RemoveForUserAsync(user.Id, cancellationToken).ConfigureAwait(false);
-        return success ? Ok(new { Username = username }) : Unauthorized();
+        return success ? Ok(
+            new
+            {
+                Username = username
+            }
+        ) : Unauthorized();
     }
 
     [HttpDelete]
@@ -106,7 +112,13 @@ public sealed class OAuthController : IntersectControllerBase
             return Problem();
         }
 
-        return Ok(new UsernameAndTokenResponse { TokenId = tokenId, Username = username });
+        return Ok(
+            new UsernameAndTokenResponse
+            {
+                TokenId = tokenId,
+                Username = username
+            }
+        );
     }
 
     private class UsernameAndTokenResponse

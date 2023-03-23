@@ -59,6 +59,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{91D46B09
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intersect.BlazorEditor", "Intersect.BlazorEditor\Intersect.BlazorEditor.csproj", "{A1760897-7568-4F47-AB1E-D522FBD25A7F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{8FB7E2D2-E649-418D-9412-665000014CD7}"
+	ProjectSection(SolutionItems) = preProject
+		Framework\Directory.Build.props = Framework\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intersect.Framework", "Framework\Intersect.Framework\Intersect.Framework.csproj", "{6895B9F0-9DF4-44F4-9D96-34C24967634F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intersect.Framework.Commands", "Framework\Intersect.Framework.Commands\Intersect.Framework.Commands.csproj", "{29DE4EC2-17ED-431F-8BCF-83BB5950BF3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intersect.Framework.Memory", "Framework\Intersect.Framework.Memory\Intersect.Framework.Memory.csproj", "{898F58DF-2D7B-4766-A259-E1A4476C6564}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
