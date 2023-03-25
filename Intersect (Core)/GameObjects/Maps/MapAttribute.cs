@@ -79,7 +79,7 @@ namespace Intersect.GameObjects.Maps
 
         public override MapAttribute Clone()
         {
-            var att = (MapItemAttribute) base.Clone();
+            var att = (MapItemAttribute)base.Clone();
             att.ItemId = ItemId;
             att.Quantity = Quantity;
             att.RespawnTime = RespawnTime;
@@ -102,7 +102,7 @@ namespace Intersect.GameObjects.Maps
 
         public override MapAttribute Clone()
         {
-            var att = (MapZDimensionAttribute) base.Clone();
+            var att = (MapZDimensionAttribute)base.Clone();
             att.GatewayTo = GatewayTo;
             att.BlockedLevel = BlockedLevel;
 
@@ -149,7 +149,7 @@ namespace Intersect.GameObjects.Maps
 
         public override MapAttribute Clone()
         {
-            var att = (MapWarpAttribute) base.Clone();
+            var att = (MapWarpAttribute)base.Clone();
             att.MapId = MapId;
             att.X = X;
             att.Y = Y;
@@ -179,7 +179,7 @@ namespace Intersect.GameObjects.Maps
 
         public override MapAttribute Clone()
         {
-            var att = (MapSoundAttribute) base.Clone();
+            var att = (MapSoundAttribute)base.Clone();
             att.File = File;
             att.Distance = Distance;
             att.LoopInterval = LoopInterval;
@@ -202,7 +202,7 @@ namespace Intersect.GameObjects.Maps
 
         public override MapAttribute Clone()
         {
-            var att = (MapResourceAttribute) base.Clone();
+            var att = (MapResourceAttribute)base.Clone();
             att.ResourceId = ResourceId;
             att.SpawnLevel = SpawnLevel;
 
@@ -224,7 +224,7 @@ namespace Intersect.GameObjects.Maps
 
         public override MapAttribute Clone()
         {
-            var att = (MapAnimationAttribute) base.Clone();
+            var att = (MapAnimationAttribute)base.Clone();
             att.AnimationId = AnimationId;
             att.IsBlock = IsBlock;
 
@@ -247,9 +247,8 @@ namespace Intersect.GameObjects.Maps
 
         public override MapAttribute Clone()
         {
-            var att = (MapSlideAttribute) base.Clone();
+            var att = (MapSlideAttribute)base.Clone();
             att.Direction = Direction;
-
             return att;
         }
     }
