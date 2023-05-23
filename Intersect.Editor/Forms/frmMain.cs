@@ -1768,7 +1768,7 @@ namespace Intersect.Editor.Forms
             var preferenceSoundPackSize = Preferences.LoadPreference("SoundPackSize");
             var preferenceTexturePackSize = Preferences.LoadPreference("TexturePackSize");
 
-            if (!int.TryParse(preferenceMusicPackSize, out var musicPackSize))
+            if (!uint.TryParse(preferenceMusicPackSize, out var musicPackSize))
             {
                 _ = MessageBox.Show(
                     this,
@@ -1780,7 +1780,7 @@ namespace Intersect.Editor.Forms
                 return;
             }
 
-            if (!int.TryParse(preferenceSoundPackSize, out var soundPackSize))
+            if (!uint.TryParse(preferenceSoundPackSize, out var soundPackSize))
             {
                 _ = MessageBox.Show(
                     this,
@@ -1792,7 +1792,7 @@ namespace Intersect.Editor.Forms
                 return;
             }
 
-            if (!int.TryParse(preferenceTexturePackSize, out var texturePackSize))
+            if (!uint.TryParse(preferenceTexturePackSize, out var texturePackSize))
             {
                 _ = MessageBox.Show(
                     this,
@@ -1881,7 +1881,7 @@ namespace Intersect.Editor.Forms
                     }
                     else
                     {
-                        var pack = new TexturePacker(resourcesDirectory, texturePackSize, texturePackSize, true);
+                        var pack = new TexturePacker(resourcesDirectory, (int)texturePackSize, (int)texturePackSize, true);
                         packs.Add(pack);
                         if (!pack.InsertTex(tex))
                         {

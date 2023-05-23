@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Development": {
+      "commandName": "Project",
+      "commandLineArgs": "-d -m 16 -s 16 -t 4096 $(ProjectDir)../assets/development/client $(ProjectDir)../assets/development-update/client",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development",
+        "LD_LIBRARY_PATH": "."
+      }
+    }
+  }
+}
