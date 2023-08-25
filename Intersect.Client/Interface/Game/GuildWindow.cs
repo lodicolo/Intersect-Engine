@@ -55,7 +55,7 @@ namespace Intersect.Client.Interface.Game
         //Init
         public GuildWindow(Canvas gameCanvas)
         {
-            mGuildWindow = new WindowControl(gameCanvas, Globals.Me.Guild, false, "GuildWindow");
+            mGuildWindow = new WindowControl(GameContentManager.UI.InGame, gameCanvas, Globals.Me.Guild, false, "GuildWindow");
             mGuildWindow.DisableResizing();
 
             mTextboxContainer = new ImagePanel(mGuildWindow, "SearchContainer");

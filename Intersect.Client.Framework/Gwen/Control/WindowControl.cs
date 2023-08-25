@@ -1,11 +1,13 @@
 using System;
 using System.Linq;
-
+using System.Numerics;
 using Intersect.Client.Framework.File_Management;
 using Intersect.Client.Framework.Graphics;
 using Intersect.Client.Framework.Gwen.ControlInternal;
-
+using Intersect.Logging;
 using Newtonsoft.Json.Linq;
+
+using static Intersect.Client.Framework.File_Management.GameContentManager;
 
 namespace Intersect.Client.Framework.Gwen.Control
 {
@@ -24,6 +26,10 @@ namespace Intersect.Client.Framework.Gwen.Control
             Inactive,
 
         }
+        
+        private readonly UI _stage;
+
+        private readonly ReloadButton mReloadUiButton;
 
         private readonly CloseButton mCloseButton;
 
@@ -48,6 +54,8 @@ namespace Intersect.Client.Framework.Gwen.Control
         private Modal mModal;
 
         private Base mOldParent;
+        private Pos _pinTo = Pos.None;
+        private Vector2 _pinPosition = Vector2.Zero;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="WindowControl" /> class.
@@ -55,8 +63,10 @@ namespace Intersect.Client.Framework.Gwen.Control
         /// <param name="parent">Parent control.</param>
         /// <param name="caption">Window caption.</param>
         /// <param name="modal">Determines whether the window should be modal.</param>
-        public WindowControl(Base parent, string title = "", bool modal = false, string name = "") : base(parent, name)
+        public WindowControl(UI stage, Base parent, string title = "", bool modal = false, string name = "") : base(parent, name)
         {
+            _stage = stage;
+
             mTitleBar = new Dragger(this);
             mTitleBar.Height = 24;
             mTitleBar.Padding = Gwen.Padding.Zero;
@@ -71,11 +81,15 @@ namespace Intersect.Client.Framework.Gwen.Control
             mTitle.Padding = new Padding(8, 4, 0, 0);
             mTitle.TextColor = Skin.Colors.Window.TitleInactive;
 
+            mReloadUiButton = new ReloadButton(mTitleBar, this);
+            mReloadUiButton.SetSize(24, 24);
+            mReloadUiButton.Dock = Pos.Top | Pos.Right;
+            mReloadUiButton.Clicked += (sender, arguments) => ReloadJson(null);
+
             mCloseButton = new CloseButton(mTitleBar, this);
             mCloseButton.SetSize(24, 24);
             mCloseButton.Dock = Pos.Top | Pos.Right;
             mCloseButton.Clicked += CloseButtonPressed;
-            mCloseButton.IsTabable = false;
 
             //Create a blank content control, dock it to the top - Should this be a ScrollControl?
             mInnerPanel = new Base(this);
@@ -146,9 +160,31 @@ namespace Intersect.Client.Framework.Gwen.Control
             get { return Parent.Children.Where(x => x is WindowControl).Last() == this; }
         }
 
+        public Pos PinTo
+        {
+            get => _pinTo;
+            set
+            {
+                _pinTo = value.Simplify();
+                Invalidate();
+            }
+        }
+
+        public Vector2 PinPosition
+        {
+            get => _pinPosition;
+            set
+            {
+                _pinPosition = value;
+                Invalidate();
+            }
+        }
+
         public override JObject GetJson(bool isRoot = default)
         {
             var obj = base.GetJson(isRoot);
+            obj.Add(nameof(PinPosition), $"{PinPosition.X},{PinPosition.Y}");
+            obj.Add(nameof(PinTo), PinTo.ToString());
             obj.Add("ActiveImage", GetImageFilename(ControlState.Active));
             obj.Add("InactiveImage", GetImageFilename(ControlState.Inactive));
             obj.Add("ActiveColor", Color.ToString(mActiveColor));
@@ -156,15 +192,57 @@ namespace Intersect.Client.Framework.Gwen.Control
             obj.Add("Closable", IsClosable);
             obj.Add("Titlebar", mTitleBar.GetJson());
             obj.Add("Title", mTitle.GetJson());
+            obj.Add("ReloadUiButton", mReloadUiButton.GetJson());
             obj.Add("CloseButton", mCloseButton.GetJson());
             obj.Add("InnerPanel", mInnerPanel.GetJson());
 
             return base.FixJson(obj);
         }
 
+        protected void ReloadJson(string resolution)
+        {
+            if (_stage == UI.None)
+            {
+                return;
+            }
+
+            LoadJsonUi(_stage, resolution);
+        }
+
         public override void LoadJson(JToken obj, bool isRoot = default)
         {
             base.LoadJson(obj);
+
+            var pinPosition = (string)obj[nameof(PinPosition)];
+            if (!string.IsNullOrWhiteSpace(pinPosition))
+            {
+                var pinPositionParts = pinPosition.Split(',');
+                if (pinPositionParts.Length < 2)
+                {
+                    Log.Error($"Invalid PinPosition value: '{pinPosition}'");
+                }
+                else
+                {
+                    if (!float.TryParse(pinPositionParts[0], out _pinPosition.X))
+                    {
+                        Log.Error($"Invalid X value: '{pinPositionParts[0]}'");
+                    }
+                    if (!float.TryParse(pinPositionParts[1], out _pinPosition.Y))
+                    {
+                        Log.Error($"Invalid Y value: '{pinPositionParts[1]}'");
+                    }
+                }
+            }
+
+            if (obj[nameof(PinTo)] != null)
+            {
+                var pinTo = (string)obj[nameof(PinTo)];
+                if (!Enum.TryParse(pinTo, true, out _pinTo))
+                {
+                    Log.Error($"Invalid PinTo value: '{pinTo}'");
+                }
+            }
+
             if (obj["ActiveImage"] != null)
             {
                 SetImage(
@@ -206,6 +284,13 @@ namespace Intersect.Client.Framework.Gwen.Control
             if (obj["Title"] != null)
             {
                 mTitle.LoadJson(obj["Title"]);
+            }
+
+            if (obj["ReloadUiButton"] != null)
+            {
+                mReloadUiButton.Alignment = Pos.None;
+                mReloadUiButton.Dock = Pos.None;
+                mReloadUiButton.LoadJson(obj["ReloadUiButton"]);
             }
 
             if (obj["CloseButton"] != null)
@@ -339,6 +424,58 @@ namespace Intersect.Client.Framework.Gwen.Control
         /// <param name="skin">Skin to use.</param>
         protected override void RenderFocus(Skin.Base skin)
         {
+        }
+
+        public override void Invalidate()
+        {
+            base.Invalidate();
+
+            var parent = Parent;
+            if (parent == default)
+            {
+                // Can't calculate
+                return;
+            }
+
+            if (PinTo == Pos.None || PinTo == Pos.Fill)
+            {
+                // Not supported
+                return;
+            }
+
+            var position = Vector2.Zero;
+            var origin = Vector2.Zero;
+            var parentSize = new Vector2(parent.InnerWidth, parent.InnerHeight);
+            var size = new Vector2(Bounds.Width, Bounds.Height);
+
+            if (PinTo.HasFlag(Pos.CenterV))
+            {
+                origin += size * Vector2.UnitY / 2;
+                position += parentSize * Vector2.UnitY / 2;
+            }
+
+            if (PinTo.HasFlag(Pos.CenterH))
+            {
+                origin += size * Vector2.UnitX / 2;
+                position += parentSize * Vector2.UnitX / 2;
+            }
+
+            if (PinTo.HasFlag(Pos.Bottom))
+            {
+                origin += size * Vector2.UnitY;
+                position += parentSize * Vector2.UnitY;
+            }
+
+            if (PinTo.HasFlag(Pos.Right))
+            {
+                origin += size * Vector2.UnitY;
+                position += parentSize * Vector2.UnitY;
+            }
+
+            position += parentSize * PinPosition / 2;
+
+            // X = (int)(position.X - origin.X);
+            // Y = (int)(position.Y - origin.Y);
         }
 
         public void SetTitleBarHeight(int h)

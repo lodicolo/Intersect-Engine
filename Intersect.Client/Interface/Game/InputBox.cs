@@ -120,7 +120,7 @@ namespace Intersect.Client.Interface.Game
             _uiStage = stage;
             mPrompt = prompt;
 
-            mMyWindow = new WindowControl(parent, title, modal, "InputBox");
+            mMyWindow = new WindowControl(GameContentManager.UI.InGame, parent, title, modal, "InputBox");
             mMyWindow.BeforeDraw += _myWindow_BeforeDraw;
             mMyWindow.DisableResizing();
 

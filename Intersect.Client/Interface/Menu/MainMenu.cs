@@ -47,6 +47,8 @@ namespace Intersect.Client.Interface.Menu
 
         private readonly Button mSettingsButton;
 
+        private readonly RealSettingsWindow _settingsWindow;
+        
         private readonly SettingsWindow mSettingsWindow;
 
         private readonly Button mRegisterButton;
@@ -128,6 +130,7 @@ namespace Intersect.Client.Interface.Menu
 
             //Settings Controls
             mSettingsWindow = new SettingsWindow(menuCanvas, this, null);
+            _settingsWindow = new RealSettingsWindow(menuCanvas, this, default);
 
             //Login Controls
             mLoginWindow = new LoginWindow(menuCanvas, this, mMenuWindow);
@@ -193,6 +196,7 @@ namespace Intersect.Client.Interface.Menu
             }
 
             mSettingsWindow.Update();
+            _settingsWindow.Update();
         }
 
         public void Reset()
@@ -200,6 +204,7 @@ namespace Intersect.Client.Interface.Menu
             mLoginWindow.Hide();
             mRegisterWindow.Hide();
             mSettingsWindow.Hide();
+            _settingsWindow.Hide();
             mCreditsWindow.Hide();
             mForgotPasswordWindow.Hide();
             mResetPasswordWindow.Hide();
@@ -263,6 +268,7 @@ namespace Intersect.Client.Interface.Menu
             mLoginWindow.Hide();
             mRegisterWindow.Hide();
             mSettingsWindow.Hide();
+            _settingsWindow.Hide();
             mCreateCharacterWindow.Hide();
             mSelectCharacterWindow.Show();
             mShouldOpenCharacterSelection = false;
@@ -279,6 +285,7 @@ namespace Intersect.Client.Interface.Menu
             mLoginWindow.Hide();
             mRegisterWindow.Hide();
             mSettingsWindow.Hide();
+            _settingsWindow.Hide();
             mSelectCharacterWindow.Hide();
             mCreateCharacterWindow.Show();
             mCreateCharacterWindow.Init();
@@ -309,6 +316,7 @@ namespace Intersect.Client.Interface.Menu
         {
             Hide();
             mSettingsWindow.Show(true);
+            // _settingsWindow.Show();
         }
 
         void ExitButton_Clicked(Base sender, ClickedEventArgs arguments)

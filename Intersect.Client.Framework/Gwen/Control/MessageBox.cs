@@ -1,5 +1,7 @@
 ﻿using System;
 
+using static Intersect.Client.Framework.File_Management.GameContentManager;
+
 namespace Intersect.Client.Framework.Gwen.Control
 {
 
@@ -24,7 +26,7 @@ namespace Intersect.Client.Framework.Gwen.Control
         /// <param name="parent">Parent control.</param>
         /// <param name="text">Message to display.</param>
         /// <param name="caption">Window caption.</param>
-        public MessageBox(Base parent, string text, string caption = "") : base(parent, caption, true)
+        public MessageBox(Base parent, string text, string caption = "") : base(UI.None, parent, caption, true)
         {
             DeleteOnClose = true;
 

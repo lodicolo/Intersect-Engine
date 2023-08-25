@@ -42,7 +42,7 @@ namespace Intersect.Client.Interface.Game
 
         private void GenerateControls()
         {
-            mWindow = new WindowControl(mParent, Strings.Friends.Title, false, "FriendsWindow");
+            mWindow = new WindowControl(GameContentManager.UI.InGame, mParent, Strings.Friends.Title, false, "FriendsWindow");
             mAdd = new Button(mWindow, "AddFriendButton");
             mFriendContainer = new ScrollControl(mWindow, "FriendContainer");
             mFriendListAnchor = new ImagePanel(mFriendContainer, "FriendListAnchor");

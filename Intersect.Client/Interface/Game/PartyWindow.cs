@@ -49,7 +49,7 @@ namespace Intersect.Client.Interface.Game
         //Init
         public PartyWindow(Canvas gameCanvas)
         {
-            mPartyWindow = new WindowControl(gameCanvas, Strings.Parties.title, false, "PartyWindow");
+            mPartyWindow = new WindowControl(GameContentManager.UI.InGame, gameCanvas, Strings.Parties.title, false, "PartyWindow");
             mPartyWindow.DisableResizing();
 
             //Add the icon representing party leader (ALWAYS member 1 in the party list)

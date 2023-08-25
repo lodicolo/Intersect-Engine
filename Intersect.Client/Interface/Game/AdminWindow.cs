@@ -76,6 +76,8 @@ namespace Intersect.Client.Interface.Game
         private Button ButtonWarpMeTo;
 
         private Button ButtonWarpToMe;
+
+        private Button ButtonZoom;
         
         private Button ButtonOverworldReturn;
 
@@ -86,7 +88,7 @@ namespace Intersect.Client.Interface.Game
         //Init
         public AdminWindow(Base gameCanvas)
         {
-            mAdminWindow = new WindowControl(gameCanvas, Strings.Admin.title, false, nameof(AdminWindow));
+            mAdminWindow = new WindowControl(UI.InGame, gameCanvas, Strings.Admin.title, false, nameof(AdminWindow));
             mAdminWindow.SetPosition(
                 (Graphics.Renderer.ScreenWidth - mAdminWindow.Width) / 2,
                 (Graphics.Renderer.ScreenHeight - mAdminWindow.Height) / 2
@@ -144,6 +146,17 @@ namespace Intersect.Client.Interface.Game
             ButtonUnmute = new Button(mAdminWindow, nameof(ButtonUnmute));
             ButtonUnmute.Text = Strings.Admin.unmute;
             ButtonUnmute.Clicked += _unmuteButton_Clicked;
+
+            ButtonZoom = new Button(mAdminWindow, nameof(ButtonZoom));
+            ButtonZoom.Text = Strings.Admin.Zoom;
+            ButtonZoom.Clicked += (sender, arguments) =>
+            {
+                Globals.Database.WorldZoom *= 2;
+                if (Globals.Database.WorldZoom > 4)
+                {
+                    Globals.Database.WorldZoom = 1;
+                }
+            };
 
             LabelSprite = new Label(mAdminWindow, nameof(LabelSprite));
             LabelSprite.Text = Strings.Admin.sprite;

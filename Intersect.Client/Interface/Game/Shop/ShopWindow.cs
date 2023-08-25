@@ -33,7 +33,7 @@ namespace Intersect.Client.Interface.Game.Shop
         //Init
         public ShopWindow(Canvas gameCanvas)
         {
-            mShopWindow = new WindowControl(gameCanvas, Globals.GameShop.Name, false, "ShopWindow");
+            mShopWindow = new WindowControl(GameContentManager.UI.InGame, gameCanvas, Globals.GameShop.Name, false, "ShopWindow");
             mShopWindow.DisableResizing();
             Interface.InputBlockingElements.Add(mShopWindow);
 

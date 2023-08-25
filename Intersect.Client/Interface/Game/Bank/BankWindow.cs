@@ -45,7 +45,7 @@ namespace Intersect.Client.Interface.Game.Bank
         public BankWindow(Canvas gameCanvas)
         {
             // Create a new window to display the contents of the bank.
-            mBankWindow = new WindowControl(gameCanvas,
+            mBankWindow = new WindowControl(GameContentManager.UI.InGame, gameCanvas,
                 Globals.GuildBank
                     ? Strings.Guilds.Bank.ToString(Globals.Me?.Guild)
                     : Strings.Bank.title.ToString(),

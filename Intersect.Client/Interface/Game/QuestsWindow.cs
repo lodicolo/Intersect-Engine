@@ -44,7 +44,7 @@ namespace Intersect.Client.Interface.Game
         //Init
         public QuestsWindow(Canvas gameCanvas)
         {
-            mQuestsWindow = new WindowControl(gameCanvas, Strings.QuestLog.title, false, "QuestsWindow");
+            mQuestsWindow = new WindowControl(GameContentManager.UI.InGame, gameCanvas, Strings.QuestLog.title, false, "QuestsWindow");
             mQuestsWindow.DisableResizing();
 
             mQuestList = new ListBox(mQuestsWindow, "QuestList");

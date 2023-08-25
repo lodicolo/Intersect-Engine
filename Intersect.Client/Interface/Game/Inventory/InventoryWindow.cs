@@ -39,7 +39,7 @@ namespace Intersect.Client.Interface.Game.Inventory
         //Init
         public InventoryWindow(Canvas gameCanvas)
         {
-            mInventoryWindow = new WindowControl(gameCanvas, Strings.Inventory.Title, false, "InventoryWindow");
+            mInventoryWindow = new WindowControl(GameContentManager.UI.InGame, gameCanvas, Strings.Inventory.Title, false, "InventoryWindow");
             mInventoryWindow.DisableResizing();
 
             mItemContainer = new ScrollControl(mInventoryWindow, "ItemsContainer");

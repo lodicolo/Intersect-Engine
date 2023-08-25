@@ -43,7 +43,7 @@ namespace Intersect.Client.Interface.Game.Trades
         public TradingWindow(Canvas gameCanvas, string traderName)
         {
             mTradeWindow = new WindowControl(
-                gameCanvas, Strings.Trading.title.ToString(traderName), false, "TradeWindow"
+                GameContentManager.UI.InGame, gameCanvas, Strings.Trading.title.ToString(traderName), false, "TradeWindow"
             );
 
             mTradeWindow.DisableResizing();

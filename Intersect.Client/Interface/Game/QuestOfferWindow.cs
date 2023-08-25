@@ -34,7 +34,7 @@ namespace Intersect.Client.Interface.Game
 
         public QuestOfferWindow(Canvas gameCanvas)
         {
-            mQuestOfferWindow = new WindowControl(gameCanvas, Strings.QuestOffer.title, false, "QuestOfferWindow");
+            mQuestOfferWindow = new WindowControl(GameContentManager.UI.InGame, gameCanvas, Strings.QuestOffer.title, false, "QuestOfferWindow");
             mQuestOfferWindow.DisableResizing();
             mQuestOfferWindow.IsClosable = false;
 

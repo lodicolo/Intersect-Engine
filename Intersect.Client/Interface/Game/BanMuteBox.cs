@@ -1,6 +1,7 @@
 ﻿using System;
 
 using Intersect.Client.Core;
+using Intersect.Client.Framework.File_Management;
 using Intersect.Client.Framework.Graphics;
 using Intersect.Client.Framework.Gwen;
 using Intersect.Client.Framework.Gwen.Control;
@@ -33,7 +34,7 @@ namespace Intersect.Client.Interface.Game
         {
             OkayEventHandler = okayClicked;
 
-            mMyWindow = new WindowControl(Interface.GameUi.GameCanvas, title, modal);
+            mMyWindow = new WindowControl(GameContentManager.UI.InGame, Interface.GameUi.GameCanvas, title, modal);
             mMyWindow.SetSize(400, 150);
             mMyWindow.SetPosition(
                 Graphics.Renderer.GetScreenWidth() / 2 - mMyWindow.Width / 2,

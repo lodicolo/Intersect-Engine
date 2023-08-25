@@ -73,7 +73,7 @@ namespace Intersect.Client.Interface.Game.Crafting
 
         public CraftingWindow(Canvas gameCanvas)
         {
-            mCraftWindow = new WindowControl(gameCanvas, Globals.ActiveCraftingTable.Name, false, "CraftingWindow");
+            mCraftWindow = new WindowControl(GameContentManager.UI.InGame, gameCanvas, Globals.ActiveCraftingTable.Name, false, "CraftingWindow");
             mCraftWindow.DisableResizing();
 
             mItemContainer = new ScrollControl(mCraftWindow, "IngredientsContainer");

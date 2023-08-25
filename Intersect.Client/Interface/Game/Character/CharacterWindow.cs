@@ -111,7 +111,7 @@ namespace Intersect.Client.Interface.Game.Character
         //Init
         public CharacterWindow(Canvas gameCanvas)
         {
-            mCharacterWindow = new WindowControl(gameCanvas, Strings.Character.title, false, "CharacterWindow");
+            mCharacterWindow = new WindowControl(GameContentManager.UI.InGame, gameCanvas, Strings.Character.title, false, "CharacterWindow");
             mCharacterWindow.DisableResizing();
 
             mCharacterName = new Label(mCharacterWindow, "CharacterNameLabel");

@@ -37,7 +37,7 @@ namespace Intersect.Client.Interface.Game.Bag
         //Init
         public BagWindow(Canvas gameCanvas)
         {
-            mBagWindow = new WindowControl(gameCanvas, Strings.Bags.title, false, "BagWindow");
+            mBagWindow = new WindowControl(GameContentManager.UI.InGame, gameCanvas, Strings.Bags.title, false, "BagWindow");
             mBagWindow.DisableResizing();
             Interface.InputBlockingElements.Add(mBagWindow);
 
