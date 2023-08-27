@@ -1,0 +1,126 @@
+name: Build Intersect (.NET 7.0)
+
+on:
+  push:
+    branches: [ "main-net7" ]
+  pull_request:
+    branches: [ "main-net7" ]
+  workflow_dispatch:
+    inputs:
+      workflowDebug:
+        description: 'If the workflow should be debugged (skip release)'
+        default: true
+        type: boolean
+      forceBuild:
+        description: 'If the build should be forced even on cache hit'
+        default: false
+        type: boolean
+      forceRestore:
+        description: 'If dependencies should be forced even on cache hit'
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+env:
+  VERSION_PREFIX: 0.7.2
+  VERSION_SUFFIX: -beta-net7
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Cache binaries
+      uses: actions/cache@v3.2.6
+      id: cache-binaries
+      with:
+        key: ${{ runner.os }}-binaries-${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}-${{ hashFiles('Intersect*/**/*.cs*') }}
+        path: |
+          Intersect*/bin/Release/**/Intersect*
+
+    - name: Setup dotnet
+      if: steps.cache-binaries.outputs.cache-hit != 'true' || inputs.forceBuild == true || inputs.forceRestore == true
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+
+    - name: Cache NuGet dependencies
+      uses: actions/cache@v3.2.6
+      id: cache-nuget
+      if: steps.cache-binaries.outputs.cache-hit != 'true' || inputs.forceBuild == true || inputs.forceRestore == true
+      with:
+        key: ${{ runner.os }}-nuget-${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}-${{ hashFiles('Intersect*/*.csproj') }}
+        path: |
+          ~/.nuget/packages
+          Intersect*/obj/
+
+    - name: Restore NuGet Packages
+      if: steps.cache-binaries.outputs.cache-hit != 'true' && steps.cache-nuget.outputs.cache-hit != 'true' || inputs.forceRestore == true
+      run: dotnet restore Intersect.sln
+
+    # - run: ls -R ~/.nuget/packages
+    # - run: ls -R
+
+    - name: Build solution
+      if: steps.cache-binaries.outputs.cache-hit != 'true' || inputs.forceBuild == true || inputs.forceRestore == true
+      run: dotnet build Intersect.sln -p:Configuration=Release -p:PackageVersion=${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }} -p:Version=0.7.2.${{ github.run_number }}
+
+    - name: Package artifacts
+      run: |
+        mkdir intersect-engine
+        mkdir intersect-engine/client
+        mkdir intersect-engine/editor
+        mkdir intersect-engine/server
+        Copy-Item -Path "Intersect.Client/LICENSE.md" -Destination "intersect-engine/client"
+        Copy-Item -Path "Intersect.Client/bin/Release/**/Intersect Client.*" -Destination "intersect-engine/client"
+        Copy-Item -Path "Intersect.Editor/LICENSE.md" -Destination "intersect-engine/editor"
+        Copy-Item -Path "Intersect.Editor/bin/Release/**/Intersect Editor.*" -Destination "intersect-engine/editor"
+        Copy-Item -Path "Intersect.Server/LICENSE.md" -Destination "intersect-engine/server"
+        Copy-Item -Path "Intersect.Server/bin/Release/**/Intersect Server.*" -Destination "intersect-engine/server"
+        Copy-Item -Path "AUTHORS.md" -Destination "intersect-engine"
+        Copy-Item -Path "LICENSE.md" -Destination "intersect-engine"
+        Copy-Item -Path "README.md" -Destination "intersect-engine"
+        Copy-Item -Path "Documentation" -Destination "intersect-engine" -Recurse
+        Compress-Archive -Path "intersect-engine" -DestinationPath "intersect-${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }}.zip"
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        if-no-files-found: error
+        name: intersect-${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }}
+        path: |
+          AUTHORS.md
+          Documentation/**
+          Intersect.*/LICENSE.md
+          Intersect.Client/bin/Release/**/Intersect Client.*
+          Intersect.Editor/bin/Release/**/Intersect Editor.*
+          Intersect.Server/bin/Release/**/Intersect Server.*
+          LICENSE.md
+          README.md
+          !Intersect.*/bin/Release/**/*.xml
+          !Intersect.*/bin/Release/**/*.runtimeconfig.*
+        retention-days: 1
+
+    # - name: Download artifacts
+    #   uses: actions/download-artifact@v3
+    #   with:
+    #     name: intersect-${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }}
+    #     path: artifacts
+
+    # - run: ls -R
+
+    - name: Publish Release
+      uses: softprops/action-gh-release@v0.1.15
+      with:
+        files: "intersect-${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}+build.${{ github.sha }}.zip"
+        generate_release_notes: true
+        prerelease: true
+        name: ${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}
+        tag_name: v${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}${{ github.run_number }}
+        target_commitish: ${{ github.sha }}
