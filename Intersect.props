@@ -12,13 +12,13 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Assembly Properties">
+    <ApplicationIcon>$(IntersectRepoPath)\assets\intersect-logo-qu.ico</ApplicationIcon>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <ApplicationIcon>$(IntersectRepoPath)\assets\intersect-logo-qu.ico</ApplicationIcon>
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
   </PropertyGroup>
 
   <ItemGroup>
