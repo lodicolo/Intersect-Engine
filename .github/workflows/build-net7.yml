@@ -65,11 +65,13 @@ jobs:
       run: dotnet restore Intersect.sln
 
     # - run: ls -R ~/.nuget/packages
-    # - run: ls -R
 
     - name: Build solution
       if: steps.cache-binaries.outputs.cache-hit != 'true' || inputs.forceBuild == true || inputs.forceRestore == true
       run: dotnet build Intersect.sln -p:Configuration=Release -p:PackageVersion=${{ env.VERSION_PREFIX }}${{ env.VERSION_SUFFIX }}.${{ github.run_number }}+build.${{ github.sha }} -p:Version=0.7.2.${{ github.run_number }}
+
+    - name: Debug output of Build Solution
+      run: ls -R
 
     - name: Checkout assets main_upgrade branch
       uses: actions/checkout@v3
@@ -101,7 +103,6 @@ jobs:
       with:
         name: workflow-debug
         path: "dist/*.zip"
-
 
     - name: Publish GitHub Release
       if: inputs.workflowDebug != true
