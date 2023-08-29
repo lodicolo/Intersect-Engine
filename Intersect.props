@@ -14,6 +14,7 @@
   <PropertyGroup Label="Assembly Properties">
     <ApplicationIcon>$(IntersectRepoPath)\assets\intersect-logo-qu.ico</ApplicationIcon>
     <AssemblyVersion>$(Version)</AssemblyVersion>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <FileVersion>$(Version)</FileVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
