@@ -131,7 +131,7 @@ function packageBundle(version, ...bundleDescriptors) {
             }
             try {
                 const archiveRootName = `intersect${(platform ? `-${platform}` : '')}`;
-                const archiveName = `${archiveRootName}-${version}.${name}.zip`;
+                const archiveName = `${archiveRootName}-${name}-${version}.zip`;
                 const archivePath = (0, path_1.join)(repositoryRoot, 'dist', archiveName);
                 const fileHandle = yield (0, promises_1.open)(archivePath, 'w');
                 const writeStream = fileHandle.createWriteStream();

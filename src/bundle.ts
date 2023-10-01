@@ -166,7 +166,7 @@ export async function packageBundle(
 
 		try {
 			const archiveRootName = `intersect${(platform ? `-${platform}` : '')}`;
-			const archiveName = `${archiveRootName}-${version}.${name}.zip`;
+			const archiveName = `${archiveRootName}-${name}-${version}.zip`;
 			const archivePath = join(repositoryRoot, 'dist', archiveName);
 			const fileHandle = await open(archivePath, 'w');
 			const writeStream = fileHandle.createWriteStream();
