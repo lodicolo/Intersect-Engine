@@ -1,13 +1,13 @@
-import {info, warning} from '@actions/core';
-import {copyFile, open, stat} from 'fs/promises';
-import {glob} from 'glob';
-import {mkdirp} from 'mkdirp';
-import {basename, dirname, join, normalize, relative, sep} from 'path';
+import { info, warning } from '@actions/core';
+import { copyFile, open, stat } from 'fs/promises';
+import { glob } from 'glob';
+import { mkdirp } from 'mkdirp';
+import { basename, dirname, join, normalize, relative, sep } from 'path';
 import archiver from 'archiver';
 
 export type Result<T = void> =
-	| (T extends void ? {ok: true} : {ok: true; value: T})
-	| {ok: false; err: Error};
+	| (T extends void ? { ok: true } : { ok: true; value: T })
+	| { ok: false; err: Error };
 
 export type FileMapping = {
 	source: string;
@@ -20,6 +20,7 @@ export type BundleDescriptor = {
 	directories: DirectorySegments[];
 	includes: (FileMapping | string)[];
 	name: string;
+	platform?: string;
 };
 
 export async function makeDirectory(
@@ -31,7 +32,7 @@ export async function makeDirectory(
 			const resolvedPath = join(parent, segments);
 			info(`Creating directory: ${resolvedPath}`);
 			await mkdirp(resolvedPath);
-			return {ok: true};
+			return { ok: true };
 		}
 
 		if (!Array.isArray(segments)) {
@@ -41,7 +42,7 @@ export async function makeDirectory(
 		const resolvedPath = join(parent, ...segments);
 		info(`Creating directory: ${resolvedPath}`);
 		await mkdirp(resolvedPath);
-		return {ok: true};
+		return { ok: true };
 	} catch (err) {
 		return {
 			ok: false,
@@ -58,7 +59,7 @@ export async function packageBundle(
 	info(`Bundling packages from ${repositoryRoot}`);
 
 	const archivePaths: string[] = [];
-	for (const {directories, includes, name} of bundleDescriptors) {
+	for (const { directories, includes, name, platform } of bundleDescriptors) {
 		const bundleOutputDirectory = join('dist', name);
 		await mkdirp(bundleOutputDirectory);
 
@@ -164,7 +165,8 @@ export async function packageBundle(
 		}
 
 		try {
-			const archiveName = `intersect-${version}.${name}.zip`;
+			const archiveRootName = `intersect-${(platform ? `${platform}-` : '')}`;
+			const archiveName = `${archiveRootName}-${version}.${name}.zip`;
 			const archivePath = join(repositoryRoot, 'dist', archiveName);
 			const fileHandle = await open(archivePath, 'w');
 			const writeStream = fileHandle.createWriteStream();

@@ -57,7 +57,7 @@ function packageBundle(version, ...bundleDescriptors) {
         const repositoryRoot = process.cwd();
         (0, core_1.info)(`Bundling packages from ${repositoryRoot}`);
         const archivePaths = [];
-        for (const { directories, includes, name } of bundleDescriptors) {
+        for (const { directories, includes, name, platform } of bundleDescriptors) {
             const bundleOutputDirectory = (0, path_1.join)('dist', name);
             yield (0, mkdirp_1.mkdirp)(bundleOutputDirectory);
             for (const nestableDirectory of directories) {
@@ -130,7 +130,8 @@ function packageBundle(version, ...bundleDescriptors) {
                 }
             }
             try {
-                const archiveName = `intersect-${version}.${name}.zip`;
+                const archiveRootName = `intersect-${(platform ? `${platform}-` : '')}`;
+                const archiveName = `${archiveRootName}-${version}.${name}.zip`;
                 const archivePath = (0, path_1.join)(repositoryRoot, 'dist', archiveName);
                 const fileHandle = yield (0, promises_1.open)(archivePath, 'w');
                 const writeStream = fileHandle.createWriteStream();
