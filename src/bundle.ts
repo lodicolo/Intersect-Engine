@@ -51,6 +51,10 @@ export async function makeDirectory(
 	}
 }
 
+function isDefined<TValue>(value: TValue | undefined): value is TValue {
+	return value !== undefined;
+}
+
 export async function packageBundle(
 	version: string,
 	...bundleDescriptors: BundleDescriptor[]
@@ -60,7 +64,7 @@ export async function packageBundle(
 
 	const archivePaths: string[] = [];
 	for (const { directories, includes, name, platform } of bundleDescriptors) {
-		const bundleOutputDirectory = join('dist', name);
+		const bundleOutputDirectory = join(...['dist', platform, name].filter(isDefined));
 		await mkdirp(bundleOutputDirectory);
 
 		for (const nestableDirectory of directories) {

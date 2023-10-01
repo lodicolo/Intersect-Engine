@@ -52,13 +52,16 @@ function makeDirectory(parent, segments) {
     });
 }
 exports.makeDirectory = makeDirectory;
+function isDefined(value) {
+    return value !== undefined;
+}
 function packageBundle(version, ...bundleDescriptors) {
     return __awaiter(this, void 0, void 0, function* () {
         const repositoryRoot = process.cwd();
         (0, core_1.info)(`Bundling packages from ${repositoryRoot}`);
         const archivePaths = [];
         for (const { directories, includes, name, platform } of bundleDescriptors) {
-            const bundleOutputDirectory = (0, path_1.join)('dist', name);
+            const bundleOutputDirectory = (0, path_1.join)(...['dist', platform, name].filter(isDefined));
             yield (0, mkdirp_1.mkdirp)(bundleOutputDirectory);
             for (const nestableDirectory of directories) {
                 const result = yield makeDirectory(bundleOutputDirectory, nestableDirectory);
