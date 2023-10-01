@@ -151,7 +151,7 @@ function packageBundle(version, ...bundleDescriptors) {
                     }
                 });
                 archive.pipe(writeStream);
-                const directoryToArchive = (0, path_1.join)(repositoryRoot, 'dist', name);
+                const directoryToArchive = (0, path_1.join)(repositoryRoot, bundleOutputDirectory);
                 (0, core_1.info)(`Adding directory to archive: ${directoryToArchive}`);
                 archive.directory(directoryToArchive, false);
                 yield archive.finalize();

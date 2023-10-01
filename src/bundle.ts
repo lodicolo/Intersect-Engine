@@ -189,7 +189,7 @@ export async function packageBundle(
 			});
 
 			archive.pipe(writeStream);
-			const directoryToArchive = join(repositoryRoot, 'dist', name);
+			const directoryToArchive = join(repositoryRoot, bundleOutputDirectory);
 			info(`Adding directory to archive: ${directoryToArchive}`);
 			archive.directory(directoryToArchive, false);
 			await archive.finalize();
