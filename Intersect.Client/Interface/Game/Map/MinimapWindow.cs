@@ -16,15 +16,15 @@ namespace Intersect.Client.Interface.Game.Map
 {
     public sealed class MinimapWindow : Window
     {
-        private GameRenderTexture _renderTexture;
-        private GameTexture _whiteTexture;
+        private GameRenderTexture? _renderTexture;
+        private GameTexture? _whiteTexture;
 
         private bool _redrawMaps;
         private bool _redrawEntities;
         private int _zoomLevel;
         private Point _minimapTileSize;
 
-        private Dictionary<MapPosition, MapBase> _mapGrid = new();
+        private Dictionary<MapPosition, MapBase?> _mapGrid = new();
         private Dictionary<MapPosition, Dictionary<Point, EntityInfo>> _entityInfoCache = new();
 
         private readonly Dictionary<MapPosition, GameRenderTexture> _minimapCache = new();
@@ -37,39 +37,48 @@ namespace Intersect.Client.Interface.Game.Map
         private static readonly GameContentManager ContentManager = Globals.ContentManager;
 
         // Constructors
-        public MinimapWindow(Base parent) : base(parent, Strings.Minimap.Title, false, "MinimapWindow")
+        public MinimapWindow(Base parent) : base(parent, Strings.Minimap.Title, false, nameof(MinimapWindow))
         {
             DisableResizing();
             IsHidden = true;
 
             _minimap = new ImagePanel(this, "MinimapContainer");
             _zoomInButton = new Button(_minimap, "ZoomInButton");
+            _zoomInButton.SetToolTipText(Strings.Minimap.ZoomIn);
+            _zoomInButton.Clicked += MZoomInButton_Clicked;
             _zoomOutButton = new Button(_minimap, "ZoomOutButton");
-
-            LoadJsonUi(GameContentManager.UI.InGame, Graphics.Renderer.GetResolutionString());
-            EnsureInitialized();
+            _zoomOutButton.SetToolTipText(Strings.Minimap.ZoomOut);
+            _zoomOutButton.Clicked += MZoomOutButton_Clicked;
         }
 
         protected override void EnsureInitialized()
         {
+            var (renderTexture, _) = EnsureGraphicsResourcesInitialized();
+
+            _minimap.SetBounds(4, 4, 192, 156);
+
+            MinimumSize = new Point(200, 189);
+            this.SetSize(200, 189);
+
+            _minimap.Texture = renderTexture;
+            _minimap.SetTextureRect(0, 0, renderTexture.Width, renderTexture.Height);
+
+            LoadJsonUi(GameContentManager.UI.InGame, Graphics.Renderer.GetResolutionString());
+        }
+
+        private (GameTexture, GameTexture) EnsureGraphicsResourcesInitialized()
+        {
             _zoomLevel = Options.Instance.MinimapOpts.DefaultZoom;
             _minimapTileSize = Options.Instance.MinimapOpts.TileSize;
-
-            _zoomInButton.Clicked += MZoomInButton_Clicked;
-            _zoomInButton.SetToolTipText(Strings.Minimap.ZoomIn);
-            _zoomOutButton.Clicked += MZoomOutButton_Clicked;
-            _zoomOutButton.SetToolTipText(Strings.Minimap.ZoomOut);
-
-            _whiteTexture = Graphics.Renderer.GetWhiteTexture();
-            _renderTexture = GenerateBaseRenderTexture();
-            _minimap.Texture = _renderTexture;
-            _minimap.SetTextureRect(0, 0, _renderTexture.Width, _renderTexture.Height);
+            _whiteTexture ??= Graphics.Renderer.GetWhiteTexture();
+            _renderTexture ??= GenerateBaseRenderTexture();
+            return (_renderTexture, _whiteTexture);
         }
 
         // Public Methods
         public void Update()
         {
-            if (!IsVisible())
+            if (IsHidden)
             {
                 return;
             }
@@ -78,25 +87,10 @@ namespace Intersect.Client.Interface.Game.Map
             DrawMinimap();
         }
 
-        public void Show()
-        {
-            IsHidden = false;
-        }
-
-        public bool IsVisible()
-        {
-            return !IsHidden;
-        }
-
-        public void Hide()
-        {
-            IsHidden = true;
-        }
-
         // Private Methods
-        private void UpdateMinimap(Player player, Dictionary<Guid, Entity> allEntities)
+        private void UpdateMinimap(Player? player, Dictionary<Guid, Entity> allEntities)
         {
-            if (player == null)
+            if (player == default)
             {
                 return;
             }
@@ -130,16 +124,17 @@ namespace Intersect.Client.Interface.Game.Map
                 _redrawEntities = true;
             }
 
+            var (renderTexture, _) = EnsureGraphicsResourcesInitialized();
             // Update our minimap display area
-            var centerX = (_renderTexture.Width / 3) + (player.X * _minimapTileSize.X);
-            var centerY = (_renderTexture.Height / 3) + (player.Y * _minimapTileSize.Y);
-            var displayWidth = (int)(_renderTexture.Width * (_zoomLevel / 100f));
-            var displayHeight = (int)(_renderTexture.Height * (_zoomLevel / 100f));
+            var centerX = (renderTexture.Width / 3) + (player.X * _minimapTileSize.X);
+            var centerY = (renderTexture.Height / 3) + (player.Y * _minimapTileSize.Y);
+            var displayWidth = (int)(renderTexture.Width * (_zoomLevel / 100f));
+            var displayHeight = (int)(renderTexture.Height * (_zoomLevel / 100f));
 
             var x = centerX - (displayWidth / 2);
-            if (x + displayWidth > _renderTexture.Width)
+            if (x + displayWidth > renderTexture.Width)
             {
-                x = _renderTexture.Width - displayWidth;
+                x = renderTexture.Width - displayWidth;
             }
 
             if (x < 0)
@@ -164,6 +159,11 @@ namespace Intersect.Client.Interface.Game.Map
         private void DrawMinimap()
         {
             if (!_redrawEntities && !_redrawMaps)
+            {
+                return;
+            }
+
+            if (_renderTexture == default)
             {
                 return;
             }
@@ -209,7 +209,7 @@ namespace Intersect.Client.Interface.Game.Map
             // Clear the texture, whether it's newly generated or already existed in the cache
             cachedMinimap.Clear(Color.Transparent);
 
-            if (!_mapGrid.TryGetValue(position, out var cachedMapGrid) || cachedMapGrid == null)
+            if (!_mapGrid.TryGetValue(position, out var cachedMapGrid) || cachedMapGrid == default)
             {
                 return;
             }
@@ -230,7 +230,7 @@ namespace Intersect.Client.Interface.Game.Map
 
                         var texture = ContentManager.GetTexture(TextureType.Tileset, tileSet.Name);
 
-                        if (texture == null)
+                        if (texture == default)
                         {
                             continue;
                         }
@@ -278,7 +278,7 @@ namespace Intersect.Client.Interface.Game.Map
                 if (!string.IsNullOrWhiteSpace(entity.Value.Texture))
                 {
                     var found = ContentManager.Find<GameTexture>(ContentTypes.Miscellaneous, entity.Value.Texture);
-                    if (found != null)
+                    if (found != default)
                     {
                         texture = found;
                         color = Color.White;
@@ -355,16 +355,36 @@ namespace Intersect.Client.Interface.Game.Map
 
             if (_minimapCache.TryGetValue(position, out var cachedMinimap))
             {
-                Graphics.Renderer.DrawTexture(cachedMinimap, 0, 0, cachedMinimap.Width,
-                    cachedMinimap.Height, x, y, cachedMinimap.Width, cachedMinimap.Height,
-                    Color.White, _renderTexture);
+                Graphics.Renderer.DrawTexture(
+                    cachedMinimap,
+                    0,
+                    0,
+                    cachedMinimap.Width,
+                    cachedMinimap.Height,
+                    x,
+                    y,
+                    cachedMinimap.Width,
+                    cachedMinimap.Height,
+                    Color.White,
+                    _renderTexture
+                );
             }
 
             if (_entityCache.TryGetValue(position, out var cachedEntity))
             {
-                Graphics.Renderer.DrawTexture(cachedEntity, 0, 0, cachedEntity.Width,
-                    cachedEntity.Height, x, y, cachedEntity.Width, cachedEntity.Height,
-                    Color.White, _renderTexture);
+                Graphics.Renderer.DrawTexture(
+                    cachedEntity,
+                    0,
+                    0,
+                    cachedEntity.Width,
+                    cachedEntity.Height,
+                    x,
+                    y,
+                    cachedEntity.Width,
+                    cachedEntity.Height,
+                    Color.White,
+                    _renderTexture
+                );
             }
         }
 

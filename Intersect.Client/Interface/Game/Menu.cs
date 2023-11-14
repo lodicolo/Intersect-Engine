@@ -207,7 +207,7 @@ namespace Intersect.Client.Interface.Game
                 return;
             }
 
-            if (mMinimapWindow.IsVisible())
+            if (mMinimapWindow.IsVisible)
             {
                 mMinimapWindow.Hide();
             }
