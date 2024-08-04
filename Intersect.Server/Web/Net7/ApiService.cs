@@ -72,6 +72,20 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
             );
         }
 
+        builder.Services.AddCors(
+            options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                builder =>
+                {
+                    builder.AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .SetIsOriginAllowed((host) => true)
+                            .AllowCredentials();
+                });
+            }
+        );
+
         builder.Services.AddRouting(
             routeOptions =>
             {
@@ -315,6 +329,7 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
         app.UseAuthorization();
 
         app.MapControllers();
+        app.UseCors("CorsPolicy");
         app.MapHub<GameHub>("/gamehub");
 
         // app.MapControllers();
