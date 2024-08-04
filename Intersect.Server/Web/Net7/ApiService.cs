@@ -5,6 +5,7 @@ using Intersect.Core;
 using Intersect.Enums;
 using Intersect.Logging;
 using Intersect.Server.Core;
+using Intersect.Server.CustomChange;
 using Intersect.Server.Web.Configuration;
 using Intersect.Server.Web.Constraints;
 using Intersect.Server.Web.Middleware;
@@ -112,6 +113,8 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
                 );
             }
         );
+
+        builder.Services.AddSignalR();
 
         builder.Services.AddControllers(
                 mvcOptions =>
@@ -312,6 +315,7 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
         app.UseAuthorization();
 
         app.MapControllers();
+        app.MapHub<GameHub>("/gamehub");
 
         // app.MapControllers();
 
