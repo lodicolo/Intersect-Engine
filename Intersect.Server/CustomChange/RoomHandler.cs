@@ -1,5 +1,6 @@
 using Intersect.Server.CustomChange.Types;
 using Intersect.Server.CustomChange.Utils;
+using Intersect.Utilities;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Intersect.Server.CustomChange;
@@ -7,6 +8,8 @@ namespace Intersect.Server.CustomChange;
 public static class RoomHandler
 {
     public static readonly Dictionary<string, Room> Rooms = [];
+    //TODO: Implement a way to remove disconnected players or rooms that are empty after a certain amount of time
+    private static readonly Dictionary<Guid, Tuple<long, Player>> DisconnectedPlayers = [];
 
     public static async Task CreateRoom(IGroupManager groups, string clientId, Guid userId, string roomName)
     {
@@ -98,5 +101,25 @@ public static class RoomHandler
     public static Player? FindUserByToken(string token)
     {
         return Rooms.Values.SelectMany(r => r.Players).FirstOrDefault(p => p.ReconnectionToken == token);
+    }
+
+    public static Player? GetPlayerByConnectionId(string connectionId)
+    {
+        return Rooms.Values.SelectMany(r => r.Players).FirstOrDefault(p => p.ClientId == connectionId);
+    }
+
+    public static void AddDisconnectedPlayer(Player player)
+    {
+        DisconnectedPlayers[player.UserId] = new Tuple<long, Player>(Timing.Global.Milliseconds + 30000, player);
+    }
+
+    public static Player GetDisconnectedPlayer(Guid userId)
+    {
+        return DisconnectedPlayers.TryGetValue(userId, out var data) ? data.Item2 : null;
+    }
+
+    public static void RemoveDisconnectedPlayer(Guid userId)
+    {
+        _ = DisconnectedPlayers.Remove(userId);
     }
 }

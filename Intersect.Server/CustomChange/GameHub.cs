@@ -32,11 +32,20 @@ public class GameHub : Hub
             return;
         }
 
-        // find any room that the player was in before
-        var room = RoomHandler.Rooms.Values.FirstOrDefault(r => r.Players.Any(p => p.UserId == user.Id));
-        if (room != default)
+        var disconnectedPlayer = RoomHandler.GetDisconnectedPlayer(user.Id);
+
+        // player was disconnected, but it reconnected
+        if (disconnectedPlayer != null)
         {
-            await RoomHandler.JoinRoomById(Groups, Context.ConnectionId, user.Id, room.Id);
+            disconnectedPlayer.ClientId = Context.ConnectionId;
+            RoomHandler.RemoveDisconnectedPlayer(user.Id);
+
+            // find any room that the player was in before
+            var room = RoomHandler.Rooms.Values.FirstOrDefault(r => r.Players.Any(p => p.UserId == user.Id));
+            if (room != default)
+            {
+                await RoomHandler.JoinRoomById(Groups, Context.ConnectionId, user.Id, room.Id);
+            }
         }
         else
         {
@@ -46,10 +55,13 @@ public class GameHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        await base.OnDisconnectedAsync(exception);
-        // TODO: Handle disconnection and reconnection
+        var player = RoomHandler.GetPlayerByConnectionId(Context.ConnectionId);
+        if (player != default)
+        {
+            RoomHandler.AddDisconnectedPlayer(player);
+        }
 
-        await RoomHandler.LeaveRoom(Groups, Context.ConnectionId, default);
+        await base.OnDisconnectedAsync(exception);
     }
 
     public async Task<LoginResponse> Login(string username, string password)
