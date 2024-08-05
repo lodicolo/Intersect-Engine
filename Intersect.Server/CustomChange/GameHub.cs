@@ -128,10 +128,10 @@ public class GameHub : Hub
         return await Login(username, password);
     }
 
-    public string GetUsername(string reconnectionToken)
+    public string? GetUsername(string reconnectionToken)
     {
         var player = RoomHandler.FindUserByToken(reconnectionToken);
         var user = User.FindById(player?.UserId ?? Guid.Empty);
-        return user?.Name ?? string.Empty;
+        return user?.Name;
     }
 }
