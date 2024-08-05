@@ -103,6 +103,8 @@ public partial class User
 
     public string LastIp { get; set; }
 
+    public string ReconnectionToken;
+
     public static User FindOnline(Guid id) => OnlineUsers.ContainsKey(id) ? OnlineUsers[id] : null;
 
     public static User FindOnline(string username) =>

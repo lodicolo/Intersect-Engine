@@ -10,11 +10,13 @@ public class Room(string roomId, string roomName)
 
     public bool IsGameStarted { get; set; } = false;
 
-    public void AddPlayer(string clientId)
+    public string? Leader { get; set; }
+
+    public void AddPlayer(string clientId, Guid userId)
     {
         if (Players.All(p => p.ClientId != clientId))
         {
-            Players.Add(new Player(clientId));
+            Players.Add(new Player(clientId, userId));
         }
     }
 

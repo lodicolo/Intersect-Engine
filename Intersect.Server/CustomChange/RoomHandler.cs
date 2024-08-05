@@ -8,18 +8,18 @@ public static class RoomHandler
 {
     public static readonly Dictionary<string, Room> Rooms = [];
 
-    public static async Task CreateRoom(IGroupManager groups, string clientId, string roomName)
+    public static async Task CreateRoom(IGroupManager groups, string clientId, Guid userId, string roomName)
     {
-        var roomId = RoomIdGenerator.NewRoomId;
+        var roomId = SimpleIdGenerator.NewId;
         if (!Rooms.TryAdd(roomId, new Room(roomId, roomName)))
         {
             return;
         }
 
-        await AddPlayerToRoom(groups, clientId, roomId);
+        await AddPlayerToRoom(groups, clientId, userId, roomId);
     }
 
-    public static async Task JoinRoomByName(IGroupManager groups, string clientId, string roomName)
+    public static async Task JoinRoomByName(IGroupManager groups, string clientId, Guid userId, string roomName)
     {
         var room = Rooms.FirstOrDefault(r => r.Value.Name == roomName).Value;
         if (room == default)
@@ -27,10 +27,10 @@ public static class RoomHandler
             return;
         }
 
-        await AddPlayerToRoom(groups, clientId, room.Id);
+        await AddPlayerToRoom(groups, clientId, userId, room.Id);
     }
 
-    public static async Task JoinRoomById(IGroupManager groups, string clientId, string roomId)
+    public static async Task JoinRoomById(IGroupManager groups, string clientId, Guid userId, string roomId)
     {
         var room = Rooms[roomId];
         if (room == default)
@@ -38,7 +38,7 @@ public static class RoomHandler
             return;
         }
 
-        await AddPlayerToRoom(groups, clientId, room.Id);
+        await AddPlayerToRoom(groups, clientId, userId, room.Id);
     }
 
     public static async Task LeaveRoom(IGroupManager groups, string clientId, string? roomId)
@@ -54,7 +54,7 @@ public static class RoomHandler
         room.RemovePlayer(clientId);
     }
 
-    public static async Task AddPlayerToRoom(IGroupManager groups, string clientId, string roomId)
+    public static async Task AddPlayerToRoom(IGroupManager groups, string clientId, Guid userId, string roomId)
     {
         // if the room does not exist, skip
         if (!Rooms.TryGetValue(roomId, out var room))
@@ -80,7 +80,7 @@ public static class RoomHandler
             await LeaveRoom(groups, clientId, r.Id);
         }
 
-        room.AddPlayer(clientId);
+        room.AddPlayer(clientId, userId);
         await groups.AddToGroupAsync(clientId, room.Id);
 
         // Give some line breaks in console and print a table with all rooms and players
@@ -93,5 +93,10 @@ public static class RoomHandler
         {
             Console.WriteLine($"{r.Id} | {r.Name} | {string.Join(", ", r.Players.Select(p => p.ClientId))}");
         }
+    }
+
+    public static Player? FindUserByToken(string token)
+    {
+        return Rooms.Values.SelectMany(r => r.Players).FirstOrDefault(p => p.ReconnectionToken == token);
     }
 }
