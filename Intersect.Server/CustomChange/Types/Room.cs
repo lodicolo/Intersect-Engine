@@ -12,16 +12,21 @@ public class Room(string roomId, string roomName)
 
     public string? Leader { get; set; }
 
-    public void AddPlayer(string clientId, Guid userId)
+    public Player AddPlayer(Guid userId)
     {
-        if (Players.All(p => p.ClientId != clientId))
+        Player player = new Player(userId);
+
+        if (Players.All(p => p.UserId != userId))
         {
-            Players.Add(new Player(clientId, userId));
+            Players.Add(player);
+            return player;
         }
+
+        return default;
     }
 
-    public void RemovePlayer(string clientId)
+    public void RemovePlayer(Guid userId)
     {
-        _ = Players.RemoveAll(p => p.ClientId == clientId);
+        _ = Players.RemoveAll(p => p.UserId == userId);
     }
 }

@@ -1,3 +1,5 @@
+#pragma warning disable CA1822 // Mark members as static
+
 using Intersect.Server.CustomChange.Types;
 using Intersect.Server.CustomChange.Utils;
 using Intersect.Server.Database;
@@ -23,7 +25,7 @@ public class GameHub : Hub
             return;
         }
 
-        var player = RoomHandler.FindUserByToken(reconnectionToken);
+        var player = RoomHandler.FindPlayerByToken(reconnectionToken);
         var user = User.FindById(player?.UserId ?? Guid.Empty);
 
         // player not found, anounymous player
@@ -32,30 +34,29 @@ public class GameHub : Hub
             return;
         }
 
+        player.ClientId = Context.ConnectionId;
         var disconnectedPlayer = RoomHandler.GetDisconnectedPlayer(user.Id);
 
         // player was disconnected, but it reconnected
         if (disconnectedPlayer != null)
         {
-            disconnectedPlayer.ClientId = Context.ConnectionId;
             RoomHandler.RemoveDisconnectedPlayer(user.Id);
 
-            // find any room that the player was in before
-            var room = RoomHandler.Rooms.Values.FirstOrDefault(r => r.Players.Any(p => p.UserId == user.Id));
-            if (room != default)
+            var room = RoomHandler.FindRoomByUserId(user.Id);
+            if (room == default)
             {
-                await RoomHandler.JoinRoomById(Groups, Context.ConnectionId, user.Id, room.Id);
+                RoomHandler.JoinRoomByName(user.Id, "menu");
             }
         }
         else
         {
-            await RoomHandler.JoinRoomByName(Groups, Context.ConnectionId, user.Id, "menu");
+            RoomHandler.JoinRoomByName(user.Id, "menu");
         }
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        var player = RoomHandler.GetPlayerByConnectionId(Context.ConnectionId);
+        var player = RoomHandler.FindPlayerByConnectionId(Context.ConnectionId);
         if (player != default)
         {
             RoomHandler.AddDisconnectedPlayer(player);
@@ -80,30 +81,29 @@ public class GameHub : Hub
         // user found, we accept the connection and we add the player to the room
         if (RoomHandler.Rooms.Count == 0)
         {
-            await RoomHandler.CreateRoom(Groups, Context.ConnectionId, user.Id, "menu");
+            RoomHandler.CreateRoom(user.Id, "menu");
         }
 
-        var room = RoomHandler.Rooms.Values.FirstOrDefault(r => r.Name == "menu");
+        var room = RoomHandler.FindRoomByName("menu");
         if (room == default)
         {
             return default;
         }
 
-        await RoomHandler.AddPlayerToRoom(Groups, Context.ConnectionId, user.Id, room.Id);
+        var player = RoomHandler.AddPlayerToRoom(user.Id, room.Id);
+        player.ClientId = Context.ConnectionId;
+        player.ReconnectionToken = SimpleIdGenerator.NewId;
 
-        user.ReconnectionToken = SimpleIdGenerator.NewId;
-        var player = room.Players.FirstOrDefault(p => p.ClientId == Context.ConnectionId);
-        if (player != default)
+        await Clients.Caller.SendAsync("RoomCreated", new
         {
-            player.ReconnectionToken = user.ReconnectionToken;
-        }
+            id = room.Id,
+            name = room.Name,
+        });
 
         return new LoginResponse
         {
-            RoomId = room.Id,
             RoomName = room.Name,
-            ReconnectionToken = user.ReconnectionToken,
-            Players = room.Players
+            ReconnectionToken = player.ReconnectionToken,
         };
     }
 
@@ -130,7 +130,7 @@ public class GameHub : Hub
 
     public string? GetUsername(string reconnectionToken)
     {
-        var player = RoomHandler.FindUserByToken(reconnectionToken);
+        var player = RoomHandler.FindPlayerByToken(reconnectionToken);
         var user = User.FindById(player?.UserId ?? Guid.Empty);
         return user?.Name;
     }
