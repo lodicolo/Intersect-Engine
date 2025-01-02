@@ -47,5 +47,5 @@ public interface INetworkLayerInterface : IDisposable
 
     void Disconnect(IConnection connection, string message);
 
-    void Disconnect(ICollection<IConnection> connections, string messages);
+    void Disconnect(ICollection<IConnection> connections, string message);
 }

@@ -4,11 +4,13 @@ using System.Threading.RateLimiting;
 using Intersect.Core;
 using Intersect.Enums;
 using Intersect.Logging;
+using Intersect.Network;
 using Intersect.Server.Core;
 using Intersect.Server.CustomChange;
 using Intersect.Server.Web.Configuration;
 using Intersect.Server.Web.Constraints;
 using Intersect.Server.Web.Middleware;
+using Intersect.Server.Web.Network;
 using Intersect.Server.Web.RestApi.Payloads;
 using Intersect.Server.Web.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -34,7 +36,7 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
     private WebApplication? _app;
     private static readonly Assembly Assembly = typeof(ApiService).Assembly;
 
-    private WebApplication? Configure()
+    private WebApplication? Configure(ServerContext applicationContext)
     {
         UnpackAppSettings();
 
@@ -57,6 +59,10 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
         }
 
         Log.Info($"Launching Intersect REST API in '{builder.Environment.EnvironmentName}' mode...");
+
+        builder.Services.AddSingleton(applicationContext);
+        builder.Services.AddSingleton(applicationContext.Network);
+        builder.Services.AddSingleton<SignalRNetworkLayerInterface>();
 
         var corsPolicies = builder.Configuration.GetValue<Dictionary<string, CorsPolicy>>("Cors");
         if (corsPolicies != default)
@@ -128,7 +134,11 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
             }
         );
 
-        builder.Services.AddSignalR();
+        builder.Services.AddSignalR(
+            options =>
+            {
+                options.EnableDetailedErrors = true;
+            }).AddNewtonsoftJsonProtocol();
 
         builder.Services.AddControllers(
                 mvcOptions =>
@@ -331,6 +341,7 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
         app.MapControllers();
         app.UseCors("CorsPolicy");
         app.MapHub<GameHub>("/gamehub");
+        app.MapHub<SignalRNetworkLayerInterface.InterfaceHub>("/game/signalr");
 
         // app.MapControllers();
 
@@ -343,11 +354,11 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
         return app;
     }
 
-    private async Task StartAsync(CancellationToken cancellationToken = default)
+    private async Task StartAsync(ServerContext applicationContext, CancellationToken cancellationToken = default)
     {
         try
         {
-            var app = Configure();
+            var app = Configure(applicationContext);
             if (app == default)
             {
                 return;
@@ -375,7 +386,7 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
 
     protected override void TaskStart(ServerContext applicationContext)
     {
-        StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+        StartAsync(applicationContext).ConfigureAwait(false).GetAwaiter().GetResult();
     }
 
     protected override void TaskStop(ServerContext applicationContext)

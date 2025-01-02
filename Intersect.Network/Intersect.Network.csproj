@@ -30,6 +30,10 @@
     <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SignalR\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <IntersectNetworkKeysGenerateEachBuild>$(INTERSECT_GENERATE_EACH_BUILD)</IntersectNetworkKeysGenerateEachBuild>
     <IntersectNetworkKeySize Condition="'$(IntersectNetworkKeySize)' != ''">4096</IntersectNetworkKeySize>

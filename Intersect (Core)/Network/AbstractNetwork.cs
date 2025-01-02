@@ -115,7 +115,7 @@ public abstract partial class AbstractNetwork : INetwork
 
     public bool Disconnect(IConnection connection, string message = "")
     {
-        return Disconnect(new[] {connection}, message);
+        return Disconnect([connection], message);
     }
 
     public bool Disconnect(ICollection<Guid> guids, string message = "") =>
@@ -123,9 +123,10 @@ public abstract partial class AbstractNetwork : INetwork
 
     public bool Disconnect(ICollection<IConnection> connections, string message = "")
     {
-        mNetworkLayerInterfaces?.ForEach(
-            networkLayerInterface => networkLayerInterface?.Disconnect(connections, message)
-        );
+        foreach (var networkLayerInterface in mNetworkLayerInterfaces)
+        {
+            networkLayerInterface.Disconnect(connections, message);
+        }
 
         return true;
     }

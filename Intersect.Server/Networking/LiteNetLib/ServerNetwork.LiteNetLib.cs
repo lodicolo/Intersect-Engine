@@ -14,7 +14,7 @@ using LiteNetLib.Utils;
 
 namespace Intersect.Server.Networking.LiteNetLib;
 
-public class ServerNetwork : AbstractNetwork, IServer
+internal partial class ServerNetwork : AbstractServerNetwork, IServer
 {
     /// <summary>
     ///     This is our smart thread pool which we use to handle packet processing and packet sending. Min/Max Number of
@@ -36,7 +36,7 @@ public class ServerNetwork : AbstractNetwork, IServer
         NetworkConfiguration configuration,
         RSAParameters rsaParameters
     ) : base(
-        applicationContext, configuration
+        context, applicationContext, configuration
     )
     {
         Context = context ?? throw new ArgumentNullException(nameof(context));
@@ -54,7 +54,7 @@ public class ServerNetwork : AbstractNetwork, IServer
 
     private IServerContext Context { get; }
 
-    public bool Listen()
+    public override bool Listen()
     {
         StartInterfaces();
 
