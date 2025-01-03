@@ -6,6 +6,8 @@ public partial class ErrorHandler
 {
     private readonly List<InputBox> _windows = [];
 
+    public void Clear() => _windows.Clear();
+
     public void Update()
     {
         while (Interface.TryDequeueErrorMessage(out var message))

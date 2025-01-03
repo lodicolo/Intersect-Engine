@@ -15,7 +15,6 @@ using Base = Intersect.Client.Framework.Gwen.Renderer.Base;
 
 namespace Intersect.Client.Interface;
 
-
 public static partial class Interface
 {
 
@@ -28,26 +27,27 @@ public static partial class Interface
         _errorMessages.Enqueue(new KeyValuePair<string, string>(header ?? string.Empty, message));
     }
 
-    public static ErrorHandler ErrorMsgHandler;
+    public static readonly ErrorHandler ErrorMessageHandler = new();
+    private static InterfaceState _state;
 
     //GWEN GUI
-    public static bool GwenInitialized;
+    public static bool GwenInitialized { get; set; }
 
-    public static InputBase GwenInput;
+    public static InputBase GwenInput { get; set; }
 
-    public static Base GwenRenderer;
+    public static Base GwenRenderer { get; set; }
 
-    public static bool HideUi;
+    public static bool HideUi { get; set; }
 
-    private static Canvas sGameCanvas;
+    private static Canvas sGameCanvas { get; set; }
 
-    private static Canvas sMenuCanvas;
+    private static Canvas sMenuCanvas { get; set; }
 
     public static bool SetupHandlers { get; set; }
 
-    public static GameInterface GameUi { get; private set; }
+    public static GameInterface? GameUi { get; private set; }
 
-    public static MenuGuiBase MenuUi { get; private set; }
+    public static MenuGuiBase? MenuUi { get; private set; }
 
     public static MutableInterface CurrentInterface => GameUi as MutableInterface ?? MenuUi?.MainMenu;
 
@@ -58,10 +58,58 @@ public static partial class Interface
 
     public static List<Framework.Gwen.Control.Base> InputBlockingElements { get; set; }
 
+    public static InterfaceState State
+    {
+        get => _state;
+        set => SetState(default, value);
+    }
+
+    public static event InterfaceStateChangedHandler? StateChanged;
+
+    private static void OnStateChanged(object? sender, InterfaceState state)
+    {
+        FocusElements = [];
+        InputBlockingElements = [];
+        ErrorMessageHandler.Clear();
+
+        IMutableInterface mutableInterface;
+        if (state == InterfaceState.MainMenu)
+        {
+            GwenInput.Initialize(sMenuCanvas);
+            mutableInterface = MenuUi = new MenuGuiBase(sMenuCanvas);
+            GameUi = null;
+        }
+        else if (state == InterfaceState.Game)
+        {
+            GwenInput.Initialize(sGameCanvas);
+            mutableInterface = GameUi = new GameInterface(sGameCanvas);
+            MenuUi = null;
+        }
+        else
+        {
+            throw new NotImplementedException($"Unimplemented InterfaceState '{state.Name}'");
+        }
+
+        HookOnStateChanged(sender, state, mutableInterface);
+
+        StateChanged?.Invoke(sender, state, mutableInterface);
+    }
+
+    public static void SetState(object? sender, InterfaceState state)
+    {
+        if (state == _state)
+        {
+            return;
+        }
+
+        _state = state;
+        OnStateChanged(sender, _state);
+    }
+
     #region "Gwen Setup and Input"
 
     //Gwen Low Level Functions
-    public static void InitGwen()
+    public static void InitGwen(object? sender = default)
     {
         // Preserve the debug window
         MutableInterface.DetachDebugWindow();
@@ -106,28 +154,23 @@ public static partial class Interface
         sGameCanvas.KeyboardInputEnabled = true;
 
         // Create GWEN input processor
-        if (Globals.GameState == GameStates.Intro || Globals.GameState == GameStates.Menu)
-        {
-            GwenInput.Initialize(sMenuCanvas);
-        }
-        else
-        {
-            GwenInput.Initialize(sGameCanvas);
-        }
+        var currentGameState = Globals.GameState;
 
-        FocusElements = new List<Framework.Gwen.Control.Base>();
-        InputBlockingElements = new List<Framework.Gwen.Control.Base>();
-        ErrorMsgHandler = new ErrorHandler();
-
-        if (Globals.GameState == GameStates.Intro || Globals.GameState == GameStates.Menu)
+        switch (currentGameState)
         {
-            MenuUi = new MenuGuiBase(sMenuCanvas);
-            GameUi = null;
-        }
-        else
-        {
-            GameUi = new GameInterface(sGameCanvas);
-            MenuUi = null;
+            case GameStates.Intro:
+            case GameStates.Menu:
+                SetState(sender, InterfaceState.MainMenu);
+                break;
+            case GameStates.Loading:
+            case GameStates.Error:
+            case GameStates.InGame:
+                SetState(sender, InterfaceState.Game);
+                break;
+            default:
+                throw new NotImplementedException(
+                    $"Interface logic for GameState '{currentGameState}' not implemented"
+                );
         }
 
         Globals.OnLifecycleChangeState();
@@ -195,7 +238,7 @@ public static partial class Interface
         //Do not allow hiding of UI under several conditions
         var forceShowUi = Globals.InCraft || Globals.InBank || Globals.InShop || Globals.InTrade || Globals.InBag || Globals.EventDialogs?.Count > 0 || HasInputFocus() || (!Interface.GameUi?.EscapeMenu?.IsHidden ?? true);
 
-        ErrorMsgHandler.Update();
+        ErrorMessageHandler.Update();
         sGameCanvas.RestrictToParent = false;
         if (Globals.GameState == GameStates.Menu)
         {
@@ -344,4 +387,6 @@ public static partial class Interface
 
         return currentElement;
     }
+
+    private static partial void HookOnStateChanged(object? sender, InterfaceState state, IMutableInterface mutableInterface);
 }
