@@ -1,3 +1,1 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-Console.WriteLine("Hello, World!");
+﻿Intersect.Client.Core.Program.Main(args);
