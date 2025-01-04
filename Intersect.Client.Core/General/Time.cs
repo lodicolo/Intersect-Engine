@@ -74,10 +74,8 @@ public static partial class Time
         return val;
     }
 
-    public static string GetTime()
-    {
-        return sServerTime.ToString("h:mm:ss tt");
-    }
+    public static string GetTime() =>
+        (Globals.GameState == GameStates.Menu ? DateTime.Now : sServerTime).ToString("h:mm:ss tt");
 
     public static ColorF GetTintColor()
     {

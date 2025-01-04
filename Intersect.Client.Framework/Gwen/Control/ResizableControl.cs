@@ -26,49 +26,56 @@ public partial class ResizableControl : Base
         MinimumSize = new Point(5, 5);
         mClampMovement = false;
 
-        mResizer[2] = new Resizer(this);
-        mResizer[2].Dock = Pos.Bottom;
-        mResizer[2].ResizeDir = Pos.Bottom;
+        mResizer[2] = new Resizer(this)
+        {
+            IsInternal = true, Dock = Pos.Bottom, ResizeDir = Pos.Bottom, Target = this,
+        };
         mResizer[2].Resized += OnResized;
-        mResizer[2].Target = this;
 
         mResizer[1] = new Resizer(mResizer[2]);
+        mResizer[1].IsInternal = true;
         mResizer[1].Dock = Pos.Left;
         mResizer[1].ResizeDir = Pos.Bottom | Pos.Left;
         mResizer[1].Resized += OnResized;
         mResizer[1].Target = this;
 
         mResizer[3] = new Resizer(mResizer[2]);
+        mResizer[3].IsInternal = true;
         mResizer[3].Dock = Pos.Right;
         mResizer[3].ResizeDir = Pos.Bottom | Pos.Right;
         mResizer[3].Resized += OnResized;
         mResizer[3].Target = this;
 
         mResizer[8] = new Resizer(this);
+        mResizer[8].IsInternal = true;
         mResizer[8].Dock = Pos.Top;
         mResizer[8].ResizeDir = Pos.Top;
         mResizer[8].Resized += OnResized;
         mResizer[8].Target = this;
 
         mResizer[7] = new Resizer(mResizer[8]);
+        mResizer[7].IsInternal = true;
         mResizer[7].Dock = Pos.Left;
         mResizer[7].ResizeDir = Pos.Left | Pos.Top;
         mResizer[7].Resized += OnResized;
         mResizer[7].Target = this;
 
         mResizer[9] = new Resizer(mResizer[8]);
+        mResizer[9].IsInternal = true;
         mResizer[9].Dock = Pos.Right;
         mResizer[9].ResizeDir = Pos.Right | Pos.Top;
         mResizer[9].Resized += OnResized;
         mResizer[9].Target = this;
 
         mResizer[4] = new Resizer(this);
+        mResizer[4].IsInternal = true;
         mResizer[4].Dock = Pos.Left;
         mResizer[4].ResizeDir = Pos.Left;
         mResizer[4].Resized += OnResized;
         mResizer[4].Target = this;
 
         mResizer[6] = new Resizer(this);
+        mResizer[6].IsInternal = true;
         mResizer[6].Dock = Pos.Right;
         mResizer[6].ResizeDir = Pos.Right;
         mResizer[6].Resized += OnResized;

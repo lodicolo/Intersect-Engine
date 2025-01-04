@@ -74,19 +74,35 @@ public partial class WindowControl : ResizableControl
     /// <param name="name">name of this control</param>
     public WindowControl(Base? parent, string? title = default, bool modal = false, string? name = default) : base(parent, name)
     {
-        mTitleBar = new Dragger(this);
-        mTitleBar.Height = 24;
-        mTitleBar.Padding = Gwen.Padding.Zero;
-        mTitleBar.Margin = new Margin(0, 0, 0, 0);
-        mTitleBar.Target = this;
-        mTitleBar.Dock = Pos.Top;
+        mTitleBar = new Dragger(this, "TitleBar")
+        {
+            IsInternal = true,
+            Height = 24,
+            Padding = Gwen.Padding.Zero,
+            Margin = new Margin(
+                0,
+                0,
+                0,
+                0
+            ),
+            Target = this,
+            Dock = Pos.Top,
+        };
 
-        mTitle = new Label(mTitleBar);
-        mTitle.Alignment = Pos.Left | Pos.CenterV;
-        mTitle.Text = title ?? string.Empty;
-        mTitle.Dock = Pos.Fill;
-        mTitle.Padding = new Padding(8, 4, 0, 0);
-        mTitle.TextColor = Skin.Colors.Window.TitleInactive;
+        mTitle = new Label(mTitleBar, name: "TitlebarLabel")
+        {
+            Alignment = Pos.Left | Pos.CenterV,
+            Dock = Pos.Fill,
+            FontName = "sourcesansproblack",
+            FontSize = 10,
+            IsInternal = true,
+            Text = title ?? string.Empty,
+            Padding = new Padding(
+                8,
+                4
+            ),
+            TextColor = Skin.Colors.Window.TitleInactive,
+        };
 
         mCloseButton = new CloseButton(mTitleBar, this);
         mCloseButton.SetSize(24, 24);
@@ -95,7 +111,10 @@ public partial class WindowControl : ResizableControl
         mCloseButton.IsTabable = false;
 
         //Create a blank content control, dock it to the top - Should this be a ScrollControl?
-        mInnerPanel = new Base(this);
+        mInnerPanel = new Base(this, "InnerPanel")
+        {
+            IsInternal = true,
+        };
         mInnerPanel.Dock = Pos.Fill;
         GetResizer(8).Hide();
         BringToFront();
@@ -174,8 +193,8 @@ public partial class WindowControl : ResizableControl
         obj.Add(nameof(DrawShadow), DrawShadow);
         obj.Add("ActiveImage", GetImageFilename(ControlState.Active));
         obj.Add("InactiveImage", GetImageFilename(ControlState.Inactive));
-        obj.Add("ActiveColor", Color.ToString(mActiveColor));
-        obj.Add("InactiveColor", Color.ToString(mInactiveColor));
+        obj.Add("ActiveColor", mActiveColor?.ToString());
+        obj.Add("InactiveColor", mInactiveColor?.ToString());
         obj.Add("Closable", IsClosable);
         obj.Add("Titlebar", mTitleBar.GetJson());
         obj.Add("Title", mTitle.GetJson());

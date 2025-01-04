@@ -8,13 +8,13 @@ public interface ILabel : IColorableText, IAutoSizeToContents
 
     GameFont? Font { get; set; }
 
-    string FontName { get; set; }
+    string? FontName { get; set; }
 
     int FontSize { get; set; }
 
     Color TextColor { get; set; }
 
-    Color TextColorOverride { get; set; }
+    Color? TextColorOverride { get; set; }
 
     Padding TextPadding { get; set; }
 

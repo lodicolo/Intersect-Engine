@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Intersect.Collections;
 using Intersect.Extensions;
+using Intersect.Framework.Core.Properties;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Switches_and_Variables;
 using Intersect.Models;
@@ -34,6 +36,27 @@ public static partial class GameObjectTypeExtensions
     private static Dictionary<GameObjectType, GameObjectInfoAttribute> AttributeMap { get; }
 
     private static readonly Dictionary<Type, GameObjectType> _gameObjectTypeLookup = [];
+
+    public static GameObjectType GetDescriptorType(this Type type)
+    {
+        if (TryGetGameObjectType(type, out var gameObjectType))
+        {
+            return gameObjectType;
+        }
+
+        throw new ArgumentException($"{type.FullName ?? type.Name} is not a valid descriptor type", nameof(type));
+    }
+
+    public static string GetLocalizedName(this Type type, int count = 1, CultureInfo? culture = default)
+    {
+        var name = $"DescriptorType_{GetDescriptorType(type)}";
+        if (count != 1)
+        {
+            name += "_Plural";
+        }
+
+        return CoreStrings.ResourceManager.GetString(name, culture);
+    }
 
     public static bool TryGetGameObjectType(this Type type, out GameObjectType gameObjectType) =>
         _gameObjectTypeLookup.TryGetValue(type, out gameObjectType);

@@ -21,12 +21,12 @@ public partial class Menu : ScrollControl
 
     private bool mDisableIconMargin;
 
-    private GameFont mItemFont;
+    private GameFont? mItemFont;
 
     //Menu Item Stuff
-    private string mItemFontInfo;
+    private string? mItemFontInfo;
 
-    protected Color mItemHoverTextColor;
+    protected Color? mItemHoverTextColor;
 
     protected Color mItemNormalTextColor;
 
@@ -155,17 +155,22 @@ public partial class Menu : ScrollControl
     public virtual MenuItem AddItem(
         string text,
         GameTexture iconTexture,
-        string textureFilename = "",
-        string accelerator = "",
-        GameFont font = null
+        string? textureFilename = default,
+        string? accelerator = default,
+        GameFont? font = default
     )
     {
         var item = new MenuItem(this);
         item.Padding = Padding.Four;
         item.SetText(text);
         item.SetImage(iconTexture, textureFilename, Button.ControlState.Normal);
-        item.SetAccelerator(accelerator);
-        if (font != null)
+
+        if (!string.IsNullOrWhiteSpace(accelerator))
+        {
+            item.SetAccelerator(accelerator);
+        }
+
+        if (font != default)
         {
             item.Font = font;
         }
@@ -173,6 +178,12 @@ public partial class Menu : ScrollControl
         OnAddItem(item);
 
         return item;
+    }
+
+    public override GameFont? Font
+    {
+        get => base.Font;
+        set => base.Font = value;
     }
 
     /// <summary>
@@ -321,8 +332,8 @@ public partial class Menu : ScrollControl
         if (!(this is CheckBox))
         {
             obj.Add("BackgroundTemplate", mBackgroundTemplateFilename);
-            obj.Add("ItemTextColor", Color.ToString(mItemNormalTextColor));
-            obj.Add("ItemHoveredTextColor", Color.ToString(mItemHoverTextColor));
+            obj.Add("ItemTextColor", mItemNormalTextColor?.ToString());
+            obj.Add("ItemHoveredTextColor", mItemHoverTextColor?.ToString());
             obj.Add("ItemFont", mItemFontInfo);
         }
 

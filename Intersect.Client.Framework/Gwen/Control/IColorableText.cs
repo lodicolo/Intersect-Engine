@@ -4,5 +4,5 @@ public interface IColorableText
 {
     Color TextColor { get; set; }
 
-    Color TextColorOverride { get; set; }
+    Color? TextColorOverride { get; set; }
 }

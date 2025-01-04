@@ -46,6 +46,14 @@ public partial struct Margin : IEquatable<Margin>
         Right = right;
     }
 
+    public Margin(int horizontal, int vertical) : this(horizontal, vertical, horizontal, vertical)
+    {
+    }
+
+    public Margin(int amount) : this(amount, amount, amount, amount)
+    {
+    }
+
     public bool Equals(Margin other)
     {
         return other.Top == Top && other.Bottom == Bottom && other.Left == Left && other.Right == Right;
@@ -89,10 +97,9 @@ public partial struct Margin : IEquatable<Margin>
         }
     }
 
-    public static string ToString(Margin mar)
-    {
-        return mar.Left + "," + mar.Top + "," + mar.Right + "," + mar.Bottom;
-    }
+    public override string ToString() => $"{Left},{Top},{Right},{Bottom}";
+
+    public static string ToString(Margin margin) => margin.ToString();
 
     public static Margin FromString(string val)
     {

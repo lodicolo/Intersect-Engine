@@ -47,8 +47,6 @@ public partial class Button : Label
 
     private string mClickedImageFilename;
 
-    protected string mClickSound;
-
     private bool mDepressed;
 
     private GameTexture mDisabledImage;
@@ -60,11 +58,13 @@ public partial class Button : Label
     private string mHoverImageFilename;
 
     //Sound Effects
-    protected string mHoverSound;
+    protected string? mHoverSound;
 
-    protected string mMouseDownSound;
+    protected string? mMouseDownSound;
 
-    protected string mMouseUpSound;
+    protected string? mMouseUpSound;
+
+    protected string? mClickSound;
 
     private GameTexture mNormalImage;
 
@@ -253,24 +253,28 @@ public partial class Button : Label
 
         if (this.GetType() != typeof(ComboBox) && this.GetType() != typeof(CheckBox))
         {
-            if (obj["HoverSound"] != null)
+            var tokenHoverSound = obj["HoverSound"]?.Value<string>();
+            if (!string.IsNullOrWhiteSpace(tokenHoverSound))
             {
-                mHoverSound = (string)obj["HoverSound"];
+                mHoverSound = tokenHoverSound;
             }
 
-            if (obj["MouseUpSound"] != null)
+            var tokenMouseUpSound = obj["MouseUpSound"]?.Value<string>();
+            if (!string.IsNullOrWhiteSpace(tokenMouseUpSound))
             {
-                mMouseUpSound = (string)obj["MouseUpSound"];
+                mMouseUpSound = tokenMouseUpSound;
             }
 
-            if (obj["MouseDownSound"] != null)
+            var tokenMouseDownSound = obj["MouseDownSound"]?.Value<string>();
+            if (!string.IsNullOrWhiteSpace(tokenMouseDownSound))
             {
-                mMouseDownSound = (string)obj["MouseDownSound"];
+                mMouseDownSound = tokenMouseDownSound;
             }
 
-            if (obj["ClickSound"] != null)
+            var tokenClickSound = obj["ClickSound"]?.Value<string>();
+            if (!string.IsNullOrWhiteSpace(tokenClickSound))
             {
-                mClickSound = (string)obj["ClickSound"];
+                mClickSound = tokenClickSound;
             }
         }
     }
@@ -287,10 +291,10 @@ public partial class Button : Label
 
     public void ClearSounds()
     {
-        mMouseUpSound = "";
-        mMouseDownSound = "";
-        mHoverSound = "";
-        mClickSound = "";
+        mMouseUpSound = default;
+        mMouseDownSound = default;
+        mHoverSound = default;
+        mClickSound = default;
     }
 
     /// <summary>

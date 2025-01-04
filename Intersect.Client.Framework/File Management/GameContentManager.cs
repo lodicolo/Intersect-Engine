@@ -304,7 +304,7 @@ public abstract partial class GameContentManager : IContentManager
         return mShaderDict?.GetValueOrDefault(name.ToLower());
     }
 
-    public virtual GameFont GetFont(string name, int size)
+    public virtual GameFont? GetFont(string? name, int size)
     {
         if (name == null)
         {
@@ -313,7 +313,7 @@ public abstract partial class GameContentManager : IContentManager
 
         return mFontDict.Where(t => t != null)
             .Where(t => t.GetName().ToLower().Trim() == name.ToLower().Trim())
-            .FirstOrDefault(t => t.GetSize() == size);
+            .FirstOrDefault(t => t.Size == size);
     }
 
     public virtual GameAudioSource GetMusic(string name)

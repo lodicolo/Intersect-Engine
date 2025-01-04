@@ -30,7 +30,7 @@ public partial class Label : Base, ILabel
 
     protected readonly Text _textElement;
 
-    private string fontInfo;
+    private string? _fontKey;
 
     private Pos mAlign;
 
@@ -40,11 +40,11 @@ public partial class Label : Base, ILabel
 
     private GameTexture mBackgroundTemplateTex;
 
-    protected Color mClickedTextColor;
+    protected Color? mClickedTextColor;
 
-    protected Color mDisabledTextColor;
+    protected Color? mDisabledTextColor;
 
-    protected Color mHoverTextColor;
+    protected Color? mHoverTextColor;
 
     protected Color mNormalTextColor;
 
@@ -111,18 +111,19 @@ public partial class Label : Base, ILabel
     /// <summary>
     ///     Font.
     /// </summary>
-    public GameFont? Font
+    public override GameFont? Font
     {
-        get => _textElement.Font;
+        get => base.Font;
         set
         {
-            if (value == _textElement.Font)
+            if (value == Font)
             {
                 return;
             }
 
-            _textElement.Font = value;
-            fontInfo = $"{value?.GetName()},{value?.GetSize()}";
+            base.Font = value;
+
+            _fontKey = value == default ? default : $"{value?.Name},{value?.Size}";
 
             if (mAutoSizeToContents)
             {
@@ -131,24 +132,6 @@ public partial class Label : Base, ILabel
 
             Invalidate();
         }
-    }
-
-    /// <summary>
-    /// Font Name
-    /// </summary>
-    public string FontName
-    {
-        get => _textElement.Font.GetName();
-        set => Font = GameContentManager.Current?.GetFont(value, FontSize);
-    }
-
-    /// <summary>
-    /// Font Size
-    /// </summary>
-    public int FontSize
-    {
-        get => _textElement?.Font?.GetSize() ?? 12;
-        set => Font = GameContentManager.Current?.GetFont(FontName, value);
     }
 
     /// <summary>
@@ -246,14 +229,14 @@ public partial class Label : Base, ILabel
             obj.Add("BackgroundTemplate", mBackgroundTemplateFilename);
         }
 
-        obj.Add("TextColor", Color.ToString(TextColor));
-        obj.Add("HoveredTextColor", Color.ToString(mHoverTextColor));
-        obj.Add("ClickedTextColor", Color.ToString(mClickedTextColor));
-        obj.Add("DisabledTextColor", Color.ToString(mDisabledTextColor));
+        obj.Add("TextColor", TextColor?.ToString());
+        obj.Add("HoveredTextColor", mHoverTextColor?.ToString());
+        obj.Add("ClickedTextColor", mClickedTextColor?.ToString());
+        obj.Add("DisabledTextColor", mDisabledTextColor?.ToString());
         obj.Add("TextAlign", mAlign.ToString());
         obj.Add("TextPadding", Padding.ToString(mTextPadding));
         obj.Add("AutoSizeToContents", mAutoSizeToContents);
-        obj.Add("Font", fontInfo);
+        obj.Add("Font", _fontKey);
         obj.Add("TextScale", _textElement.GetScale());
 
         return base.FixJson(obj);
@@ -315,7 +298,7 @@ public partial class Label : Base, ILabel
                 );
                 if (fontArr.Length > 1)
                 {
-                    fontInfo = stringFont;
+                    _fontKey = stringFont;
                     try
                     {
                         Font = GameContentManager.Current.GetFont(fontArr[0], int.Parse(fontArr[1]));
@@ -552,10 +535,9 @@ public partial class Label : Base, ILabel
     {
         _textElement.SetPosition(mTextPadding.Left + Padding.Left, mTextPadding.Top + Padding.Top);
 
-        if (!SetSize(
-                _textElement.Width + Padding.Left + Padding.Right + mTextPadding.Left + mTextPadding.Right,
-                _textElement.Height + Padding.Top + Padding.Bottom + mTextPadding.Top + mTextPadding.Bottom
-            ))
+        var totalWidth = _textElement.Width + Padding.Left + Padding.Right + mTextPadding.Left + mTextPadding.Right;
+        var totalHeight = _textElement.Height + Padding.Top + Padding.Bottom + mTextPadding.Top + mTextPadding.Bottom;
+        if (!SetSize(totalWidth, totalHeight))
         {
             return;
         }

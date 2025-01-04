@@ -55,9 +55,6 @@ public static partial class TypeExtensions
             .ToArray();
     }
 
-    public static string QualifiedGenericName(this Type type) =>
-        $"{type.Name}<{string.Join(", ", type.GenericTypeArguments.Select(parameterType => parameterType.Name))}>";
-
     public static IEnumerable<ConstructorInfo> FindConstructors(this Type type, params object[] parameters) => type
         .GetConstructors()
         .Where(
@@ -384,10 +381,32 @@ public static partial class TypeExtensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string GetName(this Type type, bool qualified = false) => qualified ? type.GetQualifiedName() : type.Name;
+    public static string GetName(this Type type, bool qualified = false)
+    {
+        var name = type.Name;
+        if (qualified)
+        {
+            var typeNamespace = type.Namespace;
+            if (!string.IsNullOrWhiteSpace(typeNamespace))
+            {
+                name = $"{typeNamespace}.{name}";
+            }
+        }
+
+        // ReSharper disable once InvertIf
+        if (type.IsGenericType)
+        {
+            var genericArgumentNames = type.GenericTypeArguments
+                .Select(argumentType => argumentType.GetName(qualified: qualified));
+            name = $"{name}<{string.Join(", ", genericArgumentNames)}>";
+        }
+
+        return name;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string GetQualifiedName(this Type type) => type.FullName ?? type.Name;
+    public static string GetQualifiedName(this Type type) => GetName(type, qualified: true);
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsConcrete(this Type type) => type is { IsInterface: false, IsAbstract: false, IsClass: true };

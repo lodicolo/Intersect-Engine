@@ -1,4 +1,5 @@
-﻿using Intersect.Client.Framework.Gwen.Control.EventArguments;
+﻿using Intersect.Client.Framework.Graphics;
+using Intersect.Client.Framework.Gwen.Control.EventArguments;
 using Intersect.Client.Framework.Gwen.ControlInternal;
 
 namespace Intersect.Client.Framework.Gwen.Control;
@@ -26,7 +27,7 @@ public partial class MenuItem : Button
     ///     Initializes a new instance of the <see cref="MenuItem" /> class.
     /// </summary>
     /// <param name="parent">Parent control.</param>
-    public MenuItem(Base parent) : base(parent)
+    public MenuItem(Menu parent) : base(parent)
     {
         AutoSizeToContents = true;
         mOnStrip = false;
@@ -35,6 +36,12 @@ public partial class MenuItem : Button
         IsChecked = false;
 
         mAccelerator = new Label(this);
+    }
+
+    public override GameFont? Font
+    {
+        get => base.Font;
+        set => base.Font = value;
     }
 
     /// <summary>
@@ -247,7 +254,7 @@ public partial class MenuItem : Button
         }
 
         // TODO: Option this.
-        // TODO: Make sure on screen, open the other side of the 
+        // TODO: Make sure on screen, open the other side of the
         // parent if it's better...
     }
 

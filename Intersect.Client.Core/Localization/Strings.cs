@@ -1231,6 +1231,9 @@ public static partial class Strings
         public static LocalizedString Bounds = @"Bounds";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public static LocalizedString CanonicalName = @"Canonical Name";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public static LocalizedString Color = @"Color";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -1249,10 +1252,19 @@ public static partial class Strings
         public static LocalizedString ExperimentalFeatureTooltip = @"This feature is experimental and may cause issues when enabled.";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public static LocalizedString Font = @"Font";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public static LocalizedString GlobalItem = @"Global {00}";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public static LocalizedString HasOwnFont = @"HasOwnFont";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public static LocalizedString LocalItem = @"Local {00}";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public static LocalizedString Margin = @"Margin";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public static LocalizedString Name = @"Name";
@@ -1261,7 +1273,13 @@ public static partial class Strings
         public static LocalizedString NotApplicable = @"N/A";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public static LocalizedString Padding = @"Padding";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public static LocalizedString ResolutionXByY = @"{0}x{1}";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public static LocalizedString TextPadding = @"Text Padding";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public static LocalizedString Type = @"Type";

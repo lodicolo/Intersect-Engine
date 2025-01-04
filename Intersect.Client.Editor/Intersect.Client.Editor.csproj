@@ -24,6 +24,10 @@
     <EmbeddedResource Include="$(IntersectRepoPath)\assets\intersect-logo-qu.bmp">
       <LogicalName>Icon.bmp</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Update="Properties\EditorStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EditorStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +35,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Properties\EditorStrings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EditorStrings.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 

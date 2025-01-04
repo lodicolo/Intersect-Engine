@@ -8,6 +8,24 @@
       <ProjectReference Include="..\Intersect.Framework\Intersect.Framework.csproj" />
     </ItemGroup>
 
+  <ItemGroup Label="InternalsVisibleTo">
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Intersect.Client.Core</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Intersect.SinglePlayer</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Intersect Client</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Intersect Server</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Intersect Editor Client</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
     <ItemGroup>
       <PackageReference Include="Ceras" Version="4.1.7" />
       <PackageReference Include="K4os.Compression.LZ4" Version="1.3.6" />
@@ -22,6 +40,21 @@
       <PackageReference Include="System.IO.Abstractions" Version="21.1.7" />
       <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
       <PackageReference Include="System.IO.Hashing" Version="9.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Properties\CoreStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>CoreStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Properties\CoreStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>CoreStrings.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

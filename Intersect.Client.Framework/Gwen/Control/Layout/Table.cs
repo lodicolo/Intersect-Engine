@@ -387,6 +387,7 @@ public partial class Table : Base, IColorableText
             ComputeColumnWidths();
         }
 
+        var bottom = Padding.Top;
         var even = false;
         foreach (TableRow row in Children)
         {
@@ -405,9 +406,9 @@ public partial class Table : Base, IColorableText
     /// <summary>
     ///     Sizes to fit contents.
     /// </summary>
-    public void SizeToContents(int maxWidth)
+    public void SizeToContents(int? maxWidth = null)
     {
-        mMaxWidth = maxWidth;
+        mMaxWidth = maxWidth ?? mMaxWidth;
         mSizeToContents = true;
         Invalidate();
     }

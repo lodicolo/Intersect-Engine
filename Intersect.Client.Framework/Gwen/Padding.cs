@@ -38,6 +38,14 @@ public partial struct Padding : IEquatable<Padding>
         Right = right;
     }
 
+    public Padding(int horizontal, int vertical) : this(horizontal, vertical, horizontal, vertical)
+    {
+    }
+
+    public Padding(int amount) : this(amount, amount, amount, amount)
+    {
+    }
+
     public bool Equals(Padding other)
     {
         return other.Top == Top && other.Bottom == Bottom && other.Left == Left && other.Right == Right;

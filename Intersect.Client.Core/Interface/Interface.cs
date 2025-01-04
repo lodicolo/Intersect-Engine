@@ -39,9 +39,9 @@ public static partial class Interface
 
     public static bool HideUi { get; set; }
 
-    private static Canvas sGameCanvas { get; set; }
+    private static Canvas? _canvasGame { get; set; }
 
-    private static Canvas sMenuCanvas { get; set; }
+    private static Canvas? _canvasMenu { get; set; }
 
     public static bool SetupHandlers { get; set; }
 
@@ -75,14 +75,14 @@ public static partial class Interface
         IMutableInterface mutableInterface;
         if (state == InterfaceState.MainMenu)
         {
-            GwenInput.Initialize(sMenuCanvas);
-            mutableInterface = MenuUi = new MenuGuiBase(sMenuCanvas);
+            GwenInput.Initialize(_canvasMenu);
+            mutableInterface = MenuUi = new MenuGuiBase(_canvasMenu);
             GameUi = null;
         }
         else if (state == InterfaceState.Game)
         {
-            GwenInput.Initialize(sGameCanvas);
-            mutableInterface = GameUi = new GameInterface(sGameCanvas);
+            GwenInput.Initialize(_canvasGame);
+            mutableInterface = GameUi = new GameInterface(_canvasGame);
             MenuUi = null;
         }
         else
@@ -126,32 +126,32 @@ public static partial class Interface
         GameUi?.Dispose();
 
         // Create a Canvas (it's root, on which all other GWEN controls are created)
-        sMenuCanvas = new Canvas(Skin, "MainMenu")
+        _canvasMenu = new Canvas(Skin, "MainMenu")
         {
             Scale = 1f //(GameGraphics.Renderer.GetScreenWidth()/1920f);
         };
 
-        sMenuCanvas.SetSize(
-            (int) (Graphics.Renderer.GetScreenWidth() / sMenuCanvas.Scale),
-            (int) (Graphics.Renderer.GetScreenHeight() / sMenuCanvas.Scale)
+        _canvasMenu.SetSize(
+            (int) (Graphics.Renderer.GetScreenWidth() / _canvasMenu.Scale),
+            (int) (Graphics.Renderer.GetScreenHeight() / _canvasMenu.Scale)
         );
 
-        sMenuCanvas.ShouldDrawBackground = false;
-        sMenuCanvas.BackgroundColor = Color.FromArgb(255, 150, 170, 170);
-        sMenuCanvas.KeyboardInputEnabled = true;
+        _canvasMenu.ShouldDrawBackground = false;
+        _canvasMenu.BackgroundColor = Color.FromArgb(255, 150, 170, 170);
+        _canvasMenu.KeyboardInputEnabled = true;
 
         // Create the game Canvas (it's root, on which all other GWEN controls are created)
-        sGameCanvas = new Canvas(Skin, "InGame");
+        _canvasGame = new Canvas(Skin, "InGame");
 
         //_gameCanvas.Scale = (GameGraphics.Renderer.GetScreenWidth() / 1920f);
-        sGameCanvas.SetSize(
-            (int) (Graphics.Renderer.GetScreenWidth() / sGameCanvas.Scale),
-            (int) (Graphics.Renderer.GetScreenHeight() / sGameCanvas.Scale)
+        _canvasGame.SetSize(
+            (int) (Graphics.Renderer.GetScreenWidth() / _canvasGame.Scale),
+            (int) (Graphics.Renderer.GetScreenHeight() / _canvasGame.Scale)
         );
 
-        sGameCanvas.ShouldDrawBackground = false;
-        sGameCanvas.BackgroundColor = Color.FromArgb(255, 150, 170, 170);
-        sGameCanvas.KeyboardInputEnabled = true;
+        _canvasGame.ShouldDrawBackground = false;
+        _canvasGame.BackgroundColor = Color.FromArgb(255, 150, 170, 170);
+        _canvasGame.KeyboardInputEnabled = true;
 
         // Create GWEN input processor
         var currentGameState = Globals.GameState;
@@ -184,8 +184,8 @@ public static partial class Interface
         MutableInterface.DetachDebugWindow();
 
         //The canvases dispose of all of their children.
-        sMenuCanvas?.Dispose();
-        sGameCanvas?.Dispose();
+        _canvasMenu?.Dispose();
+        _canvasGame?.Dispose();
         GameUi?.Dispose();
 
         // Destroy our target UI as well! Above code does NOT appear to clear this properly.
@@ -239,7 +239,7 @@ public static partial class Interface
         var forceShowUi = Globals.InCraft || Globals.InBank || Globals.InShop || Globals.InTrade || Globals.InBag || Globals.EventDialogs?.Count > 0 || HasInputFocus() || (!Interface.GameUi?.EscapeMenu?.IsHidden ?? true);
 
         ErrorMessageHandler.Update();
-        sGameCanvas.RestrictToParent = false;
+        _canvasGame.RestrictToParent = false;
         if (Globals.GameState == GameStates.Menu)
         {
             MenuUi.Draw();
@@ -248,16 +248,16 @@ public static partial class Interface
         {
             if (HideUi && !forceShowUi)
             {
-                if (sGameCanvas.IsVisible)
+                if (_canvasGame.IsVisible)
                 {
-                    sGameCanvas.Hide();
+                    _canvasGame.Hide();
                 }
             }
             else
             {
-                if (!sGameCanvas.IsVisible)
+                if (!_canvasGame.IsVisible)
                 {
-                    sGameCanvas.Show();
+                    _canvasGame.Show();
                 }
                 GameUi.Draw();
             }
@@ -267,7 +267,7 @@ public static partial class Interface
     public static void SetHandleInput(bool val) => GwenInput.HandleInput = val;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool DoesMouseHitInterface() => DoesMouseHitComponentOrChildren(sGameCanvas);
+    public static bool DoesMouseHitInterface() => DoesMouseHitComponentOrChildren(_canvasGame);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool DoesMouseHitComponentOrChildren(Framework.Gwen.Control.Base? component) =>

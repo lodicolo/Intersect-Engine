@@ -15,7 +15,7 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Label="InternalsVisibleTo">
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>Intersect.Tests.Client</_Parameter1>
     </AssemblyAttribute>

@@ -6,7 +6,7 @@ namespace Intersect.Client.Interface;
 
 public abstract partial class MutableInterface : IMutableInterface
 {
-    private static DebugWindow? _debugWindow;
+    internal static DebugWindow? _debugWindow;
 
     public static void DetachDebugWindow()
     {
@@ -51,26 +51,25 @@ public abstract partial class MutableInterface : IMutableInterface
         var fullParameters = fullParameterList.ToArray();
         var constructor = typeof(TElement).FindConstructors(fullParameters).FirstOrDefault();
 
-        if (constructor != null)
+        if (constructor == null)
         {
-            var constructorParameters = constructor.GetParameters();
-            if (fullParameters.Length != constructorParameters.Length)
-            {
-                fullParameters =
-                [
-                    .. fullParameters,
-                    .. Enumerable.Range(0, constructorParameters.Length - fullParameters.Length)
-                        .Select(_ => default(object))
-,
-                ];
-            }
-
-            return constructor.Invoke(fullParameters) is not TElement constructedElement
-                ? throw new NullReferenceException("Failed to invoke constructor that matches parameters.")
-                : constructedElement;
+            throw new NullReferenceException("Failed to find constructor that matches parameters.");
         }
 
-        throw new NullReferenceException("Failed to find constructor that matches parameters.");
+        var constructorParameters = constructor.GetParameters();
+        if (fullParameters.Length != constructorParameters.Length)
+        {
+            fullParameters =
+            [
+                ..fullParameters,
+                ..Enumerable.Range(0, constructorParameters.Length - fullParameters.Length)
+                    .Select(_ => default(object)),
+            ];
+        }
+
+        return constructor.Invoke(fullParameters) as TElement ??
+               throw new NullReferenceException("Failed to invoke constructor that matches parameters.");
+
     }
 
     /// <inheritdoc />

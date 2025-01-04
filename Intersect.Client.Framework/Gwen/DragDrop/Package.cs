@@ -12,8 +12,8 @@ public partial class Package
 
     public bool IsDraggable;
 
-    public string Name;
+    public string? Name;
 
-    public object UserData;
+    public object? UserData;
 
 }

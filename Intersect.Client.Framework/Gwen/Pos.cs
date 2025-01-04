@@ -24,6 +24,8 @@ public enum Pos
 
     Fill = 1 << 7,
 
+    Auto = 1 << 8,
+
     Center = CenterV | CenterH,
 
 }

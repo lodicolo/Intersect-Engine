@@ -60,8 +60,9 @@ public partial class Dragger : Base
     ///     Initializes a new instance of the <see cref="Dragger" /> class.
     /// </summary>
     /// <param name="parent">Parent control.</param>
-    public Dragger(Base parent, string name = "") : base(parent, name)
+    public Dragger(Base parent, string? name = default) : base(parent, name ?? nameof(Dragger))
     {
+        IsInternal = true;
         MouseInputEnabled = true;
         mHeld = false;
     }
@@ -214,19 +215,22 @@ public partial class Dragger : Base
             );
         }
 
-        if (obj["HoverSound"] != null)
+        var tokenHoverSound = obj["HoverSound"]?.Value<string>();
+        if (!string.IsNullOrWhiteSpace(tokenHoverSound))
         {
-            mHoverSound = (string) obj["HoverSound"];
+            mHoverSound = tokenHoverSound;
         }
 
-        if (obj["MouseUpSound"] != null)
+        var tokenMouseUpSound = obj["MouseUpSound"]?.Value<string>();
+        if (!string.IsNullOrWhiteSpace(tokenMouseUpSound))
         {
-            mMouseUpSound = (string) obj["MouseUpSound"];
+            mMouseUpSound = tokenMouseUpSound;
         }
 
-        if (obj["MouseDownSound"] != null)
+        var tokenMouseDownSound = obj["MouseDownSound"]?.Value<string>();
+        if (!string.IsNullOrWhiteSpace(tokenMouseDownSound))
         {
-            mMouseDownSound = (string) obj["MouseDownSound"];
+            mMouseDownSound = tokenMouseDownSound;
         }
     }
 
@@ -320,4 +324,14 @@ public partial class Dragger : Base
         mMouseUpSound = "";
     }
 
+    protected override void Layout(Skin.Base skin)
+    {
+        var childrenHeight = GetChildrenSize().Y;
+        if (childrenHeight > InnerHeight)
+        {
+            SizeToChildren(width: false);
+        }
+
+        base.Layout(skin);
+    }
 }

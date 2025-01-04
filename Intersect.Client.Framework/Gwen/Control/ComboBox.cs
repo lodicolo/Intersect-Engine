@@ -42,9 +42,11 @@ public partial class ComboBox : Button
         SetSize(100, 20);
         mMenu = new Menu(this)
         {
+            FontSource = this,
             IsHidden = true,
             IconMarginDisabled = true,
-            IsTabable = false
+            IsTabable = false,
+            Padding = Padding.Four,
         };
 
         var arrow = new DownArrow(this);

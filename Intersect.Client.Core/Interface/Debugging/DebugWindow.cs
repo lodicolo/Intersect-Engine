@@ -7,7 +7,6 @@ using Intersect.Client.General;
 using Intersect.Client.Localization;
 using Intersect.Client.Maps;
 using Intersect.Extensions;
-
 using static Intersect.Client.Framework.File_Management.GameContentManager;
 
 namespace Intersect.Client.Interface.Debugging;
@@ -28,6 +27,7 @@ internal sealed partial class DebugWindow : Window
         ButtonShutdownServer = CreateButtonShutdownServer();
         ButtonShutdownServerAndExit = CreateButtonShutdownServerAndExit();
         TableDebugStats = CreateTableDebugStats();
+
         IsHidden = true;
     }
 
@@ -217,7 +217,7 @@ internal sealed partial class DebugWindow : Window
         table.AddRow(Strings.Debug.Time).Listen(timeProvider, 1);
         _disposables.Add(timeProvider.Generator.Start());
 
-        var interfaceObjectsProvider = new ValueTableCellDataProvider<int>((cancellationToken) =>
+        var interfaceObjectsProvider = new ValueTableCellDataProvider<int>(cancellationToken =>
         {
             try
             {
@@ -241,12 +241,20 @@ internal sealed partial class DebugWindow : Window
         _ = table.AddRow(Strings.Debug.ControlUnderCursor, 1);
 
         var controlUnderCursorProvider = new ControlUnderCursorProvider();
-        table.AddRow(Strings.Internals.Type).Listen(controlUnderCursorProvider, 0);
-        table.AddRow(Strings.Internals.Name).Listen(controlUnderCursorProvider, 1);
-        table.AddRow(Strings.Internals.LocalItem.ToString(Strings.Internals.Bounds)).Listen(controlUnderCursorProvider, 2);
-        table.AddRow(Strings.Internals.GlobalItem.ToString(Strings.Internals.Bounds)).Listen(controlUnderCursorProvider, 3);
-        table.AddRow(Strings.Internals.Color).Listen(controlUnderCursorProvider, 4);
-        table.AddRow(Strings.Internals.ColorOverride).Listen(controlUnderCursorProvider, 5);
+        var controlUnderCursorRow = 0;
+        table.AddRow(Strings.Internals.Type).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.Name).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.CanonicalName).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.LocalItem.ToString(Strings.Internals.Bounds)).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.GlobalItem.ToString(Strings.Internals.Bounds)).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.Margin).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.Padding).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.TextPadding).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.Font).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.HasOwnFont).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.Color).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.ColorOverride).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+
         _disposables.Add(controlUnderCursorProvider.Generator.Start());
 
         return table;
@@ -268,18 +276,128 @@ internal sealed partial class DebugWindow : Window
             _ = Generator.Start();
         }
 
+        private void UpdateValues(Base component)
+        {
+            var row = 0;
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    component?.GetType().Name ?? Strings.Internals.NotApplicable
+                )
+            );
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    component?.Name ?? string.Empty
+                )
+            );
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    component?.CanonicalName ?? string.Empty
+                )
+            );
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    component?.Bounds.ToString() ?? string.Empty
+                )
+            );
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    component?.BoundsGlobal.ToString() ?? string.Empty
+                )
+            );
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    component?.Margin.ToString() ?? string.Empty
+                )
+            );
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    component?.Padding.ToString() ?? string.Empty
+                )
+            );
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    (component as Label)?.TextPadding.ToString() ?? Strings.Internals.NotApplicable.ToString()
+                )
+            );
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    component?.Font?.ToString() ?? Strings.Internals.NotApplicable.ToString()
+                )
+            );
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    component?.HasOwnFont.ToString() ?? Strings.Internals.NotApplicable.ToString()
+                )
+            );
+
+            var colorableText = component as IColorableText;
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    colorableText?.TextColor ?? string.Empty
+                )
+            );
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    colorableText?.TextColorOverride?.ToString() ?? Strings.Internals.NotApplicable.ToString()
+                )
+            );
+        }
+
         private AsyncValueGenerator<Base> CreateControlUnderCursorGenerator(CancellationToken cancellationToken)
         {
-            return new AsyncValueGenerator<Base>(() => Task.Delay(100).ContinueWith((completedTask) => Interface.FindControlAtCursor(), TaskScheduler.Current), (component) =>
-            {
-                DataChanged?.Invoke(this, new TableDataChangedEventArgs(0, 1, default, component?.GetType().Name ?? Strings.Internals.NotApplicable));
-                DataChanged?.Invoke(this, new TableDataChangedEventArgs(1, 1, default, component?.CanonicalName ?? string.Empty));
-                DataChanged?.Invoke(this, new TableDataChangedEventArgs(2, 1, default, component?.Bounds.ToString() ?? string.Empty));
-                DataChanged?.Invoke(this, new TableDataChangedEventArgs(3, 1, default, component?.BoundsGlobal.ToString() ?? string.Empty));
-                DataChanged?.Invoke(this, new TableDataChangedEventArgs(4, 1, default, (component as IColorableText)?.TextColor ?? string.Empty));
-                DataChanged?.Invoke(this, new TableDataChangedEventArgs(5, 1, default, (component as IColorableText)?.TextColorOverride ?? string.Empty));
-
-            }, cancellationToken);
+            return new AsyncValueGenerator<Base>(
+                () => Task.Delay(100).ContinueWith(_ => Interface.FindControlAtCursor(), TaskScheduler.Current),
+                UpdateValues,
+                cancellationToken
+            );
         }
     }
 }

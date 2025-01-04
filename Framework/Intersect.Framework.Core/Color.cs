@@ -230,8 +230,6 @@ public partial class Color : IEquatable<Color>
         return FromArgb((rgba >> 0) & 0x0FF, (rgba >> 24) & 0x0FF, (rgba >> 16) & 0x0FF, (rgba >> 8) & 0x0FF);
     }
 
-    public static string ToString(Color clr) => clr?.ToString() ?? string.Empty;
-
     public static Color FromString(string val, Color defaultColor = null)
     {
         if (string.IsNullOrEmpty(val))

@@ -9,9 +9,6 @@ namespace Intersect.Client.Framework.Gwen.ControlInternal;
 /// </summary>
 public partial class Text : Base
 {
-
-    private GameFont? _font;
-
     private float _scale = 1f;
 
     private string? _displayedText;
@@ -23,11 +20,10 @@ public partial class Text : Base
     /// <param name="name">The name of the element.</param>
     public Text(Base parent, string? name = default) : base(parent, name)
     {
-        _font = Skin.DefaultFont;
+        IsInternal = true;
         _displayedText = String.Empty;
         Color = Skin.Colors.Label.Default;
         MouseInputEnabled = false;
-        ColorOverride = Color.FromArgb(0, 255, 255, 255); // A==0, override disabled
     }
 
     /// <summary>
@@ -36,18 +32,19 @@ public partial class Text : Base
     /// <remarks>
     ///     The font is not being disposed by this class.
     /// </remarks>
-    public GameFont? Font
+    public override GameFont? Font
     {
-        get => _font;
+        get => base.Font;
         set
         {
-            if (value == _font)
+            if (value == base.Font)
             {
                 return;
             }
 
-            _font = value;
+            base.Font = value;
             SizeToContents();
+            InvalidateFont();
         }
     }
 
@@ -98,7 +95,7 @@ public partial class Text : Base
             return;
         }
 
-        var font = _font;
+        var font = Font;
         if (font == default)
         {
             return;
@@ -217,7 +214,7 @@ public partial class Text : Base
             return default;
         }
 
-        var font = _font;
+        var font = Font;
         if (font == default)
         {
             return default;

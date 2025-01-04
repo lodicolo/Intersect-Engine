@@ -16,9 +16,12 @@ public partial class Resizer : Dragger
     ///     Initializes a new instance of the <see cref="Resizer" /> class.
     /// </summary>
     /// <param name="parent">Parent control.</param>
-    public Resizer(Base parent) : base(parent)
+    /// <param name="name"></param>
+    public Resizer(Base parent, string? name = default) : base(parent, name ?? nameof(Resizer))
     {
+        IsInternal = true;
         mResizeDir = Pos.Left;
+        IgnoredForSpaceCalculations = true;
         MouseInputEnabled = true;
         SetSize(6, 6);
         Target = parent;
