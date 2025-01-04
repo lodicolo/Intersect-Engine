@@ -5,7 +5,10 @@ using Intersect.GameObjects;
 Interface.StateChanged += (sender, state, mutableInterface) =>
 {
     Console.WriteLine($"Interface state changed to {state.Name} by {sender}");
-    var descriptorEditorWindow = mutableInterface.Create<DescriptorEditorWindow<UserVariableBase>>();
+    if (state == InterfaceState.Game)
+    {
+        var descriptorEditorWindow = mutableInterface.Create<DescriptorEditorWindow<UserVariableBase>>();
+    }
 };
 
 Intersect.Client.Core.Program.Main(args);
