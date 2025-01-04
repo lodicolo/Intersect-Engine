@@ -1249,6 +1249,9 @@ public static partial class Strings
         public static LocalizedString CoordinateZ = @"Z";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public static LocalizedString Dock = @"Dock";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public static LocalizedString ExperimentalFeatureTooltip = @"This feature is experimental and may cause issues when enabled.";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

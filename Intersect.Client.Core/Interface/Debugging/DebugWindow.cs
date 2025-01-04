@@ -1,5 +1,6 @@
 using Intersect.Async;
 using Intersect.Client.Core;
+using Intersect.Client.Framework.Gwen;
 using Intersect.Client.Framework.Gwen.Control;
 using Intersect.Client.Framework.Gwen.Control.Data;
 using Intersect.Client.Framework.Gwen.Control.Layout;
@@ -249,6 +250,7 @@ internal sealed partial class DebugWindow : Window
         table.AddRow(Strings.Internals.GlobalItem.ToString(Strings.Internals.Bounds)).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
         table.AddRow(Strings.Internals.Margin).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
         table.AddRow(Strings.Internals.Padding).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.Dock).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
         table.AddRow(Strings.Internals.TextPadding).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
         table.AddRow(Strings.Internals.Font).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
         table.AddRow(Strings.Internals.HasOwnFont).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
@@ -340,6 +342,20 @@ internal sealed partial class DebugWindow : Window
                     1,
                     default,
                     component?.Padding.ToString() ?? string.Empty
+                )
+            );
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    component == default
+                        ? Strings.Internals.NotApplicable.ToString()
+                        : string.Join(
+                            " | ",
+                            Enum.GetValues<Pos>().Where(p => component.Dock.HasFlag(p)).Select(p => p.ToString())
+                        )
                 )
             );
             DataChanged?.Invoke(

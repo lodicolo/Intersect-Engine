@@ -80,7 +80,7 @@ public class DescriptorEditorWindow<TDescriptorType> : Window
         buttonDebug3.Clicked += (sender, arguments) =>
         {
             var table = MutableInterface._debugWindow?.FindChildByName<Table>("TableDebugStats", recursive: true);
-            table?.SizeToContents();
+            table?.SizeToContents(350);
         };
 
         var buttonDebug4 = new Button(this, "buttonDebug4")

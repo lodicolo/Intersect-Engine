@@ -259,8 +259,6 @@ public partial class WindowControl : ResizableControl
 
         if (obj["CloseButton"] != null)
         {
-            mCloseButton.Alignment = Pos.None;
-            mCloseButton.Dock = Pos.None;
             mCloseButton.LoadJson(obj["CloseButton"]);
         }
 

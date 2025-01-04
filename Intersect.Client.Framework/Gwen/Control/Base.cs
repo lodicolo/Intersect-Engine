@@ -146,6 +146,7 @@ public partial class Base : IFontSource, IDisposable
     private string? _fontName;
     private int? _fontSize;
     private IFontSource? _fontSource;
+    private bool _reflowChildren = true;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="Base" /> class.
@@ -2635,204 +2636,220 @@ public partial class Base : IFontSource, IDisposable
             Layout(skin);
         }
 
-        var availableBounds = RenderBounds;
-
-        // Adjust bounds for padding
-        availableBounds.X += mPadding.Left;
-        availableBounds.Width -= mPadding.Left + mPadding.Right;
-        availableBounds.Y += mPadding.Top;
-        availableBounds.Height -= mPadding.Top + mPadding.Bottom;
-
-        foreach (var child in _children)
+        // if (_reflowChildren)
         {
-            if (child.IsHidden)
+            _reflowChildren = false;
+
+            var availableBounds = RenderBounds;
+
+            // Adjust bounds for padding
+            availableBounds.X += mPadding.Left;
+            availableBounds.Width -= mPadding.Left + mPadding.Right;
+            availableBounds.Y += mPadding.Top;
+            availableBounds.Height -= mPadding.Top + mPadding.Bottom;
+
+            foreach (var child in _children)
             {
-                if (!ToolTip.IsActiveTooltip(child))
+                if (child.IsHidden)
+                {
+                    if (!ToolTip.IsActiveTooltip(child))
+                    {
+                        continue;
+                    }
+                }
+
+                var childDock = child.Dock;
+
+                if (childDock.HasFlag(Pos.Auto))
                 {
                     continue;
                 }
-            }
 
-            var childDock = child.Dock;
-
-            if (childDock.HasFlag(Pos.Auto))
-            {
-                continue;
-            }
-
-            if (childDock.HasFlag(Pos.Fill))
-            {
-                continue;
-            }
-
-            var childMargin = child.Margin;
-            var childBounds = child.Bounds;
-
-            var childMarginHorizontal = childMargin.Left + childMargin.Right;
-            var childMarginVertical = childMargin.Top + childMargin.Bottom;
-
-            if (childDock.HasFlag(Pos.Top))
-            {
-                childBounds.Y = availableBounds.Y + childMargin.Top;
-
-                if (childDock == Pos.Top)
+                if (childDock.HasFlag(Pos.Fill))
                 {
-                    childBounds.X = availableBounds.X + childMargin.Left;
-                    childBounds.Width = availableBounds.Width - childMarginHorizontal;
-
-                    if (!child.IgnoredForSpaceCalculations)
-                    {
-                        var childFullHeight = childMarginVertical + child.Height;
-                        availableBounds.Y += childFullHeight;
-                        availableBounds.Height -= childFullHeight;
-                    }
+                    continue;
                 }
 
-                child.SetBounds(childBounds);
-            }
+                var childMargin = child.Margin;
+                var childBounds = child.Bounds;
 
-            if (childDock.HasFlag(Pos.Left))
-            {
-                childBounds.X = childMargin.Left;
+                var childMarginHorizontal = childMargin.Left + childMargin.Right;
+                var childMarginVertical = childMargin.Top + childMargin.Bottom;
 
-                if (childDock == Pos.Left)
+                if (childDock.HasFlag(Pos.Top))
                 {
                     childBounds.Y = availableBounds.Y + childMargin.Top;
-                    childBounds.Height = availableBounds.Height - childMarginVertical;
 
-                    if (!child.IgnoredForSpaceCalculations)
+                    if (childDock == Pos.Top)
                     {
-                        var childFullWidth = childMarginHorizontal + child.Width;
-                        availableBounds.X += childFullWidth;
-                        availableBounds.Width -= childFullWidth;
+                        childBounds.X = availableBounds.X + childMargin.Left;
+                        childBounds.Width = availableBounds.Width - childMarginHorizontal;
+
+                        if (!child.IgnoredForSpaceCalculations)
+                        {
+                            var childFullHeight = childMarginVertical + child.Height;
+                            availableBounds.Y += childFullHeight;
+                            availableBounds.Height -= childFullHeight;
+                        }
                     }
+
+                    child.SetBounds(childBounds);
                 }
 
-                child.SetBounds(childBounds);
-            }
-
-            if (childDock.HasFlag(Pos.Right))
-            {
-                childBounds.X = availableBounds.Right - (child.Width + childMargin.Right);
-
-                if (childDock == Pos.Right)
+                if (childDock.HasFlag(Pos.Left))
                 {
-                    childBounds.Y = availableBounds.Y + childMargin.Top;
-                    childBounds.Height = availableBounds.Height - childMarginVertical;
+                    childBounds.X = childMargin.Left;
 
-                    if (!child.IgnoredForSpaceCalculations)
+                    if (childDock == Pos.Left)
                     {
-                        var childFullWidth = childMarginHorizontal + child.Width;
-                        availableBounds.Width -= childFullWidth;
+                        childBounds.Y = availableBounds.Y + childMargin.Top;
+                        childBounds.Height = availableBounds.Height - childMarginVertical;
+
+                        if (!child.IgnoredForSpaceCalculations)
+                        {
+                            var childFullWidth = childMarginHorizontal + child.Width;
+                            availableBounds.X += childFullWidth;
+                            availableBounds.Width -= childFullWidth;
+                        }
                     }
+
+                    child.SetBounds(childBounds);
                 }
 
-                child.SetBounds(childBounds);
-            }
-
-            if (childDock.HasFlag(Pos.Bottom))
-            {
-                childBounds.Y = availableBounds.Bottom - (childMargin.Bottom + child.Height);
-
-                if (childDock == Pos.Bottom)
+                if (childDock.HasFlag(Pos.Right))
                 {
-                    childBounds.X = availableBounds.X + childMargin.Left;
-                    childBounds.Width = availableBounds.Width - childMarginHorizontal;
+                    childBounds.X = availableBounds.Right - (child.Width + childMargin.Right);
 
-                    if (!child.IgnoredForSpaceCalculations)
+                    if (childDock == Pos.Right)
                     {
-                        var childFullHeight = child.Height + childMarginVertical;
-                        availableBounds.Height -= childFullHeight;
+                        childBounds.Y = availableBounds.Y + childMargin.Top;
+                        childBounds.Height = availableBounds.Height - childMarginVertical;
+
+                        if (!child.IgnoredForSpaceCalculations)
+                        {
+                            var childFullWidth = childMarginHorizontal + child.Width;
+                            availableBounds.Width -= childFullWidth;
+                        }
+                    }
+
+                    child.SetBounds(childBounds);
+                }
+
+                if (childDock.HasFlag(Pos.Bottom))
+                {
+                    childBounds.Y = availableBounds.Bottom - (childMargin.Bottom + child.Height);
+
+                    if (childDock == Pos.Bottom)
+                    {
+                        childBounds.X = availableBounds.X + childMargin.Left;
+                        childBounds.Width = availableBounds.Width - childMarginHorizontal;
+
+                        if (!child.IgnoredForSpaceCalculations)
+                        {
+                            var childFullHeight = child.Height + childMarginVertical;
+                            availableBounds.Height -= childFullHeight;
+                        }
+                    }
+
+                    child.SetBounds(childBounds);
+                }
+
+                child.RecurseLayout(skin);
+            }
+
+            mInnerBounds = availableBounds;
+
+            //
+            // Fill uses the left over space, so do that now.
+            //
+            foreach (var child in _children)
+            {
+                if (child.IsHidden)
+                {
+                    if (!ToolTip.IsActiveTooltip(child))
+                    {
+                        continue;
                     }
                 }
 
-                child.SetBounds(childBounds);
-            }
+                var dock = child.Dock;
 
-            child.RecurseLayout(skin);
-        }
+                if (!dock.HasFlag(Pos.Fill))
+                {
+                    continue;
+                }
 
-        mInnerBounds = availableBounds;
+                var margin = child.Margin;
 
-        //
-        // Fill uses the left over space, so do that now.
-        //
-        foreach (var child in _children)
-        {
-            if (child.IsHidden && !ToolTip.IsActiveTooltip(child))
-            {
-                continue;
-            }
-
-            var dock = child.Dock;
-
-            if (!dock.HasFlag(Pos.Fill))
-            {
-                continue;
-            }
-
-            var margin = child.Margin;
-
-            var newPosition = new Point(
-                availableBounds.X + margin.Left,
-                availableBounds.Y + margin.Top
-            );
-
-            if (child is IAutoSizeToContents { AutoSizeToContents: true })
-            {
-                child.SetPosition(newPosition);
-            }
-            else
-            {
-                child.SetBounds(
-                    newPosition,
-                    new Point(
-                        availableBounds.Width - margin.Left - margin.Right,
-                        availableBounds.Height - margin.Top - margin.Bottom
-                    )
+                var newPosition = new Point(
+                    availableBounds.X + margin.Left,
+                    availableBounds.Y + margin.Top
                 );
+
+                if (child is IAutoSizeToContents { AutoSizeToContents: true })
+                {
+                    child.SetPosition(newPosition);
+                }
+                else
+                {
+                    child.SetBounds(
+                        newPosition,
+                        new Point(
+                            availableBounds.Width - margin.Left - margin.Right,
+                            availableBounds.Height - margin.Top - margin.Bottom
+                        )
+                    );
+                }
+
+                child.RecurseLayout(skin);
             }
 
-            child.RecurseLayout(skin);
-        }
+            var autoAvailableBounds = availableBounds;
+            var autoNextRowY = autoAvailableBounds.Y;
 
-        var autoAvailableBounds = availableBounds;
-        var autoNextRowY = autoAvailableBounds.Y;
-
-        //
-        // Place Auto components which flow horizontally
-        //
-        foreach (var child in _children)
-        {
-            var childDock = child.Dock;
-
-            if (!childDock.HasFlag(Pos.Auto))
+            //
+            // Place Auto components which flow horizontally
+            //
+            foreach (var child in _children)
             {
-                continue;
+                if (child.IsHidden)
+                {
+                    if (!ToolTip.IsActiveTooltip(child))
+                    {
+                        continue;
+                    }
+                }
+
+                var childDock = child.Dock;
+
+                if (!childDock.HasFlag(Pos.Auto) || childDock.HasFlag(Pos.Fill))
+                {
+                    continue;
+                }
+
+                var childMargin = child.Margin;
+
+                var childOuterWidth = child.OuterWidth;
+                if (autoAvailableBounds.Width < childOuterWidth)
+                {
+                    autoAvailableBounds.X = availableBounds.X;
+                    autoAvailableBounds.Width = availableBounds.Width;
+                    autoAvailableBounds.Y = autoNextRowY;
+                }
+
+                var newPosition = new Point(
+                    autoAvailableBounds.X + childMargin.Left,
+                    autoAvailableBounds.Y + childMargin.Top
+                );
+
+                autoAvailableBounds.X += childOuterWidth;
+                autoAvailableBounds.Width -= childOuterWidth;
+                autoNextRowY = Math.Max(autoNextRowY, autoAvailableBounds.Y + child.OuterHeight);
+
+                child.SetPosition(newPosition);
+
+                child.RecurseLayout(skin);
             }
-
-            var childMargin = child.Margin;
-
-            var childOuterWidth = child.OuterWidth;
-            if (autoAvailableBounds.Width < childOuterWidth)
-            {
-                autoAvailableBounds.X = availableBounds.X;
-                autoAvailableBounds.Width = availableBounds.Width;
-                autoAvailableBounds.Y = autoNextRowY;
-            }
-
-            var newPosition = new Point(
-                autoAvailableBounds.X + childMargin.Left,
-                autoAvailableBounds.Y + childMargin.Top
-            );
-
-            autoAvailableBounds.X += childOuterWidth;
-            autoAvailableBounds.Width -= childOuterWidth;
-            autoNextRowY = Math.Max(autoNextRowY, autoAvailableBounds.Y + child.OuterHeight);
-
-            child.SetPosition(newPosition);
-
-            child.RecurseLayout(skin);
         }
 
         PostLayout(skin);
@@ -2935,6 +2952,8 @@ public partial class Base : IFontSource, IDisposable
     /// </summary>
     protected virtual void UpdateRenderBounds()
     {
+        _reflowChildren = true;
+
         mRenderBounds.X = 0;
         mRenderBounds.Y = 0;
 
