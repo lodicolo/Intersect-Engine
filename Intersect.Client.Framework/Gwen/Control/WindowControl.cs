@@ -96,6 +96,7 @@ public partial class WindowControl : ResizableControl
             FontName = "sourcesansproblack",
             FontSize = 10,
             IsInternal = true,
+            MouseInputEnabled = false,
             Text = title ?? string.Empty,
             Padding = new Padding(
                 8,

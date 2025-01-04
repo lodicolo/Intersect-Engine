@@ -1,4 +1,5 @@
-﻿using Intersect.Logging;
+﻿using System.Globalization;
+using Intersect.Logging;
 using Intersect.Plugins.Interfaces;
 using Intersect.Threading;
 
@@ -28,6 +29,11 @@ public interface IApplicationContext : IDisposable
     /// If the application is running.
     /// </summary>
     bool IsRunning { get; }
+
+    /// <summary>
+    /// The current <see cref="CultureInfo"/> of the application.
+    /// </summary>
+    CultureInfo Culture { get; }
 
     /// <summary>
     /// The options the application was started with.

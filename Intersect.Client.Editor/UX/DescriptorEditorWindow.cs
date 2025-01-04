@@ -33,7 +33,6 @@ public class DescriptorEditorWindow<TDescriptorType> : Window
         TitleLabel.Alignment = Pos.Center;
         TitleLabel.FontSize += 2;
         TitleLabel.AutoSizeToContents = true;
-        TitleLabel.MouseInputEnabled = true;
 
         Font = Globals.ContentManager?.GetFont("sourcesanspro", 10);
 

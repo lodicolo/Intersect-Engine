@@ -16,10 +16,8 @@ public partial class LoginPacket : IntersectPacket
         Password = password;
     }
 
-    [Key(0)]
-    public string Username { get; set; }
+    [Key(0)] public string Username { get; set; }
 
-    [Key(1)]
-    public string Password { get; set; }
+    [Key(1)] public string Password { get; set; }
 
 }

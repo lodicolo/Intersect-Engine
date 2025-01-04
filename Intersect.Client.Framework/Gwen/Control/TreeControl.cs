@@ -69,7 +69,7 @@ public partial class TreeControl : TreeNode
     /// </summary>
     /// <param name="oldChildBounds"></param>
     /// <param name="child"></param>
-    protected override void OnChildBoundsChanged(Rectangle oldChildBounds, Base child)
+    protected override void OnChildBoundsChanged(Rectangle oldChildBounds, Rectangle newChildBounds, Base child)
     {
         if (mScrollControl != null)
         {

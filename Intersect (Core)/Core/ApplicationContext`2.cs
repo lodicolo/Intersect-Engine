@@ -2,6 +2,7 @@ using Intersect.Logging;
 using Intersect.Threading;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 
 using Intersect.Properties;
@@ -51,6 +52,8 @@ public abstract partial class ApplicationContext<TContext, TStartupOptions> : IA
 
         ConcurrentInstance.Set(This);
     }
+
+    public CultureInfo Culture { get; set; }
 
     ICommandLineOptions IApplicationContext.StartupOptions => StartupOptions;
 

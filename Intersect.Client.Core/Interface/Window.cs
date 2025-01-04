@@ -1,9 +1,12 @@
 using Intersect.Client.Framework.Gwen.Control;
+using Intersect.Logging;
 
 namespace Intersect.Client.Interface;
 
 public abstract class Window : WindowControl
 {
+    protected readonly Queue<Action> _postRenderActions = [];
+
     private readonly object _initializationLock = new();
     private volatile bool _initialized;
 
@@ -30,6 +33,21 @@ public abstract class Window : WindowControl
         }
 
         base.Render(skin);
+
+        while (_postRenderActions.TryDequeue(out var postRenderAction))
+        {
+            try
+            {
+                postRenderAction();
+            }
+            catch (Exception exception)
+            {
+                LegacyLogging.Logger?.Error(
+                    exception,
+                    $"Error while running a post-render action for window '{CanonicalName}'"
+                );
+            }
+        }
     }
 
     protected abstract void EnsureInitialized();

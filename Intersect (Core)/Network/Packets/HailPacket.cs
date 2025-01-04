@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using System.Security.Cryptography;
-
+using Intersect.Features;
 using Intersect.Logging;
 using Intersect.Memory;
 using MessagePack;
@@ -62,41 +63,46 @@ public partial class HailPacket : ConnectionPacket
         set => _symmetricVersion = value;
     }
 
+    [IgnoreMember] public List<ClientCapabilities> Capabilities { get; set; } = [];
+
+    [IgnoreMember]
+    public CultureInfo Culture { get; set; } = CultureInfo.CurrentUICulture;
+
     public override bool Encrypt()
     {
-        using (var buffer = new MemoryBuffer())
-        {
-            buffer.Write(VersionData);
-            buffer.Write(HandshakeSecret, SIZE_HANDSHAKE_SECRET);
-            buffer.Write(Adjusted);
+        using var buffer = new MemoryBuffer();
+        buffer.Write(VersionData);
+        buffer.Write(HandshakeSecret, SIZE_HANDSHAKE_SECRET);
+        buffer.Write(Adjusted);
+        buffer.Write(string.Join(',', Capabilities));
+        buffer.Write(Culture.IetfLanguageTag);
 #if DEBUG
-            buffer.Write(UTC);
-            buffer.Write(Offset);
+        buffer.Write(UTC);
+        buffer.Write(Offset);
 #endif
 
 #if INTERSECT_DIAGNOSTIC
-            Log.Debug($"VersionData: {BitConverter.ToString(VersionData)}");
-            Log.Debug($"Handshake secret: {BitConverter.ToString(HandshakeSecret)}.");
+        Log.Debug($"VersionData: {BitConverter.ToString(VersionData)}");
+        Log.Debug($"Handshake secret: {BitConverter.ToString(HandshakeSecret)}.");
 #endif
 
-            Debug.Assert(RsaParameters.Modulus != null, "RsaParameters.Modulus != null");
-            var bits = (ushort)(RsaParameters.Modulus.Length << 3);
-            buffer.Write(bits);
-            buffer.Write(RsaParameters.Exponent, 3);
-            buffer.Write(RsaParameters.Modulus, bits >> 3);
-            buffer.Write(SymmetricVersion);
+        Debug.Assert(RsaParameters.Modulus != null, "RsaParameters.Modulus != null");
+        var bits = (ushort)(RsaParameters.Modulus.Length << 3);
+        buffer.Write(bits);
+        buffer.Write(RsaParameters.Exponent, 3);
+        buffer.Write(RsaParameters.Modulus, bits >> 3);
+        buffer.Write(SymmetricVersion);
 
 #if INTERSECT_DIAGNOSTIC
             DumpKey(RsaParameters, true);
 #endif
 
-            Debug.Assert(mRsa != null, "mRsa != null");
+        Debug.Assert(mRsa != null, "mRsa != null");
 
-            EncryptedData = mRsa.Encrypt(buffer.ToArray(), RSAEncryptionPadding.OaepSHA256) ??
-                            throw new InvalidOperationException("Failed to encrypt the buffer.");
+        EncryptedData = mRsa.Encrypt(buffer.ToArray(), RSAEncryptionPadding.OaepSHA256) ??
+                        throw new InvalidOperationException("Failed to encrypt the buffer.");
 
-            return true;
-        }
+        return true;
     }
 
     public override bool Decrypt(RSA rsa)
@@ -111,67 +117,97 @@ public partial class HailPacket : ConnectionPacket
             }
 
             var decryptedHail = mRsa.Decrypt(EncryptedData, RSAEncryptionPadding.OaepSHA256);
-            using (var buffer = new MemoryBuffer(decryptedHail))
+            using var buffer = new MemoryBuffer(decryptedHail);
+            if (!buffer.Read(out mVersionData))
             {
-                if (!buffer.Read(out mVersionData))
-                {
-                    return false;
-                }
+                return false;
+            }
 
-                if (!buffer.Read(out mHandshakeSecret, SIZE_HANDSHAKE_SECRET))
-                {
-                    return false;
-                }
+            if (!buffer.Read(out mHandshakeSecret, SIZE_HANDSHAKE_SECRET))
+            {
+                return false;
+            }
 
-                if (!buffer.Read(out mAdjusted))
-                {
-                    return false;
-                }
+            if (!buffer.Read(out mAdjusted))
+            {
+                return false;
+            }
+
+            if (!buffer.Read(out string? capabilitiesString))
+            {
+                return false;
+            }
+
+            try
+            {
+                Capabilities = capabilitiesString?.Split(',').Select(Enum.Parse<ClientCapabilities>).ToList();
+            }
+            catch (Exception exception)
+            {
+                Log.Warn(exception, $"Failed to parse client capabilities: '{capabilitiesString}'");
+                Capabilities = [ClientCapabilities.None];
+            }
+
+            if (!buffer.Read(out string? cultureIetfTag))
+            {
+                return false;
+            }
+
+            try
+            {
+                Culture = string.IsNullOrWhiteSpace(cultureIetfTag)
+                    ? CultureInfo.CurrentUICulture
+                    : CultureInfo.GetCultureInfoByIetfLanguageTag(cultureIetfTag);
+            }
+            catch (Exception exception)
+            {
+                Culture = CultureInfo.CurrentUICulture;
+                Log.Warn(exception, $"Failed to parse client culture: '{cultureIetfTag}'");
+            }
 
 #if DEBUG
-                if (!buffer.Read(out mUTC))
-                {
-                    return false;
-                }
-
-                if (!buffer.Read(out mOffset))
-                {
-                    return false;
-                }
-#endif
-
-#if INTERSECT_DIAGNOSTIC
-                Log.Debug($"VersionData: {BitConverter.ToString(VersionData)}");
-                Log.Debug($"Handshake secret: {BitConverter.ToString(HandshakeSecret)}.");
-#endif
-
-                if (!buffer.Read(out ushort bits))
-                {
-                    return false;
-                }
-
-                RsaParameters = new RSAParameters();
-                if (!buffer.Read(out mRsaParameters.Exponent, 3))
-                {
-                    return false;
-                }
-
-                if (!buffer.Read(out mRsaParameters.Modulus, bits >> 3))
-                {
-                    return false;
-                }
-
-                if (!buffer.Read(out _symmetricVersion))
-                {
-                    return false;
-                }
-
-#if INTERSECT_DIAGNOSTIC
-                DumpKey(RsaParameters, true);
-#endif
-
-                return true;
+            if (!buffer.Read(out mUTC))
+            {
+                return false;
             }
+
+            if (!buffer.Read(out mOffset))
+            {
+                return false;
+            }
+#endif
+
+#if INTERSECT_DIAGNOSTIC
+            Log.Debug($"VersionData: {BitConverter.ToString(VersionData)}");
+            Log.Debug($"Handshake secret: {BitConverter.ToString(HandshakeSecret)}.");
+#endif
+
+            if (!buffer.Read(out ushort bits))
+            {
+                return false;
+            }
+
+            RsaParameters = new RSAParameters();
+            if (!buffer.Read(out mRsaParameters.Exponent, 3))
+            {
+                return false;
+            }
+
+            if (!buffer.Read(out mRsaParameters.Modulus, bits >> 3))
+            {
+                return false;
+            }
+
+            if (!buffer.Read(out _symmetricVersion))
+            {
+                return false;
+            }
+
+#if INTERSECT_DIAGNOSTIC
+            DumpKey(RsaParameters, true);
+#endif
+
+            return true;
         }
         catch (Exception exception)
         {

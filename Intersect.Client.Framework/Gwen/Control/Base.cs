@@ -16,7 +16,6 @@ using Intersect.Framework.Reflection;
 
 namespace Intersect.Client.Framework.Gwen.Control;
 
-
 /// <summary>
 ///     Base control class.
 /// </summary>
@@ -1304,7 +1303,7 @@ public partial class Base : IFontSource, IDisposable
     /// <summary>
     ///     Invoked when control's bounds have been changed.
     /// </summary>
-    public event GwenEventHandler<EventArgs>? BoundsChanged;
+    public event GwenEventHandler<BoundsChangedEventArgs>? BoundsChanged;
 
     /// <summary>
     ///     Invoked when the control has been left-clicked.
@@ -1941,16 +1940,18 @@ public partial class Base : IFontSource, IDisposable
         }
 
         var oldBounds = Bounds;
+        var newBounds = new Rectangle(
+            x,
+            y,
+            Math.Clamp(width, MinimumSize.X, MaximumSize.X),
+            Math.Clamp(height, MinimumSize.Y, MaximumSize.Y)
+        );
 
-        mBounds.X = x;
-        mBounds.Y = y;
+        mBounds = newBounds;
 
-        mBounds.Width = Math.Min(MaximumSize.X, width);
-        mBounds.Height = Math.Min(MaximumSize.Y, height);
+        OnBoundsChanged(oldBounds, newBounds);
 
-        OnBoundsChanged(oldBounds);
-
-        BoundsChanged?.Invoke(this, EventArgs.Empty);
+        BoundsChanged?.Invoke(this, new BoundsChangedEventArgs(oldBounds, newBounds));
 
         return true;
     }
@@ -2005,11 +2006,11 @@ public partial class Base : IFontSource, IDisposable
     ///     Handler invoked when control's bounds change.
     /// </summary>
     /// <param name="oldBounds">Old bounds.</param>
-    protected virtual void OnBoundsChanged(Rectangle oldBounds)
+    protected virtual void OnBoundsChanged(Rectangle oldBounds, Rectangle newBounds)
     {
         //Anything that needs to update on size changes
         //Iterate my children and tell them I've changed
-        Parent?.OnChildBoundsChanged(oldBounds, this);
+        Parent?.OnChildBoundsChanged(oldBounds, newBounds, this);
 
         if (mBounds.Width != oldBounds.Width || mBounds.Height != oldBounds.Height)
         {
@@ -2034,7 +2035,7 @@ public partial class Base : IFontSource, IDisposable
     /// <summary>
     ///     Handler invoked when control children's bounds change.
     /// </summary>
-    protected virtual void OnChildBoundsChanged(Rectangle oldChildBounds, Base child)
+    protected virtual void OnChildBoundsChanged(Rectangle oldChildBounds, Rectangle newChildBounds, Base child)
     {
     }
 

@@ -2,6 +2,7 @@ using Intersect.Client.Networking;
 using Intersect.Client.Plugins.Contexts;
 using Intersect.Core;
 using Intersect.Factories;
+using Intersect.Features;
 using Intersect.Logging;
 using Intersect.Plugins;
 using Intersect.Plugins.Interfaces;
@@ -32,6 +33,8 @@ internal sealed partial class ClientContext : ApplicationContext<ClientContext, 
         get => mPlatformRunner ?? throw new ArgumentNullException(nameof(PlatformRunner));
         private set => mPlatformRunner = value;
     }
+
+    public HashSet<ClientCapabilities> Capabilities { get; } = [];
 
     /// <inheritdoc />
     protected override void InternalStart()

@@ -919,7 +919,7 @@ public partial class MultilineTextBox : Label
             mTextLines.RemoveAt(StartPoint.Y + 1);
         }
 
-        // Move the cursor to the start of the selection, 
+        // Move the cursor to the start of the selection,
         // since the end is probably outside of the string now.
         mCursorPos = StartPoint;
         mCursorEnd = StartPoint;
@@ -1085,7 +1085,7 @@ public partial class MultilineTextBox : Label
     /// </summary>
     /// <param name="oldChildBounds"></param>
     /// <param name="child"></param>
-    protected override void OnChildBoundsChanged(Rectangle oldChildBounds, Base child)
+    protected override void OnChildBoundsChanged(Rectangle oldChildBounds, Rectangle newChildBounds, Base child)
     {
         if (mScrollControl != null)
         {

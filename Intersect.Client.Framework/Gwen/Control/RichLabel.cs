@@ -301,9 +301,9 @@ public partial class RichLabel : Base
     ///     Handler invoked when control's bounds change.
     /// </summary>
     /// <param name="oldBounds">Old bounds.</param>
-    protected override void OnBoundsChanged(Rectangle oldBounds)
+    protected override void OnBoundsChanged(Rectangle oldBounds, Rectangle newBounds)
     {
-        base.OnBoundsChanged(oldBounds);
+        base.OnBoundsChanged(oldBounds, newBounds);
         Rebuild();
     }
 

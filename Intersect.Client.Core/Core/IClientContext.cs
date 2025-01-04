@@ -1,4 +1,5 @@
 ﻿using Intersect.Core;
+using Intersect.Features;
 
 namespace Intersect.Client.Core;
 
@@ -11,4 +12,9 @@ internal interface IClientContext : IApplicationContext<ClientCommandLineOptions
     /// The platform-specific runner that initializes the actual user-visible client.
     /// </summary>
     IPlatformRunner PlatformRunner { get; }
+
+    /// <summary>
+    /// The capabilities of the current client instance.
+    /// </summary>
+    HashSet<ClientCapabilities> Capabilities { get; }
 }

@@ -1270,6 +1270,9 @@ public static partial class Strings
         public static LocalizedString Margin = @"Margin";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public static LocalizedString MouseInputEnabled = @"MouseInputEnabled";
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public static LocalizedString Name = @"Name";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

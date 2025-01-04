@@ -8,6 +8,7 @@ using Intersect.Client.General;
 using Intersect.Client.Localization;
 using Intersect.Client.Maps;
 using Intersect.Extensions;
+using Intersect.Logging;
 using static Intersect.Client.Framework.File_Management.GameContentManager;
 
 namespace Intersect.Client.Interface.Debugging;
@@ -30,17 +31,28 @@ internal sealed partial class DebugWindow : Window
         TableDebugStats = CreateTableDebugStats();
 
         IsHidden = true;
+
+        _postRenderActions.Enqueue(
+            () =>
+            {
+                TableDebugStats.SizeToContents(350);
+
+                _postRenderActions.Enqueue(() => SizeToChildren());
+            }
+        );
+
+        BoundsChanged += (sender, arguments) => Log.Info($"{Name} => {arguments.OldBounds} => {arguments.NewBounds}");
     }
 
-    private LabeledCheckBox CheckboxDrawDebugOutlines { get; set; }
+    private LabeledCheckBox CheckboxDrawDebugOutlines { get; init; }
 
-    private LabeledCheckBox CheckboxEnableLayoutHotReloading { get; set; }
+    private LabeledCheckBox CheckboxEnableLayoutHotReloading { get; init; }
 
-    private Button ButtonShutdownServer { get; set; }
+    private Button ButtonShutdownServer { get; init; }
 
-    private Button ButtonShutdownServerAndExit { get; set; }
+    private Button ButtonShutdownServerAndExit { get; init; }
 
-    private Table TableDebugStats { get; set; }
+    private Table TableDebugStats { get; init; }
 
     protected override void EnsureInitialized()
     {
@@ -246,6 +258,7 @@ internal sealed partial class DebugWindow : Window
         table.AddRow(Strings.Internals.Type).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
         table.AddRow(Strings.Internals.Name).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
         table.AddRow(Strings.Internals.CanonicalName).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
+        table.AddRow(Strings.Internals.MouseInputEnabled).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
         table.AddRow(Strings.Internals.LocalItem.ToString(Strings.Internals.Bounds)).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
         table.AddRow(Strings.Internals.GlobalItem.ToString(Strings.Internals.Bounds)).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
         table.AddRow(Strings.Internals.Margin).Listen(controlUnderCursorProvider, controlUnderCursorRow++);
@@ -314,7 +327,7 @@ internal sealed partial class DebugWindow : Window
                     row++,
                     1,
                     default,
-                    component?.Bounds.ToString() ?? string.Empty
+                    component?.MouseInputEnabled.ToString() ?? Strings.Internals.NotApplicable.ToString()
                 )
             );
             DataChanged?.Invoke(
@@ -323,7 +336,7 @@ internal sealed partial class DebugWindow : Window
                     row++,
                     1,
                     default,
-                    component?.BoundsGlobal.ToString() ?? string.Empty
+                    component?.Bounds.ToString() ?? Strings.Internals.NotApplicable.ToString()
                 )
             );
             DataChanged?.Invoke(
@@ -332,7 +345,7 @@ internal sealed partial class DebugWindow : Window
                     row++,
                     1,
                     default,
-                    component?.Margin.ToString() ?? string.Empty
+                    component?.BoundsGlobal.ToString() ?? Strings.Internals.NotApplicable.ToString()
                 )
             );
             DataChanged?.Invoke(
@@ -341,7 +354,16 @@ internal sealed partial class DebugWindow : Window
                     row++,
                     1,
                     default,
-                    component?.Padding.ToString() ?? string.Empty
+                    component?.Margin.ToString() ?? Strings.Internals.NotApplicable.ToString()
+                )
+            );
+            DataChanged?.Invoke(
+                this,
+                new TableDataChangedEventArgs(
+                    row++,
+                    1,
+                    default,
+                    component?.Padding.ToString() ?? Strings.Internals.NotApplicable.ToString()
                 )
             );
             DataChanged?.Invoke(
@@ -393,7 +415,7 @@ internal sealed partial class DebugWindow : Window
                     row++,
                     1,
                     default,
-                    colorableText?.TextColor ?? string.Empty
+                    colorableText?.TextColor.ToString() ?? Strings.Internals.NotApplicable.ToString()
                 )
             );
             DataChanged?.Invoke(
