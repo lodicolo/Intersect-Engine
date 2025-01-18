@@ -33,6 +33,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Intersect.Server.Collections.Indexing;
+using Intersect.Server.Editors.Pages;
 using Intersect.Server.Web.Controllers;
 using Intersect.Server.Web.Controllers.Api;
 using Intersect.Server.Web.Types.Chat;
@@ -299,7 +300,9 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
 
         builder.Services.AddResponseCaching();
 
-        builder.Services.AddMvc(o => o.CacheProfiles.Add(nameof(AvatarController), AvatarController.ResponseCacheProfile))
+        builder.Services.AddMvc(
+                o => o.CacheProfiles.Add(nameof(AvatarController), AvatarController.ResponseCacheProfile)
+            )
             .WithRazorPagesRoot("/Web/Pages")
             .AddRazorPagesOptions(
                 rpo =>
@@ -323,6 +326,12 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
                     formatterMappings.ClearMediaTypeMappingForFormat("text/json");
                 }
             );
+
+        builder.Services.AddRazorComponents()
+            .AddInteractiveServerComponents()
+            .AddInteractiveWebAssemblyComponents();
+
+        builder.Services.AddServerSideBlazor();
 
         builder.Services.AddEndpointsApiExplorer();
 
@@ -457,18 +466,20 @@ internal partial class ApiService : ApplicationService<ServerContext, IApiServic
             app.UseForwardedHeaders();
         }
 
-        if (app.Environment.IsProduction())
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseODataRouteDebug();
+            app.UseWebAssemblyDebugging();
+        }
+        else
         {
             app.UseHttpsRedirection();
             app.UseHsts();
         }
 
-        app.UseResponseCompression();
+        app.UseBlazorFrameworkFiles();
 
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseODataRouteDebug();
-        }
+        app.UseResponseCompression();
 
         if (configuration.RequestLogging)
         {

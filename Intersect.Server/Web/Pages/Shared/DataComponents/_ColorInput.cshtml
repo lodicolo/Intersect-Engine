@@ -1,0 +1,9 @@
+@model Intersect.Server.Web.Pages.Shared.DataComponents.ColorInputModel
+
+@await Html.PartialAsync(
+    "./_ColorOutput.cshtml",
+    new ColorOutputModel
+    {
+        Value = Model.Value,
+    }
+)

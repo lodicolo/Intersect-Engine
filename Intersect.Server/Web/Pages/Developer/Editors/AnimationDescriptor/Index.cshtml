@@ -1,0 +1,52 @@
+@page "/Developer/AnimationDescriptor"
+@using Intersect.Server.Editors.Pages
+@model Intersect.Server.Web.Pages.Developer.Editors.AnimationDescriptor.AnimationDescriptorEditorModel
+
+@{
+    ViewData["Title"] = "Animation Editor";
+}
+
+<article class="page">
+    <component type="typeof(Counter)" render-mode="WebAssemblyPrerendered"/>
+
+    <h1>Animation Editor</h1>
+
+    <nav class="search-list left">
+        <input type="search" placeholder="Search..."/>
+        <ul>
+            <li>Animation 1</li>
+            <li>Animation 1</li>
+            <li>Animation 1</li>
+            <li>Animation 1</li>
+            <li>Animation 1</li>
+        </ul>
+    </nav>
+    <main>
+        <form>
+            <section class="group">
+                <h2>General</h2>
+                <label for="AnimationBase.Name">Name</label>
+                <input type="text" name="Name" id="AnimationBase.Name"/>
+            </section>
+            <section class="group">
+                <h2>Lower Layer</h2>
+                <section class="group">
+                    <h2>Light</h2>
+                    <label for="AnimationBase.Lower.Lights[0].Color">
+                        Color
+                    </label>
+                    <input type="color" name="AnimationBase.Lower.Lights[0].Color" id="AnimationBase.Lower.Lights[0].Color" value="#ffffff"/>
+                </section>
+            </section>
+            <section class="group">
+                <h2>Upper Layer</h2>
+            </section>
+        </form>
+    </main>
+    <footer>
+        <section>
+            <button>Save</button>
+            <button>Cancel</button>
+        </section>
+    </footer>
+</article>

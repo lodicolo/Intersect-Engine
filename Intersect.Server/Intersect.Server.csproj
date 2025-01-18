@@ -37,6 +37,7 @@
     <ProjectReference Include="..\Intersect (Core)\Intersect.Core.csproj" />
     <ProjectReference Include="..\Intersect.Network\Intersect.Network.csproj" />
     <ProjectReference Include="..\Intersect.Server.Core\Intersect.Server.Core.csproj" />
+    <ProjectReference Include="..\Intersect.Server.Editors\Intersect.Server.Editors.csproj" />
     <ProjectReference Include="..\Intersect.Server.Framework\Intersect.Server.Framework.csproj" />
   </ItemGroup>
 
@@ -111,6 +112,7 @@
     <PackageReference Include="Markdown" Version="2.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.11" />

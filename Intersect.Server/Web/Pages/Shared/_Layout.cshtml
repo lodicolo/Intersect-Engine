@@ -33,10 +33,12 @@
         }
     </style>
 
+    <base href="/" />
     <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     @* ReSharper disable once Html.PathError *@
     <link rel="stylesheet" href="~/AscensionGameDev.Intersect.Server.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="Intersect.Server.Editors.styles.css" asp-append-version="true"/>
     <script src="~/js/utils.js"></script>
     <script src="https://unpkg.com/htmx.org@1.9.2" defer></script>
     <script src="@HtmxAntiforgeryScriptEndpoints.Path" defer></script>
@@ -73,5 +75,9 @@
 </footer>
 
 @await RenderSectionAsync("Scripts", false)
+
+<!-- This must come after all the page content or Blazor WASM Components won't work -->
+<script src="~/_framework/blazor.webassembly.js"></script>
+
 </body>
 </html>
