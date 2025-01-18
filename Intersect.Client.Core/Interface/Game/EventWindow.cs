@@ -12,6 +12,7 @@ using Intersect.Client.MonoGame.Database;
 using Intersect.Client.Networking;
 using Intersect.Configuration;
 using Intersect.Enums;
+using Intersect.Framework.Core.Content;
 using Intersect.Utilities;
 
 namespace Intersect.Client.Interface.Game;

@@ -4,6 +4,7 @@ using Intersect.Client.Framework.File_Management;
 using Intersect.Client.Framework.Gwen.Control;
 using Intersect.Client.General;
 using Intersect.Client.Interface.Game.DescriptionWindows;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.Utilities;
 
@@ -161,7 +162,7 @@ public partial class SpellStatus
             if (spell != null)
             {
                 var spellTex = Globals.ContentManager.GetTexture(
-                    Framework.Content.TextureType.Spell, spell.Icon
+                    TextureType.Spell, spell.Icon
                 );
 
                 if (spellTex != null)

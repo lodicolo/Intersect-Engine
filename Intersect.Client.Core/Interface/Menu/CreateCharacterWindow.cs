@@ -7,6 +7,7 @@ using Intersect.Client.General;
 using Intersect.Client.Interface.Game.Chat;
 using Intersect.Client.Localization;
 using Intersect.Client.Networking;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.Logging;
 using Intersect.Utilities;

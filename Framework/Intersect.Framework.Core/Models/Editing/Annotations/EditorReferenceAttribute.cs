@@ -1,5 +1,4 @@
 using System.Reflection;
-
 using Intersect.Collections;
 using Intersect.GameObjects.Maps;
 using Intersect.GameObjects.Maps.MapList;
@@ -7,7 +6,7 @@ using Intersect.Models;
 
 namespace Intersect.GameObjects.Annotations;
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(AttributeTargets.Property)]
 public class EditorReferenceAttribute : EditorDisplayAttribute
 {
     private readonly PropertyInfo _referenceProperty;

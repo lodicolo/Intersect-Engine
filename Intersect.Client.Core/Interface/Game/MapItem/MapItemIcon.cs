@@ -7,6 +7,7 @@ using Intersect.Client.Framework.Input;
 using Intersect.Client.General;
 using Intersect.Client.Interface.Game.DescriptionWindows;
 using Intersect.Client.Items;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 
 namespace Intersect.Client.Interface.Game.Inventory;
@@ -112,7 +113,7 @@ public partial class MapItemIcon
         var item = ItemBase.Get(MyItem.ItemId);
         if (item != null)
         {
-            var itemTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Item, item.Icon);
+            var itemTex = Globals.ContentManager.GetTexture(TextureType.Item, item.Icon);
             if (itemTex != null)
             {
                 Pnl.RenderColor = item.Color;

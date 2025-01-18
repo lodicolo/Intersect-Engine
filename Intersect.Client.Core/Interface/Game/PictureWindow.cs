@@ -3,7 +3,7 @@ using Intersect.Client.Framework.Gwen.Control;
 using Intersect.Client.Framework.Gwen.Control.EventArguments;
 using Intersect.Client.General;
 using Intersect.Client.Networking;
-
+using Intersect.Framework.Core.Content;
 using Intersect.Utilities;
 
 namespace Intersect.Client.Interface.Game;
@@ -36,7 +36,7 @@ partial class PictureWindow
         Size = size;
         Clickable = clickable;
 
-        mPicture.Texture = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Image, picture);
+        mPicture.Texture = Globals.ContentManager.GetTexture(TextureType.Image, picture);
         if (mPicture.Texture != null)
         {
             mPicture.SetSize(mPicture.Texture.Width, mPicture.Texture.Height);

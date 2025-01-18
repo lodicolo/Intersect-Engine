@@ -15,6 +15,7 @@ using Intersect.Client.General;
 using Intersect.Client.Localization;
 using Intersect.Compression;
 using Intersect.Enums;
+using Intersect.Framework.Core.Content;
 using Intersect.Framework.Core.Serialization;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Maps;
@@ -225,7 +226,7 @@ public partial class MapInstance : MapBase, IGameObject<Guid, MapInstance>, IMap
                     }
 
                     var tilesetTexture = Globals.ContentManager.GetTexture(
-                        Framework.Content.TextureType.Tileset,
+                        TextureType.Tileset,
                         tileset.Name
                     );
 
@@ -878,7 +879,7 @@ public partial class MapInstance : MapBase, IGameObject<Guid, MapInstance>, IMap
             {
                 // Set up all information we need to draw this name.
                 var itemBase = ItemBase.Get(tileItems[index].ItemId);
-                var itemTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Item, itemBase.Icon);
+                var itemTex = Globals.ContentManager.GetTexture(TextureType.Item, itemBase.Icon);
 
                 if (itemTex == null)
                 {
@@ -1265,7 +1266,7 @@ public partial class MapInstance : MapBase, IGameObject<Guid, MapInstance>, IMap
         }
 
         // Get fog texture and exit early if it is not available.
-        var fogTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Fog, Fog);
+        var fogTex = Globals.ContentManager.GetTexture(TextureType.Fog, Fog);
         if (fogTex == null)
         {
             return;
@@ -1401,7 +1402,7 @@ public partial class MapInstance : MapBase, IGameObject<Guid, MapInstance>, IMap
             }
         }
 
-        var imageTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Image, Panorama);
+        var imageTex = Globals.ContentManager.GetTexture(TextureType.Image, Panorama);
         if (imageTex != null)
         {
             Graphics.DrawFullScreenTexture(imageTex, mPanoramaIntensity);
@@ -1435,7 +1436,7 @@ public partial class MapInstance : MapBase, IGameObject<Guid, MapInstance>, IMap
             }
         }
 
-        var imageTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Image, OverlayGraphic);
+        var imageTex = Globals.ContentManager.GetTexture(TextureType.Image, OverlayGraphic);
         if (imageTex != null)
         {
             Graphics.DrawFullScreenTexture(imageTex, mOverlayIntensity);
@@ -1454,7 +1455,7 @@ public partial class MapInstance : MapBase, IGameObject<Guid, MapInstance>, IMap
         if (tempMap.Fog == Fog)
         {
             // Get fog texture.
-            var fogTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Fog, Fog);
+            var fogTex = Globals.ContentManager.GetTexture(TextureType.Fog, Fog);
             if (fogTex == null)
             {
                 return;

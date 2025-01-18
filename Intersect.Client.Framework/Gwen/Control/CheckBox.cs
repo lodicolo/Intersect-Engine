@@ -1,6 +1,6 @@
 using Intersect.Client.Framework.File_Management;
 using Intersect.Client.Framework.Graphics;
-
+using Intersect.Framework.Core.Content;
 using Newtonsoft.Json.Linq;
 
 namespace Intersect.Client.Framework.Gwen.Control;
@@ -101,7 +101,7 @@ public partial class CheckBox : Button
         {
             SetImage(
                 GameContentManager.Current.GetTexture(
-                    Framework.Content.TextureType.Gui, (string)obj["NormalImage"]
+                    TextureType.Gui, (string)obj["NormalImage"]
                 ), (string)obj["NormalImage"], ControlState.Normal
             );
         }
@@ -110,7 +110,7 @@ public partial class CheckBox : Button
         {
             SetImage(
                 GameContentManager.Current.GetTexture(
-                    Framework.Content.TextureType.Gui, (string)obj["CheckedImage"]
+                    TextureType.Gui, (string)obj["CheckedImage"]
                 ), (string)obj["CheckedImage"], ControlState.CheckedNormal
             );
         }
@@ -119,7 +119,7 @@ public partial class CheckBox : Button
         {
             SetImage(
                 GameContentManager.Current.GetTexture(
-                    Framework.Content.TextureType.Gui, (string)obj["DisabledImage"]
+                    TextureType.Gui, (string)obj["DisabledImage"]
                 ), (string)obj["DisabledImage"], ControlState.Disabled
             );
         }
@@ -128,7 +128,7 @@ public partial class CheckBox : Button
         {
             SetImage(
                 GameContentManager.Current.GetTexture(
-                    Framework.Content.TextureType.Gui, (string)obj["CheckedDisabledImage"]
+                    TextureType.Gui, (string)obj["CheckedDisabledImage"]
                 ), (string)obj["CheckedDisabledImage"], ControlState.CheckedDisabled
             );
         }

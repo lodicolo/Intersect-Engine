@@ -3,7 +3,7 @@ using Intersect.Client.Framework.GenericClasses;
 using Intersect.Client.Framework.Graphics;
 using Intersect.Client.Framework.Gwen.ControlInternal;
 using Intersect.Client.Framework.Gwen.Input;
-
+using Intersect.Framework.Core.Content;
 using Newtonsoft.Json.Linq;
 
 namespace Intersect.Client.Framework.Gwen.Control;
@@ -149,7 +149,7 @@ public partial class Slider : Base
         {
             SetImage(
                 GameContentManager.Current.GetTexture(
-                    Framework.Content.TextureType.Gui, (string)obj["BackgroundImage"]
+                    TextureType.Gui, (string)obj["BackgroundImage"]
                 ), (string)obj["BackgroundImage"]
             );
         }

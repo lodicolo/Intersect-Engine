@@ -7,6 +7,7 @@ using Intersect.Client.General;
 using Intersect.Client.Localization;
 using Intersect.Client.Networking;
 using Intersect.Enums;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.Network.Packets.Server;
 
@@ -224,7 +225,7 @@ public partial class CharacterWindow
         //Load Portrait
         //UNCOMMENT THIS LINE IF YOU'D RATHER HAVE A FACE HERE GameTexture faceTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Face, Globals.Me.Face);
         var entityTex = Globals.ContentManager.GetTexture(
-            Framework.Content.TextureType.Entity, Globals.Me.Sprite
+            TextureType.Entity, Globals.Me.Sprite
         );
 
         /* UNCOMMENT THIS BLOCK IF YOU"D RATHER HAVE A FACE HERE if (Globals.Me.Face != "" && Globals.Me.Face != _currentSprite && faceTex != null)
@@ -283,7 +284,7 @@ public partial class CharacterWindow
                 else if (paperdoll != "" && paperdoll != PaperdollTextures[z])
                 {
                     var paperdollTex = Globals.ContentManager.GetTexture(
-                        Framework.Content.TextureType.Paperdoll, paperdoll
+                        TextureType.Paperdoll, paperdoll
                     );
 
                     PaperdollPanels[z].Texture = paperdollTex;

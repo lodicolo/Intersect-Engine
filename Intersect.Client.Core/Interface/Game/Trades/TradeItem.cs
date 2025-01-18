@@ -5,6 +5,7 @@ using Intersect.Client.Framework.Gwen.Input;
 using Intersect.Client.General;
 using Intersect.Client.Interface.Game.DescriptionWindows;
 using Intersect.Configuration;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 
 namespace Intersect.Client.Interface.Game.Trades;
@@ -148,7 +149,7 @@ public partial class TradeItem
             var item = ItemBase.Get(Globals.Trade[n, mMySlot].ItemId);
             if (item != null)
             {
-                var itemTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Item, item.Icon);
+                var itemTex = Globals.ContentManager.GetTexture(TextureType.Item, item.Icon);
                 if (itemTex != null)
                 {
                     Pnl.Texture = itemTex;

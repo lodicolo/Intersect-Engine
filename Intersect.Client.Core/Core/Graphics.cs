@@ -8,6 +8,7 @@ using Intersect.Client.General;
 using Intersect.Client.Maps;
 using Intersect.Configuration;
 using Intersect.Enums;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.Utilities;
 
@@ -600,7 +601,7 @@ public static partial class Graphics
         {
             var renderLoc = ConvertToWorldPointNoZoom(Globals.InputManager.GetMousePosition());
             DrawGameTexture(
-                Globals.ContentManager.GetTexture(Framework.Content.TextureType.Misc, ClientConfiguration.Instance.MouseCursor), renderLoc.X, renderLoc.Y
+                Globals.ContentManager.GetTexture(TextureType.Misc, ClientConfiguration.Instance.MouseCursor), renderLoc.X, renderLoc.Y
            );
         }
 

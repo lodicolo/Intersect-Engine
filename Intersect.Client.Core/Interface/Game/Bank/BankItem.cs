@@ -10,6 +10,7 @@ using Intersect.Client.Localization;
 using Intersect.Client.Networking;
 using Intersect.Configuration;
 using Intersect.Enums;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.Utilities;
 
@@ -174,7 +175,7 @@ public partial class BankItem
             var item = ItemBase.Get(Globals.Bank[mMySlot].ItemId);
             if (item != null)
             {
-                var itemTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Item, item.Icon);
+                var itemTex = Globals.ContentManager.GetTexture(TextureType.Item, item.Icon);
                 if (itemTex != null)
                 {
                     Pnl.Texture = itemTex;

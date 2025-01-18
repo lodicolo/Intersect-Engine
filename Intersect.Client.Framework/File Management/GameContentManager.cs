@@ -5,6 +5,7 @@ using Intersect.Client.Framework.Content;
 using Intersect.Client.Framework.Graphics;
 using Intersect.Compression;
 using Intersect.Configuration;
+using Intersect.Framework.Core.Content;
 using Intersect.Logging;
 using Intersect.Plugins;
 

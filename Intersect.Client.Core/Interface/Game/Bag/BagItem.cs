@@ -7,6 +7,7 @@ using Intersect.Client.General;
 using Intersect.Client.Interface.Game.DescriptionWindows;
 using Intersect.Client.Networking;
 using Intersect.Configuration;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.Utilities;
 
@@ -155,7 +156,7 @@ public partial class BagItem
             var item = ItemBase.Get(Globals.Bag[mMySlot].ItemId);
             if (item != null)
             {
-                var itemTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Item, item.Icon);
+                var itemTex = Globals.ContentManager.GetTexture(TextureType.Item, item.Icon);
                 if (itemTex != null)
                 {
                     Pnl.Texture = itemTex;

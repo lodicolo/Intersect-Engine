@@ -1,9 +1,10 @@
-﻿namespace Intersect.Client.Framework.Content;
+﻿namespace Intersect.Framework.Core.Content;
 
 public enum TextureType
 {
+    Any = 0,
 
-    Tileset = 0,
+    Tileset,
 
     Item,
 

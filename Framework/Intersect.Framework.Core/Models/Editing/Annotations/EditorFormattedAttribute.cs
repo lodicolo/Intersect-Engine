@@ -1,15 +1,12 @@
 using System.Reflection;
-
 using Intersect.Localization;
-using Intersect.Logging;
-
 #if !DEBUG
 using Intersect.Logging;
 #endif
 
 namespace Intersect.GameObjects.Annotations;
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(AttributeTargets.Property)]
 public class EditorFormattedAttribute : EditorDisplayAttribute
 {
     public EditorFormattedAttribute(string name)
@@ -36,7 +33,7 @@ public class EditorFormattedAttribute : EditorDisplayAttribute
         }
 
         var groupType = Group == default ? default : stringsType
-            .GetNestedTypes(BindingFlags.Static | System.Reflection.BindingFlags.Public)
+            .GetNestedTypes(BindingFlags.Static | BindingFlags.Public)
             .FirstOrDefault(type => type.Name == Group);
         var parentType = (groupType ?? stringsType);
         var members = parentType.GetMember(Name);

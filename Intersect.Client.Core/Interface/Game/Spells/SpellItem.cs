@@ -6,6 +6,7 @@ using Intersect.Client.Framework.Input;
 using Intersect.Client.General;
 using Intersect.Client.Interface.Game.DescriptionWindows;
 using Intersect.Configuration;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.Utilities;
 
@@ -153,7 +154,7 @@ public partial class SpellItem
             mCooldownLabel.IsHidden = true;
             if (spell != null)
             {
-                var spellTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Spell, spell.Icon);
+                var spellTex = Globals.ContentManager.GetTexture(TextureType.Spell, spell.Icon);
                 if (spellTex != null)
                 {
                     Pnl.Texture = spellTex;

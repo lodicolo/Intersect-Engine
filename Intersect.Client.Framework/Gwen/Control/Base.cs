@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Intersect.Logging;
 using Intersect.Client.Framework.Gwen.Renderer;
+using Intersect.Framework.Core.Content;
 using Intersect.Framework.Reflection;
 
 namespace Intersect.Client.Framework.Gwen.Control;
@@ -1068,7 +1069,7 @@ public partial class Base : IDisposable
             GameTexture texture = null;
             if (!string.IsNullOrWhiteSpace(fileName))
             {
-                texture = GameContentManager.Current?.GetTexture(Framework.Content.TextureType.Gui, fileName);
+                texture = GameContentManager.Current?.GetTexture(TextureType.Gui, fileName);
             }
 
             mToolTipBackgroundFilename = fileName;

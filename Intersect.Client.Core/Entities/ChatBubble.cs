@@ -3,6 +3,7 @@ using Intersect.Client.Framework.Entities;
 using Intersect.Client.Framework.GenericClasses;
 using Intersect.Client.Framework.Graphics;
 using Intersect.Client.General;
+using Intersect.Framework.Core.Content;
 using Intersect.Utilities;
 
 namespace Intersect.Client.Entities;
@@ -35,7 +36,7 @@ public partial class ChatBubble
         mOwner = owner;
         mSourceText = text;
         mRenderTimer = Timing.Global.MillisecondsUtc + 5000;
-        mBubbleTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Misc, "chatbubble.png");
+        mBubbleTex = Globals.ContentManager.GetTexture(TextureType.Misc, "chatbubble.png");
     }
 
     public bool Update()

@@ -4,7 +4,7 @@ using Intersect.Client.Framework.File_Management;
 using Intersect.Client.Framework.GenericClasses;
 using Intersect.Client.Framework.Graphics;
 using Intersect.Client.Framework.Gwen.ControlInternal;
-
+using Intersect.Framework.Core.Content;
 using Newtonsoft.Json.Linq;
 
 namespace Intersect.Client.Framework.Gwen.Control;
@@ -199,7 +199,7 @@ public partial class WindowControl : ResizableControl
         {
             SetImage(
                 GameContentManager.Current.GetTexture(
-                    Framework.Content.TextureType.Gui, (string)obj["ActiveImage"]
+                    TextureType.Gui, (string)obj["ActiveImage"]
                 ), (string)obj["ActiveImage"], ControlState.Active
             );
         }
@@ -208,7 +208,7 @@ public partial class WindowControl : ResizableControl
         {
             SetImage(
                 GameContentManager.Current.GetTexture(
-                    Framework.Content.TextureType.Gui, (string)obj["InactiveImage"]
+                    TextureType.Gui, (string)obj["InactiveImage"]
                 ), (string)obj["InactiveImage"], ControlState.Inactive
             );
         }

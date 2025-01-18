@@ -2,8 +2,8 @@ using System.Reflection;
 
 namespace Intersect.GameObjects.Annotations;
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-public sealed class EditorLabelAttribute : Attribute
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class EditorLabelAttribute : EditorAttribute
 {
     public EditorLabelAttribute(string name)
     {

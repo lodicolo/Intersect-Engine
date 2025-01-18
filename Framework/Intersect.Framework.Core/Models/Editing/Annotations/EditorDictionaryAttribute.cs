@@ -2,14 +2,13 @@ using System.Globalization;
 using System.Reflection;
 using Intersect.Framework.Reflection;
 using Intersect.Localization;
-
 #if !DEBUG
 using Intersect.Logging;
 #endif
 
 namespace Intersect.GameObjects.Annotations;
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(AttributeTargets.Property)]
 public class EditorDictionaryAttribute : EditorDisplayAttribute
 {
     public EditorDictionaryAttribute(string name)
@@ -115,7 +114,7 @@ public class EditorDictionaryAttribute : EditorDisplayAttribute
                 throw new ArgumentException($"Key was a {genericKey.GetFullishName()} but expected {typeof(TKey).Name}.");
             }
 
-            return Format<TKey>(dictionary, key);
+            return Format(dictionary, key);
         };
     }
 

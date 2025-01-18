@@ -1,7 +1,7 @@
 using Intersect.Client.Framework.File_Management;
 using Intersect.Client.Framework.Graphics;
 using Intersect.Client.Framework.Gwen.ControlInternal;
-
+using Intersect.Framework.Core.Content;
 using Newtonsoft.Json.Linq;
 
 namespace Intersect.Client.Framework.Gwen.Control;
@@ -336,7 +336,7 @@ public partial class Menu : ScrollControl
         {
             SetBackgroundTemplate(
                 GameContentManager.Current.GetTexture(
-                    Framework.Content.TextureType.Gui, (string)obj["BackgroundTemplate"]
+                    TextureType.Gui, (string)obj["BackgroundTemplate"]
                 ), (string)obj["BackgroundTemplate"]
             );
         }
@@ -386,7 +386,7 @@ public partial class Menu : ScrollControl
     {
         if (texture == null && !string.IsNullOrWhiteSpace(fileName))
         {
-            texture = GameContentManager.Current?.GetTexture(Framework.Content.TextureType.Gui, fileName);
+            texture = GameContentManager.Current?.GetTexture(TextureType.Gui, fileName);
         }
 
         mBackgroundTemplateFilename = fileName;

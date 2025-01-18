@@ -4,6 +4,7 @@ using Intersect.Client.Framework.Graphics;
 using Intersect.Client.Framework.Maps;
 using Intersect.Client.General;
 using Intersect.Enums;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects.Events;
 using Intersect.Logging;
 using Intersect.Network.Packets.Server;
@@ -176,7 +177,7 @@ public partial class Event : Entity
         switch (Graphic.Type)
         {
             case EventGraphicType.Tileset:
-                Texture = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Tileset, textureName);
+                Texture = Globals.ContentManager.GetTexture(TextureType.Tileset, textureName);
                 break;
 
             case EventGraphicType.Sprite:

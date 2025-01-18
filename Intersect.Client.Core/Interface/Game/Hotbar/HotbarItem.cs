@@ -9,6 +9,7 @@ using Intersect.Client.Interface.Game.DescriptionWindows;
 using Intersect.Client.Items;
 using Intersect.Client.Localization;
 using Intersect.Client.Spells;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.Utilities;
 
@@ -325,7 +326,7 @@ public partial class HotbarItem
             {
                 _contentPanel.Show();
                 _contentPanel.Texture = Globals.ContentManager.GetTexture(
-                    Framework.Content.TextureType.Item, _currentItem.Icon
+                    TextureType.Item, _currentItem.Icon
                 );
 
                 _equipLabel.IsHidden = true;
@@ -364,7 +365,7 @@ public partial class HotbarItem
             {
                 _contentPanel.Show();
                 _contentPanel.Texture = Globals.ContentManager.GetTexture(
-                    Framework.Content.TextureType.Spell, _currentSpell.Icon
+                    TextureType.Spell, _currentSpell.Icon
                 );
 
                 _equipLabel.IsHidden = true;

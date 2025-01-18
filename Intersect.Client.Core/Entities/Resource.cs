@@ -5,6 +5,7 @@ using Intersect.Client.Framework.GenericClasses;
 using Intersect.Client.Framework.Maps;
 using Intersect.Client.General;
 using Intersect.Enums;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.Network.Packets.Server;
 
@@ -81,7 +82,7 @@ public partial class Resource : Entity, IResource
         {
             if (GameContentManager.Current.TilesetsLoaded)
             {
-                Texture = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Tileset, _sprite);
+                Texture = Globals.ContentManager.GetTexture(TextureType.Tileset, _sprite);
             }
             else
             {
@@ -90,7 +91,7 @@ public partial class Resource : Entity, IResource
         }
         else
         {
-            Texture = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Resource, _sprite);
+            Texture = Globals.ContentManager.GetTexture(TextureType.Resource, _sprite);
         }
 
         _recalculateRenderBounds = true;

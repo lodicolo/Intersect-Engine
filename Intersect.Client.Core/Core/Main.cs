@@ -4,6 +4,7 @@ using Intersect.Client.Maps;
 using Intersect.Client.Networking;
 using Intersect.Configuration;
 using Intersect.Enums;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Maps;
 using Intersect.Utilities;
@@ -107,7 +108,7 @@ internal static partial class Main
         if (ClientConfiguration.Instance.IntroImages.Count > 0)
         {
             GameTexture imageTex = Globals.ContentManager.GetTexture(
-                Framework.Content.TextureType.Image, ClientConfiguration.Instance.IntroImages[Globals.IntroIndex]
+                TextureType.Image, ClientConfiguration.Instance.IntroImages[Globals.IntroIndex]
             );
 
             if (imageTex != null)

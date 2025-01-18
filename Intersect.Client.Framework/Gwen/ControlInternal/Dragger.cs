@@ -2,7 +2,7 @@
 using Intersect.Client.Framework.Graphics;
 using Intersect.Client.Framework.Gwen.Control;
 using Intersect.Client.Framework.Gwen.Input;
-
+using Intersect.Framework.Core.Content;
 using Newtonsoft.Json.Linq;
 
 namespace Intersect.Client.Framework.Gwen.ControlInternal;
@@ -182,7 +182,7 @@ public partial class Dragger : Base
         {
             SetImage(
                 GameContentManager.Current.GetTexture(
-                    Framework.Content.TextureType.Gui, (string) obj["NormalImage"]
+                    TextureType.Gui, (string) obj["NormalImage"]
                 ), (string) obj["NormalImage"], ControlState.Normal
             );
         }
@@ -191,7 +191,7 @@ public partial class Dragger : Base
         {
             SetImage(
                 GameContentManager.Current.GetTexture(
-                    Framework.Content.TextureType.Gui, (string) obj["HoveredImage"]
+                    TextureType.Gui, (string) obj["HoveredImage"]
                 ), (string) obj["HoveredImage"], ControlState.Hovered
             );
         }
@@ -200,7 +200,7 @@ public partial class Dragger : Base
         {
             SetImage(
                 GameContentManager.Current.GetTexture(
-                    Framework.Content.TextureType.Gui, (string) obj["ClickedImage"]
+                    TextureType.Gui, (string) obj["ClickedImage"]
                 ), (string) obj["ClickedImage"], ControlState.Clicked
             );
         }
@@ -209,7 +209,7 @@ public partial class Dragger : Base
         {
             SetImage(
                 GameContentManager.Current.GetTexture(
-                    Framework.Content.TextureType.Gui, (string) obj["DisabledImage"]
+                    TextureType.Gui, (string) obj["DisabledImage"]
                 ), (string) obj["DisabledImage"], ControlState.Disabled
             );
         }

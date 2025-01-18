@@ -2,6 +2,7 @@ using Intersect.Enums;
 using Intersect.GameObjects;
 using Intersect.Client.General;
 using Intersect.Client.Localization;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects.Ranges;
 using Intersect.Logging;
 using Intersect.Network.Packets.Server;
@@ -102,7 +103,7 @@ public partial class ItemDescriptionWindow : DescriptionWindowBase
         var header = AddHeader();
 
         // Set up the icon, if we can load it.
-        var tex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Item, mItem.Icon);
+        var tex = Globals.ContentManager.GetTexture(TextureType.Item, mItem.Icon);
         if (tex != null)
         {
             header.SetIcon(tex, mItem.Color);

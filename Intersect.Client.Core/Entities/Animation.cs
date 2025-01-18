@@ -5,6 +5,7 @@ using Intersect.Client.Framework.GenericClasses;
 using Intersect.Client.Framework.Graphics;
 using Intersect.Client.General;
 using Intersect.Enums;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.Utilities;
 
@@ -153,7 +154,7 @@ public partial class Animation : IAnimation
         {
             //Draw Lower
             var tex = Globals.ContentManager.GetTexture(
-                Framework.Content.TextureType.Animation, MyBase.Lower.Sprite
+                TextureType.Animation, MyBase.Lower.Sprite
             );
 
             if (tex != null)
@@ -193,7 +194,7 @@ public partial class Animation : IAnimation
         {
             //Draw Upper
             var tex = Globals.ContentManager.GetTexture(
-                Framework.Content.TextureType.Animation, MyBase.Upper.Sprite
+                TextureType.Animation, MyBase.Upper.Sprite
             );
 
             if (tex != null)
@@ -390,7 +391,7 @@ public partial class Animation : IAnimation
             return size;
         }
 
-        var tex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Animation, MyBase.Lower.Sprite);
+        var tex = Globals.ContentManager.GetTexture(TextureType.Animation, MyBase.Lower.Sprite);
         if (tex != null)
         {
             if (MyBase.Lower.XFrames > 0 && MyBase.Lower.YFrames > 0)
@@ -409,7 +410,7 @@ public partial class Animation : IAnimation
             }
         }
 
-        tex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Animation, MyBase.Upper.Sprite);
+        tex = Globals.ContentManager.GetTexture(TextureType.Animation, MyBase.Upper.Sprite);
         if (tex != null)
         {
             if (MyBase.Upper.XFrames > 0 && MyBase.Upper.YFrames > 0)

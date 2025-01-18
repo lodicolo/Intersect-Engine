@@ -8,6 +8,7 @@ using Intersect.Client.General;
 using Intersect.Client.Interface.Game.DescriptionWindows;
 using Intersect.Client.Localization;
 using Intersect.Configuration;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.Network.Packets.Server;
 
@@ -80,7 +81,7 @@ public partial class ShopItem
         var item = ItemBase.Get(Globals.GameShop.SellingItems[mMySlot].ItemId);
         if (item != null)
         {
-            var itemTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Item, item.Icon);
+            var itemTex = Globals.ContentManager.GetTexture(TextureType.Item, item.Icon);
             if (itemTex != null)
             {
                 Pnl.Texture = itemTex;

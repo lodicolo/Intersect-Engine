@@ -8,6 +8,7 @@ using Intersect.Client.General;
 using Intersect.Client.Interface.Shared;
 using Intersect.Client.Localization;
 using Intersect.Client.Networking;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects.Maps.MapList;
 using static Intersect.Client.Framework.File_Management.GameContentManager;
 

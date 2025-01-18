@@ -9,6 +9,7 @@ using Intersect.Client.Interface.Game.Chat;
 using Intersect.Client.Interface.Shared;
 using Intersect.Client.Localization;
 using Intersect.Client.Networking;
+using Intersect.Framework.Core.Content;
 using Intersect.Network.Packets.Server;
 
 namespace Intersect.Client.Interface.Menu;

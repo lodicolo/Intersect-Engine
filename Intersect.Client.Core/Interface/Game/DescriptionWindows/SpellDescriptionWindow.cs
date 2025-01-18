@@ -4,6 +4,7 @@ using Intersect.Client.General;
 using Intersect.Client.Localization;
 using Intersect.Utilities;
 using Intersect.Client.Framework.Gwen.Control;
+using Intersect.Framework.Core.Content;
 
 namespace Intersect.Client.Interface.Game.DescriptionWindows;
 
@@ -74,7 +75,7 @@ public partial class SpellDescriptionWindow : DescriptionWindowBase
         var header = AddHeader();
 
         // Set up the icon, if we can load it.
-        var tex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Spell, mSpell.Icon);
+        var tex = Globals.ContentManager.GetTexture(TextureType.Spell, mSpell.Icon);
         if (tex != null)
         {
             header.SetIcon(tex, Color.White);

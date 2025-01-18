@@ -3,6 +3,7 @@ using Intersect.Client.Framework.Gwen.Input;
 using Intersect.Client.Framework.Input;
 using Intersect.Client.General;
 using Intersect.Client.Interface.Game.DescriptionWindows;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Crafting;
 
@@ -57,7 +58,7 @@ public partial class RecipeItem
 
         if (item != null)
         {
-            var itemTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Item, item.Icon);
+            var itemTex = Globals.ContentManager.GetTexture(TextureType.Item, item.Icon);
             if (itemTex != null)
             {
                 Pnl.Texture = itemTex;

@@ -18,8 +18,8 @@ public enum StringBehavior
     Trim,
 }
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-public class EditorDisplayAttribute : Attribute
+[AttributeUsage(AttributeTargets.Property)]
+public class EditorDisplayAttribute : EditorAttribute
 {
     public EmptyBehavior EmptyBehavior { get; set; } = EmptyBehavior.NoChange;
 

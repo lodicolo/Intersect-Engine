@@ -8,6 +8,7 @@ using Intersect.Client.General;
 using Intersect.Client.Localization;
 using Intersect.Configuration;
 using Intersect.Enums;
+using Intersect.Framework.Core.Content;
 using Intersect.GameObjects;
 using Intersect.Logging;
 using Intersect.Utilities;
@@ -742,7 +743,7 @@ public partial class EntityBox
 
     private void UpdateImage()
     {
-        var faceTex = Globals.ContentManager.GetTexture(Framework.Content.TextureType.Face, MyEntity.Face);
+        var faceTex = Globals.ContentManager.GetTexture(TextureType.Face, MyEntity.Face);
         var entityTex = MyEntity.Texture;
         if (faceTex != null && faceTex != EntityFace.Texture)
         {
@@ -837,7 +838,7 @@ public partial class EntityBox
                 else if (!string.IsNullOrWhiteSpace(paperdoll) && paperdoll != PaperdollTextures[n])
                 {
                     var paperdollTex = Globals.ContentManager.GetTexture(
-                        Framework.Content.TextureType.Paperdoll, paperdoll
+                        TextureType.Paperdoll, paperdoll
                     );
 
                     paperdollPanel.Texture = paperdollTex;

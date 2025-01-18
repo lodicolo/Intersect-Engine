@@ -1,6 +1,6 @@
 namespace Intersect.GameObjects.Annotations;
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(AttributeTargets.Property)]
 public class EditorEnumAttribute : EditorDisplayAttribute
 {
     public EditorEnumAttribute(Type enumType)
@@ -14,4 +14,10 @@ public class EditorEnumAttribute : EditorDisplayAttribute
     }
 
     public Type EnumType { get; }
+}
+
+[AttributeUsage(AttributeTargets.Property)]
+public class EditorEnumAttribute<TEnum> : EditorDisplayAttribute where TEnum : struct, Enum
+{
+    public Type Type => typeof(TEnum);
 }
