@@ -218,6 +218,8 @@ public partial class Color : IEquatable<Color>
         return (int) ((uint) R << 24) + (G << 16) + (B << 8) + A;
     }
 
+    public string ToRgbaString() => $"rgba({R}, {G}, {B}, {(A / 255.0f)}";
+
     public override string ToString() => $"{A},{R},{G},{B}";
 
     public static Color FromArgb(int argb)
