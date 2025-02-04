@@ -1,0 +1,2531 @@
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Admin_Access" xml:space="preserve">
+    <value>Acceso:</value>
+  </data>
+  <data name="Admin_Access0" xml:space="preserve">
+    <value>Ninguno</value>
+  </data>
+  <data name="Admin_Access1" xml:space="preserve">
+    <value>Moderador</value>
+  </data>
+  <data name="Admin_Access2" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Admin_Ban" xml:space="preserve">
+    <value>Ban</value>
+  </data>
+  <data name="Admin_BanCaption" xml:space="preserve">
+    <value>Ban {00}</value>
+  </data>
+  <data name="Admin_BanPrompt" xml:space="preserve">
+    <value>Banear por {00} No les permitirá el acceso al juego durante el tiempo que establezcas!</value>
+  </data>
+  <data name="Admin_Chronological" xml:space="preserve">
+    <value>123...</value>
+  </data>
+  <data name="Admin_ChronologicalTip" xml:space="preserve">
+    <value>Ordenar cronologicamente.</value>
+  </data>
+  <data name="Admin_Face" xml:space="preserve">
+    <value>Cara:</value>
+  </data>
+  <data name="Admin_Kick" xml:space="preserve">
+    <value>Patear</value>
+  </data>
+  <data name="Admin_Kill" xml:space="preserve">
+    <value>Asesinar</value>
+  </data>
+  <data name="Admin_MapList" xml:space="preserve">
+    <value>Lista de mapas:</value>
+  </data>
+  <data name="Admin_Mute" xml:space="preserve">
+    <value>Silenciar</value>
+  </data>
+  <data name="Admin_MuteCaption" xml:space="preserve">
+    <value>Silenciar por {00}</value>
+  </data>
+  <data name="Admin_MutePrompt" xml:space="preserve">
+    <value>Silenciado por {00} no les permitirá chatear en el juego durante el tiempo que establezcas!</value>
+  </data>
+  <data name="Admin_Name" xml:space="preserve">
+    <value>Nombre:</value>
+  </data>
+  <data name="Admin_None" xml:space="preserve">
+    <value>Nada</value>
+  </data>
+  <data name="Admin_OverworldReturn" xml:space="preserve">
+    <value>Abandonar instancia</value>
+  </data>
+  <data name="Admin_SetFace" xml:space="preserve">
+    <value>Setear Cara</value>
+  </data>
+  <data name="Admin_SetPower" xml:space="preserve">
+    <value>Setear Acceso</value>
+  </data>
+  <data name="Admin_SetSprite" xml:space="preserve">
+    <value>Setear Sprite</value>
+  </data>
+  <data name="Admin_Sprite" xml:space="preserve">
+    <value>Sprite:</value>
+  </data>
+  <data name="Admin_Title" xml:space="preserve">
+    <value>Administracion</value>
+  </data>
+  <data name="Admin_Unban" xml:space="preserve">
+    <value>Desbanear</value>
+  </data>
+  <data name="Admin_UnbanCaption" xml:space="preserve">
+    <value>Desbanear a {00}</value>
+  </data>
+  <data name="Admin_UnbanPrompt" xml:space="preserve">
+    <value>Seguro que quieres desbanear a {00}?</value>
+  </data>
+  <data name="Admin_Unmute" xml:space="preserve">
+    <value>Sacar silencio</value>
+  </data>
+  <data name="Admin_UnmuteCaption" xml:space="preserve">
+    <value>desilenciar a {00}</value>
+  </data>
+  <data name="Admin_UnmutePrompt" xml:space="preserve">
+    <value>estas seguro que quieres cancelarle el silencio a {00}?</value>
+  </data>
+  <data name="Admin_Warp2Me" xml:space="preserve">
+    <value>Traer a mi</value>
+  </data>
+  <data name="Admin_WarpMe2" xml:space="preserve">
+    <value>Ir a</value>
+  </data>
+  <data name="BagContextMenu_Withdraw" xml:space="preserve">
+    <value>Extraer {00}</value>
+  </data>
+  <data name="Bags_RetrieveItem" xml:space="preserve">
+    <value>Recuperar Item</value>
+  </data>
+  <data name="Bags_RetrieveItemPrompt" xml:space="preserve">
+    <value>Cuantos {00} te gustaría recuperar?</value>
+  </data>
+  <data name="Bags_StoreItem" xml:space="preserve">
+    <value>Depositar item</value>
+  </data>
+  <data name="Bags_StoreItemPrompt" xml:space="preserve">
+    <value>¿Cuánto/s {00} te gustaría almacenar??</value>
+  </data>
+  <data name="Bags_Title" xml:space="preserve">
+    <value>Bolso</value>
+  </data>
+  <data name="Bank_DepositItem" xml:space="preserve">
+    <value>Depositar item</value>
+  </data>
+  <data name="Bank_DepositItemPrompt" xml:space="preserve">
+    <value>¿Cuanto/s {00} te gustaria depositar?</value>
+  </data>
+  <data name="Bank_NoSpace" xml:space="preserve">
+    <value>No hay espacio en tu banco para ese artículo!</value>
+  </data>
+  <data name="Bank_Title" xml:space="preserve">
+    <value>Banco</value>
+  </data>
+  <data name="Bank_WithdrawItem" xml:space="preserve">
+    <value>Sacar item</value>
+  </data>
+  <data name="Bank_WithdrawItemNoSpace" xml:space="preserve">
+    <value>No hay espacio en tu inventario para ese artículo!</value>
+  </data>
+  <data name="Bank_WithdrawItemPrompt" xml:space="preserve">
+    <value>Cuanto/s {00} te gustaria sacar?</value>
+  </data>
+  <data name="BankContextMenu_Withdraw" xml:space="preserve">
+    <value>Extraer {00}</value>
+  </data>
+  <data name="BanMute_Cancel" xml:space="preserve">
+    <value>Cancelar:</value>
+  </data>
+  <data name="BanMute_Duration" xml:space="preserve">
+    <value>Duración:</value>
+  </data>
+  <data name="BanMute_FiveDays" xml:space="preserve">
+    <value>5 dias</value>
+  </data>
+  <data name="BanMute_Forever" xml:space="preserve">
+    <value>Indefinidamente</value>
+  </data>
+  <data name="BanMute_FourDays" xml:space="preserve">
+    <value>4 dias</value>
+  </data>
+  <data name="BanMute_IncludeIp" xml:space="preserve">
+    <value>Incluir IP:</value>
+  </data>
+  <data name="BanMute_Okay" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="BanMute_OneDay" xml:space="preserve">
+    <value>1 día</value>
+  </data>
+  <data name="BanMute_OneMonth" xml:space="preserve">
+    <value>1 mes</value>
+  </data>
+  <data name="BanMute_OneWeek" xml:space="preserve">
+    <value>1 semana</value>
+  </data>
+  <data name="BanMute_OneYear" xml:space="preserve">
+    <value>1 año</value>
+  </data>
+  <data name="BanMute_Reason" xml:space="preserve">
+    <value>Razón:</value>
+  </data>
+  <data name="BanMute_SixMonths" xml:space="preserve">
+    <value>6 meses</value>
+  </data>
+  <data name="BanMute_ThreeDays" xml:space="preserve">
+    <value>3 dias</value>
+  </data>
+  <data name="BanMute_TwoDays" xml:space="preserve">
+    <value>2 dias</value>
+  </data>
+  <data name="BanMute_TwoMonths" xml:space="preserve">
+    <value>2 meses</value>
+  </data>
+  <data name="BanMute_TwoWeeks" xml:space="preserve">
+    <value>2 semanas</value>
+  </data>
+  <data name="Character_AttackSpeed" xml:space="preserve">
+    <value>Vel. Ataque: {00}s</value>
+  </data>
+  <data name="Character_CooldownReduction" xml:space="preserve">
+    <value>Enfriamiento: {00}%</value>
+  </data>
+  <data name="Character_Equipment" xml:space="preserve">
+    <value>Equipo:</value>
+  </data>
+  <data name="Character_ExtraBuffs" xml:space="preserve">
+    <value>Buffs extra</value>
+  </data>
+  <data name="Character_ExtraExp" xml:space="preserve">
+    <value>EXP bonus: {00}%</value>
+  </data>
+  <data name="Character_HealthRegen" xml:space="preserve">
+    <value>Reg. HP: {00}%</value>
+  </data>
+  <data name="Character_LevelAndClass" xml:space="preserve">
+    <value>Nivel: {00} {01}</value>
+  </data>
+  <data name="Character_Lifesteal" xml:space="preserve">
+    <value>Vampirismo: {00}%</value>
+  </data>
+  <data name="Character_Luck" xml:space="preserve">
+    <value>Suerte: {00}%</value>
+  </data>
+  <data name="Character_ManaRegen" xml:space="preserve">
+    <value>Reg. MP: {00}%</value>
+  </data>
+  <data name="Character_Manasteal" xml:space="preserve">
+    <value>Robo de maná: {00}%</value>
+  </data>
+  <data name="Character_Points" xml:space="preserve">
+    <value>Puntos: {00}</value>
+  </data>
+  <data name="Character_Stat0" xml:space="preserve">
+    <value>{00}: {01}</value>
+  </data>
+  <data name="Character_Stat1" xml:space="preserve">
+    <value>{00}: {01}</value>
+  </data>
+  <data name="Character_Stat2" xml:space="preserve">
+    <value>{00}: {01}</value>
+  </data>
+  <data name="Character_Stat3" xml:space="preserve">
+    <value>{00}: {01}</value>
+  </data>
+  <data name="Character_Stat4" xml:space="preserve">
+    <value>{00}: {01}</value>
+  </data>
+  <data name="Character_Stats" xml:space="preserve">
+    <value>Estadísticas</value>
+  </data>
+  <data name="Character_Tenacity" xml:space="preserve">
+    <value>Tenacidad: {00}%</value>
+  </data>
+  <data name="Character_Title" xml:space="preserve">
+    <value>Personaje</value>
+  </data>
+  <data name="CharacterCreation_Back" xml:space="preserve">
+    <value>Volver</value>
+  </data>
+  <data name="CharacterCreation_Class" xml:space="preserve">
+    <value>Clase:</value>
+  </data>
+  <data name="CharacterCreation_Create" xml:space="preserve">
+    <value>Crear</value>
+  </data>
+  <data name="CharacterCreation_Female" xml:space="preserve">
+    <value>Femen.</value>
+  </data>
+  <data name="CharacterCreation_Gender" xml:space="preserve">
+    <value>Genero:</value>
+  </data>
+  <data name="CharacterCreation_Hint" xml:space="preserve">
+    <value>Personaliza</value>
+  </data>
+  <data name="CharacterCreation_Hint2" xml:space="preserve">
+    <value>Tu personaje!</value>
+  </data>
+  <data name="CharacterCreation_InvalidName" xml:space="preserve">
+    <value>Nombre de personaje invalido. Por favor use entre 2 y 20 caracteres alfanumericos.</value>
+  </data>
+  <data name="CharacterCreation_Male" xml:space="preserve">
+    <value>Masc.</value>
+  </data>
+  <data name="CharacterCreation_Name" xml:space="preserve">
+    <value>Nombre:</value>
+  </data>
+  <data name="CharacterCreation_Title" xml:space="preserve">
+    <value>Crear personaje</value>
+  </data>
+  <data name="CharacterSelection_Delete" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="CharacterSelection_DeletePrompt" xml:space="preserve">
+    <value>Estas seguro que quieres borrar {00}? Esta acción es irreversible!!</value>
+  </data>
+  <data name="CharacterSelection_DeleteTitle" xml:space="preserve">
+    <value>Borrar {00}</value>
+  </data>
+  <data name="CharacterSelection_Empty" xml:space="preserve">
+    <value>Slot Vacío</value>
+  </data>
+  <data name="CharacterSelection_Info" xml:space="preserve">
+    <value>Nivel {00} {01}</value>
+  </data>
+  <data name="CharacterSelection_Logout" xml:space="preserve">
+    <value>Desloguear</value>
+  </data>
+  <data name="CharacterSelection_Name" xml:space="preserve">
+    <value>{00}</value>
+  </data>
+  <data name="CharacterSelection_New" xml:space="preserve">
+    <value>Nuevo</value>
+  </data>
+  <data name="CharacterSelection_Play" xml:space="preserve">
+    <value>Usar</value>
+  </data>
+  <data name="CharacterSelection_Title" xml:space="preserve">
+    <value>Seleccionar personaje</value>
+  </data>
+  <data name="Chatbox_Channel" xml:space="preserve">
+    <value>Canal:</value>
+  </data>
+  <data name="Chatbox_ChannelAdmin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Chatbox_Channels_0" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="Chatbox_Channels_1" xml:space="preserve">
+    <value>Mundial</value>
+  </data>
+  <data name="Chatbox_Channels_2" xml:space="preserve">
+    <value>Equipo</value>
+  </data>
+  <data name="Chatbox_Channels_3" xml:space="preserve">
+    <value>Clan</value>
+  </data>
+  <data name="Chatbox_ChatTabButtons_All" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="Chatbox_ChatTabButtons_Global" xml:space="preserve">
+    <value>Mundial</value>
+  </data>
+  <data name="Chatbox_ChatTabButtons_Guild" xml:space="preserve">
+    <value>Clan</value>
+  </data>
+  <data name="Chatbox_ChatTabButtons_Local" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="Chatbox_ChatTabButtons_Party" xml:space="preserve">
+    <value>Equipo</value>
+  </data>
+  <data name="Chatbox_ChatTabButtons_System" xml:space="preserve">
+    <value>Sistema</value>
+  </data>
+  <data name="Chatbox_ClearLogButtonToolTip" xml:space="preserve">
+    <value>Limpiar chat</value>
+  </data>
+  <data name="Chatbox_EnterChat" xml:space="preserve">
+    <value>Clickee aqui para chatear.</value>
+  </data>
+  <data name="Chatbox_EnterChat1" xml:space="preserve">
+    <value>Presione {00} para chatear.</value>
+  </data>
+  <data name="Chatbox_EnterChat2" xml:space="preserve">
+    <value>Presione {00} o {01} para chatear.</value>
+  </data>
+  <data name="Chatbox_Send" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="Chatbox_Title" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="Chatbox_ToggleLogButtonToolTip" xml:space="preserve">
+    <value>Mostrar chat</value>
+  </data>
+  <data name="Chatbox_TooFast" xml:space="preserve">
+    <value>Estas escribiendo muy rápido!</value>
+  </data>
+  <data name="Chatbox_UnableToCopy" xml:space="preserve">
+    <value>Parece que no puede copiar/pegar en esta plataforma. Asegúrese de tener instalados los paquetes 'xclip' o 'wl-clipboard' si está ejecutando Linux.</value>
+  </data>
+  <data name="ChatContextMenu_FriendInvite" xml:space="preserve">
+    <value>Ofrecer amistad {00}</value>
+  </data>
+  <data name="ChatContextMenu_GuildInvite" xml:space="preserve">
+    <value>Invitar a gremio {00}</value>
+  </data>
+  <data name="ChatContextMenu_PartyInvite" xml:space="preserve">
+    <value>Invitar a equipo {00}</value>
+  </data>
+  <data name="ChatContextMenu_PM" xml:space="preserve">
+    <value>PM {00}</value>
+  </data>
+  <data name="Combat_AttackWhileCastingDeny" xml:space="preserve">
+    <value>Estás casteando un hechizo, no puedes atacar.</value>
+  </data>
+  <data name="Combat_Stat0" xml:space="preserve">
+    <value>ATK</value>
+  </data>
+  <data name="Combat_Stat1" xml:space="preserve">
+    <value>AP</value>
+  </data>
+  <data name="Combat_Stat2" xml:space="preserve">
+    <value>DEF</value>
+  </data>
+  <data name="Combat_Stat3" xml:space="preserve">
+    <value>M.DEF</value>
+  </data>
+  <data name="Combat_Stat4" xml:space="preserve">
+    <value>Agilidad</value>
+  </data>
+  <data name="Combat_WarningCharacterSelect" xml:space="preserve">
+    <value>¡Estás a punto de cerrar sesión en combate! ¡Tu personaje permanecerá en el juego hasta que termine el combate! ¿Seguro que quieres cerrar sesión ahora?</value>
+  </data>
+  <data name="Combat_WarningExitDesktop" xml:space="preserve">
+    <value>¡Estás a punto de cerrar sesión en combate! ¡Tu personaje permanecerá en el juego hasta que termine el combate! ¿Seguro que quieres cerrar sesión ahora?</value>
+  </data>
+  <data name="Combat_WarningLogout" xml:space="preserve">
+    <value>¡Estás a punto de cerrar sesión en combate! ¡Tu personaje permanecerá en el juego hasta que termine el combate! ¿Seguro que quieres cerrar sesión ahora?</value>
+  </data>
+  <data name="Combat_WarningTitle" xml:space="preserve">
+    <value>Advertencia de Combate!</value>
+  </data>
+  <data name="Controls_KeyDictionary_attackinteract" xml:space="preserve">
+    <value>Atacar/Interactuar:</value>
+  </data>
+  <data name="Controls_KeyDictionary_autotarget" xml:space="preserve">
+    <value>Auto objetivo:</value>
+  </data>
+  <data name="Controls_KeyDictionary_block" xml:space="preserve">
+    <value>Bloquear:</value>
+  </data>
+  <data name="Controls_KeyDictionary_enter" xml:space="preserve">
+    <value>Enter:</value>
+  </data>
+  <data name="Controls_KeyDictionary_holdtozoomin" xml:space="preserve">
+    <value>Acercar cámara:</value>
+  </data>
+  <data name="Controls_KeyDictionary_holdtozoomout" xml:space="preserve">
+    <value>Alejar cámara:</value>
+  </data>
+  <data name="Controls_KeyDictionary_hotkey0" xml:space="preserve">
+    <value>Hot Key 0:</value>
+  </data>
+  <data name="Controls_KeyDictionary_hotkey1" xml:space="preserve">
+    <value>Hot Key 1:</value>
+  </data>
+  <data name="Controls_KeyDictionary_hotkey2" xml:space="preserve">
+    <value>Hot Key 2:</value>
+  </data>
+  <data name="Controls_KeyDictionary_hotkey3" xml:space="preserve">
+    <value>Hot Key 3:</value>
+  </data>
+  <data name="Controls_KeyDictionary_hotkey4" xml:space="preserve">
+    <value>Hot Key 4:</value>
+  </data>
+  <data name="Controls_KeyDictionary_hotkey5" xml:space="preserve">
+    <value>Hot Key 5:</value>
+  </data>
+  <data name="Controls_KeyDictionary_hotkey6" xml:space="preserve">
+    <value>Hot Key 6:</value>
+  </data>
+  <data name="Controls_KeyDictionary_hotkey7" xml:space="preserve">
+    <value>Hot Key 7:</value>
+  </data>
+  <data name="Controls_KeyDictionary_hotkey8" xml:space="preserve">
+    <value>Hot Key 8:</value>
+  </data>
+  <data name="Controls_KeyDictionary_hotkey9" xml:space="preserve">
+    <value>Hot Key 9:</value>
+  </data>
+  <data name="Controls_KeyDictionary_movedown" xml:space="preserve">
+    <value>Abajo:</value>
+  </data>
+  <data name="Controls_KeyDictionary_moveleft" xml:space="preserve">
+    <value>Izquierda:</value>
+  </data>
+  <data name="Controls_KeyDictionary_moveright" xml:space="preserve">
+    <value>Derecha:</value>
+  </data>
+  <data name="Controls_KeyDictionary_moveup" xml:space="preserve">
+    <value>Arriba:</value>
+  </data>
+  <data name="Controls_KeyDictionary_openadminpanel" xml:space="preserve">
+    <value>Abrir Panel de admin:</value>
+  </data>
+  <data name="Controls_KeyDictionary_opencharacterinfo" xml:space="preserve">
+    <value>Abrir Perfil:</value>
+  </data>
+  <data name="Controls_KeyDictionary_opendebugger" xml:space="preserve">
+    <value>Abrir Debug:</value>
+  </data>
+  <data name="Controls_KeyDictionary_openfriends" xml:space="preserve">
+    <value>Abrir Amigos:</value>
+  </data>
+  <data name="Controls_KeyDictionary_openguild" xml:space="preserve">
+    <value>Abrir clan:</value>
+  </data>
+  <data name="Controls_KeyDictionary_openinventory" xml:space="preserve">
+    <value>Abrir inventario:</value>
+  </data>
+  <data name="Controls_KeyDictionary_openmenu" xml:space="preserve">
+    <value>Abrir menu:</value>
+  </data>
+  <data name="Controls_KeyDictionary_openparties" xml:space="preserve">
+    <value>Abrir Party:</value>
+  </data>
+  <data name="Controls_KeyDictionary_openquests" xml:space="preserve">
+    <value>Abrir misiones:</value>
+  </data>
+  <data name="Controls_KeyDictionary_opensettings" xml:space="preserve">
+    <value>Abrir configuraciones:</value>
+  </data>
+  <data name="Controls_KeyDictionary_openspells" xml:space="preserve">
+    <value>Abrir Hechizos:</value>
+  </data>
+  <data name="Controls_KeyDictionary_pickup" xml:space="preserve">
+    <value>Levantar:</value>
+  </data>
+  <data name="Controls_KeyDictionary_screenshot" xml:space="preserve">
+    <value>Screenshot:</value>
+  </data>
+  <data name="Controls_KeyDictionary_togglefullscreen" xml:space="preserve">
+    <value>Pantalla completa:</value>
+  </data>
+  <data name="Controls_KeyDictionary_togglegui" xml:space="preserve">
+    <value>Mostrar GUI:</value>
+  </data>
+  <data name="Controls_KeyDictionary_togglezoomin" xml:space="preserve">
+    <value>Zoom acercado:</value>
+  </data>
+  <data name="Controls_KeyDictionary_togglezoomout" xml:space="preserve">
+    <value>Zoom alejado:</value>
+  </data>
+  <data name="Controls_KeyDictionary_turnaround" xml:space="preserve">
+    <value>Mantener para girar:</value>
+  </data>
+  <data name="Controls_Listening" xml:space="preserve">
+    <value>Teclea</value>
+  </data>
+  <data name="Crafting_Craft" xml:space="preserve">
+    <value>Craftear</value>
+  </data>
+  <data name="Crafting_CraftAll" xml:space="preserve">
+    <value>Craftear {00}</value>
+  </data>
+  <data name="Crafting_CraftChance" xml:space="preserve">
+    <value>Chance de fallo: {00}%</value>
+  </data>
+  <data name="Crafting_CraftingTime" xml:space="preserve">
+    <value>Manuractura en: {00}s</value>
+  </data>
+  <data name="Crafting_CraftStop" xml:space="preserve">
+    <value>Detener</value>
+  </data>
+  <data name="Crafting_DestroyMaterialsChance" xml:space="preserve">
+    <value>Chance de perder items: {00}%</value>
+  </data>
+  <data name="Crafting_IncorrectResources" xml:space="preserve">
+    <value>No tienes los recursos para craftear este objeto.</value>
+  </data>
+  <data name="Crafting_Ingredients" xml:space="preserve">
+    <value>Requiere:</value>
+  </data>
+  <data name="Crafting_Product" xml:space="preserve">
+    <value>Producto:</value>
+  </data>
+  <data name="Crafting_Recipes" xml:space="preserve">
+    <value>Recetas:</value>
+  </data>
+  <data name="Credits_Back" xml:space="preserve">
+    <value>Volver</value>
+  </data>
+  <data name="Credits_Title" xml:space="preserve">
+    <value>Creditos</value>
+  </data>
+  <data name="Debug_ControlUnderCursor" xml:space="preserve">
+    <value>Control bajo cursor</value>
+  </data>
+  <data name="Debug_DrawDebugOutlines" xml:space="preserve">
+    <value>Dibujar contornos de debug</value>
+  </data>
+  <data name="Debug_Draws" xml:space="preserve">
+    <value>Dibujos</value>
+  </data>
+  <data name="Debug_EnableLayoutHotReloading" xml:space="preserve">
+    <value>Habilitar cliente caliente experimental</value>
+  </data>
+  <data name="Debug_EntitiesDrawn" xml:space="preserve">
+    <value>Entidades dibujadas</value>
+  </data>
+  <data name="Debug_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Debug_InterfaceObjects" xml:space="preserve">
+    <value>Objetos de interfaz</value>
+  </data>
+  <data name="Debug_KnownEntities" xml:space="preserve">
+    <value>Entidades conocidas</value>
+  </data>
+  <data name="Debug_KnownMaps" xml:space="preserve">
+    <value>Mapas conocidos</value>
+  </data>
+  <data name="Debug_LightsDrawn" xml:space="preserve">
+    <value>Luces dibujadas</value>
+  </data>
+  <data name="Debug_Map" xml:space="preserve">
+    <value>Mapa</value>
+  </data>
+  <data name="Debug_MapsDrawn" xml:space="preserve">
+    <value>Mapas dibujados</value>
+  </data>
+  <data name="Debug_Ping" xml:space="preserve">
+    <value>Ping</value>
+  </data>
+  <data name="Debug_ShutdownServer" xml:space="preserve">
+    <value>Apagar servidor</value>
+  </data>
+  <data name="Debug_ShutdownServerAndExit" xml:space="preserve">
+    <value>Apagar servidor y salir</value>
+  </data>
+  <data name="Debug_Time" xml:space="preserve">
+    <value>Tiempo</value>
+  </data>
+  <data name="Debug_Title" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="EntityBox_Exp" xml:space="preserve">
+    <value>EXP:</value>
+  </data>
+  <data name="EntityBox_ExpValue" xml:space="preserve">
+    <value>{00} / {01}</value>
+  </data>
+  <data name="EntityBox_Level" xml:space="preserve">
+    <value>Lvl. {00}</value>
+  </data>
+  <data name="EntityBox_Map" xml:space="preserve">
+    <value>{00}</value>
+  </data>
+  <data name="EntityBox_MaxLevel" xml:space="preserve">
+    <value>Nivel Max</value>
+  </data>
+  <data name="EntityBox_NameAndLevel" xml:space="preserve">
+    <value>{00}    {01}</value>
+  </data>
+  <data name="EntityBox_Vital0" xml:space="preserve">
+    <value>HP:</value>
+  </data>
+  <data name="EntityBox_Vital0Value" xml:space="preserve">
+    <value>{00} / {01}</value>
+  </data>
+  <data name="EntityBox_Vital1" xml:space="preserve">
+    <value>MP:</value>
+  </data>
+  <data name="EntityBox_Vital1Value" xml:space="preserve">
+    <value>{00} / {01}</value>
+  </data>
+  <data name="EntityContextMenu_AddFriend" xml:space="preserve">
+    <value>Agregar amigo</value>
+  </data>
+  <data name="EntityContextMenu_InviteToGuild" xml:space="preserve">
+    <value>Invitar al clan</value>
+  </data>
+  <data name="EntityContextMenu_InviteToParty" xml:space="preserve">
+    <value>Invitar al equipo</value>
+  </data>
+  <data name="EntityContextMenu_PrivateMessage" xml:space="preserve">
+    <value>Mensaje privado</value>
+  </data>
+  <data name="EntityContextMenu_Trade" xml:space="preserve">
+    <value>invitar intercambio</value>
+  </data>
+  <data name="Errors_DisconnectionEvent" xml:space="preserve">
+    <value>Por favor brinde este mensaje a su administrador: {0}</value>
+  </data>
+  <data name="Errors_DisplayNotSupported" xml:space="preserve">
+    <value>Configuración de pantalla invalida!</value>
+  </data>
+  <data name="Errors_DisplayNotSupportedError" xml:space="preserve">
+    <value>La resolución tipo pantalla completa {00} no esta soportada en este equipo!</value>
+  </data>
+  <data name="Errors_HostNotFound" xml:space="preserve">
+    <value>Error de resolución DNS, por favor reporte esto al administrador del juego.</value>
+  </data>
+  <data name="Errors_LoadFile" xml:space="preserve">
+    <value>No se pudo cargar {00}. Envíe al administrador del juego una copia de su archivo de registro de errores en el directorio Logs.</value>
+  </data>
+  <data name="Errors_LostConnection" xml:space="preserve">
+    <value>Conexión con el servidor perdida. Por favor asegurese que esta conectado a internet e intente de nuevo!</value>
+  </data>
+  <data name="Errors_NotConnected" xml:space="preserve">
+    <value>No esta conectado al servidor. ¿Estará en linea?</value>
+  </data>
+  <data name="Errors_OpenAllLink" xml:space="preserve">
+    <value>https://goo.gl/Nbx6hx</value>
+  </data>
+  <data name="Errors_OpenGlLink" xml:space="preserve">
+    <value>https://goo.gl/RSP3ts</value>
+  </data>
+  <data name="Errors_PasswordInvalid" xml:space="preserve">
+    <value>Contraseña incorrecta. Por favor use de 4 a 20 caracteres alfanumericos.</value>
+  </data>
+  <data name="Errors_ResourcesNotFound" xml:space="preserve">
+    <value>¡No se pudo encontrar el directorio de recursos! El cliente ahora se cerrará.</value>
+  </data>
+  <data name="Errors_Title" xml:space="preserve">
+    <value>Error!</value>
+  </data>
+  <data name="Errors_UsernameInvalid" xml:space="preserve">
+    <value>Usuario invalido. Por favor use de 2 a 20 caracteres alfanumericos.</value>
+  </data>
+  <data name="EscapeMenu_CharacterSelect" xml:space="preserve">
+    <value>Chars</value>
+  </data>
+  <data name="EscapeMenu_Close" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="EscapeMenu_ExitToDesktop" xml:space="preserve">
+    <value>Escritorio</value>
+  </data>
+  <data name="EscapeMenu_Logout" xml:space="preserve">
+    <value>Deslogear</value>
+  </data>
+  <data name="EscapeMenu_Settings" xml:space="preserve">
+    <value>Ajustes</value>
+  </data>
+  <data name="EscapeMenu_Title" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="EventWindow_Continue" xml:space="preserve">
+    <value>Continuar</value>
+  </data>
+  <data name="ForgotPass_Back" xml:space="preserve">
+    <value>Volver</value>
+  </data>
+  <data name="ForgotPass_Hint" xml:space="preserve">
+    <value>Si su cuenta existe, le enviaremos un código de restablecimiento de contraseña temporal.</value>
+  </data>
+  <data name="ForgotPass_Label" xml:space="preserve">
+    <value>Ingrese su nombre de usuario o correo electrónico a continuación::</value>
+  </data>
+  <data name="ForgotPass_Submit" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="ForgotPass_Title" xml:space="preserve">
+    <value>Restablecimiento de contraseña</value>
+  </data>
+  <data name="Friends_AddFriend" xml:space="preserve">
+    <value>Agregar amigo</value>
+  </data>
+  <data name="Friends_AddFriendPrompt" xml:space="preserve">
+    <value>A quien quieres añadir como amigo?</value>
+  </data>
+  <data name="Friends_InFight" xml:space="preserve">
+    <value>Estás actualmente en combate!</value>
+  </data>
+  <data name="Friends_Offline" xml:space="preserve">
+    <value>Desconectado</value>
+  </data>
+  <data name="Friends_RemoveFriend" xml:space="preserve">
+    <value>Eliminar amistad</value>
+  </data>
+  <data name="Friends_RemoveFriendPrompt" xml:space="preserve">
+    <value>Quieres eliminar a {00} de tu lista de amigos?</value>
+  </data>
+  <data name="Friends_Request" xml:space="preserve">
+    <value>Solicitud de amistad</value>
+  </data>
+  <data name="Friends_RequestPrompt" xml:space="preserve">
+    <value>{00} te envió una solicitud de amistad. Deseas aceptarlo?</value>
+  </data>
+  <data name="Friends_Title" xml:space="preserve">
+    <value>Amigos</value>
+  </data>
+  <data name="GameMenu_Character" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="GameMenu_Friends" xml:space="preserve">
+    <value>Amigos</value>
+  </data>
+  <data name="GameMenu_Items" xml:space="preserve">
+    <value>Inventario</value>
+  </data>
+  <data name="GameMenu_Menu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="GameMenu_Party" xml:space="preserve">
+    <value>Equipo</value>
+  </data>
+  <data name="GameMenu_Quest" xml:space="preserve">
+    <value>Misiones</value>
+  </data>
+  <data name="GameMenu_Spells" xml:space="preserve">
+    <value>Habilidades</value>
+  </data>
+  <data name="GameWindow_EntityNameAndLevel" xml:space="preserve">
+    <value>{00} [Lv. {01}]</value>
+  </data>
+  <data name="General_MapItemStackable" xml:space="preserve">
+    <value>{01} {00}</value>
+  </data>
+  <data name="General_None" xml:space="preserve">
+    <value>Nada</value>
+  </data>
+  <data name="Guilds_Add" xml:space="preserve">
+    <value>+</value>
+  </data>
+  <data name="Guilds_Bank" xml:space="preserve">
+    <value>Banco del Gremio {00}</value>
+  </data>
+  <data name="Guilds_Demote" xml:space="preserve">
+    <value>Degradar a {00}</value>
+  </data>
+  <data name="Guilds_DemotePrompt" xml:space="preserve">
+    <value>Seguro que quieres degradar a {00} al rango {01}?</value>
+  </data>
+  <data name="Guilds_DemoteTitle" xml:space="preserve">
+    <value>Degradar miembro</value>
+  </data>
+  <data name="Guilds_Guild" xml:space="preserve">
+    <value>Clan</value>
+  </data>
+  <data name="Guilds_GuildTip" xml:space="preserve">
+    <value>Enviar una invitación para que se una a tu clan.</value>
+  </data>
+  <data name="Guilds_Invite" xml:space="preserve">
+    <value>Invitar</value>
+  </data>
+  <data name="Guilds_InviteAlreadyInGuild" xml:space="preserve">
+    <value>El jugador que intentas invitar ya está en un clan o tiene una invitación pendiente.</value>
+  </data>
+  <data name="Guilds_InviteMemberPrompt" xml:space="preserve">
+    <value>A quien te gustaría invitar a {00}?</value>
+  </data>
+  <data name="Guilds_InviteMemberTitle" xml:space="preserve">
+    <value>Invitar jugador</value>
+  </data>
+  <data name="Guilds_InviteRequestPrompt" xml:space="preserve">
+    <value>{00} te está invitando al clan {01}. Aceptas la invitación?</value>
+  </data>
+  <data name="Guilds_InviteRequestPromptMissingGuild" xml:space="preserve">
+    <value>{00} le gustaría invitarte a su clan. Aceptas?</value>
+  </data>
+  <data name="Guilds_InviteRequestTitle" xml:space="preserve">
+    <value>Invitación a Clan</value>
+  </data>
+  <data name="Guilds_Kick" xml:space="preserve">
+    <value>Expulsar</value>
+  </data>
+  <data name="Guilds_KickPrompt" xml:space="preserve">
+    <value>Seguro que quieres expulsar del gremio a {00}?</value>
+  </data>
+  <data name="Guilds_KickTitle" xml:space="preserve">
+    <value>Expulsar miembro</value>
+  </data>
+  <data name="Guilds_Leave" xml:space="preserve">
+    <value>Abandonar</value>
+  </data>
+  <data name="Guilds_LeavePrompt" xml:space="preserve">
+    <value>Seguro que quieres abandonar el Clan?</value>
+  </data>
+  <data name="Guilds_LeaveTitle" xml:space="preserve">
+    <value>Abandonar Clan</value>
+  </data>
+  <data name="Guilds_NotAllowedDeposit" xml:space="preserve">
+    <value>¡No tienes permiso para depositar artículos en el banco del gremio de {00}!</value>
+  </data>
+  <data name="Guilds_NotAllowedSwap" xml:space="preserve">
+    <value>¡No tienes permiso para intercambiar artículos dentro del banco del gremio de {00}!</value>
+  </data>
+  <data name="Guilds_NotAllowedWithdraw" xml:space="preserve">
+    <value>¡No tienes permiso para retirar objetos del banco del gremio de {00}!</value>
+  </data>
+  <data name="Guilds_NotInGuild" xml:space="preserve">
+    <value>No estás en un clan!</value>
+  </data>
+  <data name="Guilds_OfflineListEntry" xml:space="preserve">
+    <value>[{00}] {01} - {02}</value>
+  </data>
+  <data name="Guilds_OnlineListEntry" xml:space="preserve">
+    <value>[{00}] {01} - {02}</value>
+  </data>
+  <data name="Guilds_PM" xml:space="preserve">
+    <value>PM</value>
+  </data>
+  <data name="Guilds_Promote" xml:space="preserve">
+    <value>Promover a {00}</value>
+  </data>
+  <data name="Guilds_PromotePrompt" xml:space="preserve">
+    <value>Seguro que quieres promover a {00} al rango {01}?</value>
+  </data>
+  <data name="Guilds_PromoteTitle" xml:space="preserve">
+    <value>Promover miembro</value>
+  </data>
+  <data name="Guilds_Tooltip" xml:space="preserve">
+    <value>Lv. {00} {01}</value>
+  </data>
+  <data name="Guilds_Transfer" xml:space="preserve">
+    <value>Transferir</value>
+  </data>
+  <data name="Guilds_TransferPrompt" xml:space="preserve">
+    <value>Esta acción transferirá por completo toda la propiedad de tu clan a {00} y perderás tu rango de {01}. Si está seguro de que desea entregar su clan, ingrese '{02}' a continuación.</value>
+  </data>
+  <data name="Guilds_TransferTitle" xml:space="preserve">
+    <value>Transferir Clan</value>
+  </data>
+  <data name="InputBox_Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="InputBox_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="InputBox_Okay" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="InputBox_Yes" xml:space="preserve">
+    <value>Si</value>
+  </data>
+  <data name="Internals_Bounds" xml:space="preserve">
+    <value>Límites</value>
+  </data>
+  <data name="Internals_Color" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="Internals_ColorOverride" xml:space="preserve">
+    <value>Color sobrexpuesto</value>
+  </data>
+  <data name="Internals_CoordinateX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="Internals_CoordinateY" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="Internals_CoordinateZ" xml:space="preserve">
+    <value>Z</value>
+  </data>
+  <data name="Internals_ExperimentalFeatureTooltip" xml:space="preserve">
+    <value>Esta característica es experimental y puede romper todo si está encendida.</value>
+  </data>
+  <data name="Internals_GlobalItem" xml:space="preserve">
+    <value>Global {00}</value>
+  </data>
+  <data name="Internals_LocalItem" xml:space="preserve">
+    <value>Local {00}</value>
+  </data>
+  <data name="Internals_Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Internals_NotApplicable" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="Internals_ResolutionXByY" xml:space="preserve">
+    <value>{0}x{1}</value>
+  </data>
+  <data name="Internals_Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Inventory_DropItemPrompt" xml:space="preserve">
+    <value>Cuantos {00} quieres soltar?</value>
+  </data>
+  <data name="Inventory_DropItemTitle" xml:space="preserve">
+    <value>Soltar item</value>
+  </data>
+  <data name="Inventory_DropPrompt" xml:space="preserve">
+    <value>Deseas soltar el objeto: {00}?</value>
+  </data>
+  <data name="Inventory_EquippedSymbol" xml:space="preserve">
+    <value>E</value>
+  </data>
+  <data name="Inventory_Title" xml:space="preserve">
+    <value>Inventario</value>
+  </data>
+  <data name="ItemContextMenu_Bag" xml:space="preserve">
+    <value>Guardar {00}</value>
+  </data>
+  <data name="ItemContextMenu_Bank" xml:space="preserve">
+    <value>Almacenar {00}</value>
+  </data>
+  <data name="ItemContextMenu_Cast" xml:space="preserve">
+    <value>Conjurar {00}</value>
+  </data>
+  <data name="ItemContextMenu_Drop" xml:space="preserve">
+    <value>Dropear {00}</value>
+  </data>
+  <data name="ItemContextMenu_Equip" xml:space="preserve">
+    <value>Equipar {00}</value>
+  </data>
+  <data name="ItemContextMenu_Learn" xml:space="preserve">
+    <value>Aprender {00}</value>
+  </data>
+  <data name="ItemContextMenu_Open" xml:space="preserve">
+    <value>Abrir {00}</value>
+  </data>
+  <data name="ItemContextMenu_Sell" xml:space="preserve">
+    <value>Vender {00}</value>
+  </data>
+  <data name="ItemContextMenu_Trade" xml:space="preserve">
+    <value>Ofrecer {00}</value>
+  </data>
+  <data name="ItemContextMenu_Unequip" xml:space="preserve">
+    <value>Desequipar {00}</value>
+  </data>
+  <data name="ItemContextMenu_Use" xml:space="preserve">
+    <value>Usar {00}</value>
+  </data>
+  <data name="ItemDescription_Amount" xml:space="preserve">
+    <value>Cantidad:</value>
+  </data>
+  <data name="ItemDescription_AttackSpeed" xml:space="preserve">
+    <value>Velocidad ATQ:</value>
+  </data>
+  <data name="ItemDescription_Bagged" xml:space="preserve">
+    <value>Almacenado</value>
+  </data>
+  <data name="ItemDescription_BagSlots" xml:space="preserve">
+    <value>Slots Mochila:</value>
+  </data>
+  <data name="ItemDescription_Banked" xml:space="preserve">
+    <value>Almacenado en banco</value>
+  </data>
+  <data name="ItemDescription_BaseDamage" xml:space="preserve">
+    <value>Daño base:</value>
+  </data>
+  <data name="ItemDescription_BaseDamageType" xml:space="preserve">
+    <value>Tipo de daño:</value>
+  </data>
+  <data name="ItemDescription_BlockAbsorption" xml:space="preserve">
+    <value>Daño absorbido:</value>
+  </data>
+  <data name="ItemDescription_BlockAmount" xml:space="preserve">
+    <value>Daño bloqueado:</value>
+  </data>
+  <data name="ItemDescription_BlockChance" xml:space="preserve">
+    <value>Chance de bloqueo:</value>
+  </data>
+  <data name="ItemDescription_BonusEffects_0" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ItemDescription_BonusEffects_1" xml:space="preserve">
+    <value>Reducción enfriamiento:</value>
+  </data>
+  <data name="ItemDescription_BonusEffects_2" xml:space="preserve">
+    <value>Robo de vida:</value>
+  </data>
+  <data name="ItemDescription_BonusEffects_3" xml:space="preserve">
+    <value>Tenacidad:</value>
+  </data>
+  <data name="ItemDescription_BonusEffects_4" xml:space="preserve">
+    <value>Suerte:</value>
+  </data>
+  <data name="ItemDescription_BonusEffects_5" xml:space="preserve">
+    <value>Experiencia Bonus:</value>
+  </data>
+  <data name="ItemDescription_BonusEffects_6" xml:space="preserve">
+    <value>Robo de maná:</value>
+  </data>
+  <data name="ItemDescription_CastSpell" xml:space="preserve">
+    <value>Castea hechizo: {00}</value>
+  </data>
+  <data name="ItemDescription_ConsumableTypes_0" xml:space="preserve">
+    <value>Cura HP:</value>
+  </data>
+  <data name="ItemDescription_ConsumableTypes_1" xml:space="preserve">
+    <value>Cura MP:</value>
+  </data>
+  <data name="ItemDescription_ConsumableTypes_2" xml:space="preserve">
+    <value>Otorga experiencia:</value>
+  </data>
+  <data name="ItemDescription_CritChance" xml:space="preserve">
+    <value>Chance crítica:</value>
+  </data>
+  <data name="ItemDescription_CritMultiplier" xml:space="preserve">
+    <value>Multiplicador crítico:</value>
+  </data>
+  <data name="ItemDescription_DamageTypes_0" xml:space="preserve">
+    <value>Físico</value>
+  </data>
+  <data name="ItemDescription_DamageTypes_1" xml:space="preserve">
+    <value>Mágico</value>
+  </data>
+  <data name="ItemDescription_DamageTypes_2" xml:space="preserve">
+    <value>Real</value>
+  </data>
+  <data name="ItemDescription_Description" xml:space="preserve">
+    <value>{00}</value>
+  </data>
+  <data name="ItemDescription_DropOnDeath" xml:space="preserve">
+    <value>Chance drop al morir:</value>
+  </data>
+  <data name="ItemDescription_Dropped" xml:space="preserve">
+    <value>Dropeado</value>
+  </data>
+  <data name="ItemDescription_GuildBanked" xml:space="preserve">
+    <value>Almacenado en banco de gremio</value>
+  </data>
+  <data name="ItemDescription_ItemLimits" xml:space="preserve">
+    <value>No puede ser {00}</value>
+  </data>
+  <data name="ItemDescription_ItemTypes_0" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="ItemDescription_ItemTypes_1" xml:space="preserve">
+    <value>Equipo</value>
+  </data>
+  <data name="ItemDescription_ItemTypes_2" xml:space="preserve">
+    <value>Consumible</value>
+  </data>
+  <data name="ItemDescription_ItemTypes_3" xml:space="preserve">
+    <value>Moneda</value>
+  </data>
+  <data name="ItemDescription_ItemTypes_4" xml:space="preserve">
+    <value>Hechizo</value>
+  </data>
+  <data name="ItemDescription_ItemTypes_5" xml:space="preserve">
+    <value>Especial</value>
+  </data>
+  <data name="ItemDescription_ItemTypes_6" xml:space="preserve">
+    <value>Mochila</value>
+  </data>
+  <data name="ItemDescription_Multiplier" xml:space="preserve">
+    <value>{00}x</value>
+  </data>
+  <data name="ItemDescription_Percentage" xml:space="preserve">
+    <value>{00}%</value>
+  </data>
+  <data name="ItemDescription_Rarity_Common" xml:space="preserve">
+    <value>Común</value>
+  </data>
+  <data name="ItemDescription_Rarity_Epic" xml:space="preserve">
+    <value>Épico</value>
+  </data>
+  <data name="ItemDescription_Rarity_Legendary" xml:space="preserve">
+    <value>Legendario</value>
+  </data>
+  <data name="ItemDescription_Rarity_None" xml:space="preserve">
+    <value>Sin rareza</value>
+  </data>
+  <data name="ItemDescription_Rarity_Rare" xml:space="preserve">
+    <value>Raro</value>
+  </data>
+  <data name="ItemDescription_Rarity_Uncommon" xml:space="preserve">
+    <value>Poco común</value>
+  </data>
+  <data name="ItemDescription_RegularAndPercentage" xml:space="preserve">
+    <value>{00} + {01}%</value>
+  </data>
+  <data name="ItemDescription_ScalingPercentage" xml:space="preserve">
+    <value>Porcentaje escala:</value>
+  </data>
+  <data name="ItemDescription_ScalingStat" xml:space="preserve">
+    <value>Stat escala:</value>
+  </data>
+  <data name="ItemDescription_SingleUse" xml:space="preserve">
+    <value>Único uso</value>
+  </data>
+  <data name="ItemDescription_Sold" xml:space="preserve">
+    <value>Vendido</value>
+  </data>
+  <data name="ItemDescription_StatCounts_0" xml:space="preserve">
+    <value>Ataque:</value>
+  </data>
+  <data name="ItemDescription_StatCounts_1" xml:space="preserve">
+    <value>Poder de Habilidad:</value>
+  </data>
+  <data name="ItemDescription_StatCounts_2" xml:space="preserve">
+    <value>Def. Física:</value>
+  </data>
+  <data name="ItemDescription_StatCounts_3" xml:space="preserve">
+    <value>Def. Mágica:</value>
+  </data>
+  <data name="ItemDescription_StatCounts_4" xml:space="preserve">
+    <value>Velocidad:</value>
+  </data>
+  <data name="ItemDescription_StatGrowthRange" xml:space="preserve">
+    <value>de {00} a {01}</value>
+  </data>
+  <data name="ItemDescription_Stats_0" xml:space="preserve">
+    <value>Ataque</value>
+  </data>
+  <data name="ItemDescription_Stats_1" xml:space="preserve">
+    <value>Poder de Habilidad</value>
+  </data>
+  <data name="ItemDescription_Stats_2" xml:space="preserve">
+    <value>Def. Física</value>
+  </data>
+  <data name="ItemDescription_Stats_3" xml:space="preserve">
+    <value>Def. Mágica</value>
+  </data>
+  <data name="ItemDescription_Stats_4" xml:space="preserve">
+    <value>Velocidad</value>
+  </data>
+  <data name="ItemDescription_TeachSpell" xml:space="preserve">
+    <value>Enseña hechizo: {00}</value>
+  </data>
+  <data name="ItemDescription_Traded" xml:space="preserve">
+    <value>tradeado</value>
+  </data>
+  <data name="ItemDescription_TwoHand" xml:space="preserve">
+    <value>2-Manos</value>
+  </data>
+  <data name="ItemDescription_Vitals_0" xml:space="preserve">
+    <value>HP:</value>
+  </data>
+  <data name="ItemDescription_Vitals_1" xml:space="preserve">
+    <value>MP:</value>
+  </data>
+  <data name="ItemDescription_VitalsRegen_0" xml:space="preserve">
+    <value>Regeneración HP:</value>
+  </data>
+  <data name="ItemDescription_VitalsRegen_1" xml:space="preserve">
+    <value>Regeneración MP:</value>
+  </data>
+  <data name="Keys_KeyDictionary_a" xml:space="preserve">
+    <value>A</value>
+  </data>
+  <data name="Keys_KeyDictionary_add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Keys_KeyDictionary_alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="Keys_KeyDictionary_apps" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="Keys_KeyDictionary_attn" xml:space="preserve">
+    <value>Attn</value>
+  </data>
+  <data name="Keys_KeyDictionary_b" xml:space="preserve">
+    <value>B</value>
+  </data>
+  <data name="Keys_KeyDictionary_back" xml:space="preserve">
+    <value>Atrás</value>
+  </data>
+  <data name="Keys_KeyDictionary_browserback" xml:space="preserve">
+    <value>BrowserBack</value>
+  </data>
+  <data name="Keys_KeyDictionary_browserfavorites" xml:space="preserve">
+    <value>BrowserFavorites</value>
+  </data>
+  <data name="Keys_KeyDictionary_browserforward" xml:space="preserve">
+    <value>BrowserForward</value>
+  </data>
+  <data name="Keys_KeyDictionary_browserhome" xml:space="preserve">
+    <value>BrowserHome</value>
+  </data>
+  <data name="Keys_KeyDictionary_browserrefresh" xml:space="preserve">
+    <value>BrowserRefresh</value>
+  </data>
+  <data name="Keys_KeyDictionary_browsersearch" xml:space="preserve">
+    <value>BrowserSearch</value>
+  </data>
+  <data name="Keys_KeyDictionary_browserstop" xml:space="preserve">
+    <value>BrowserStop</value>
+  </data>
+  <data name="Keys_KeyDictionary_c" xml:space="preserve">
+    <value>C</value>
+  </data>
+  <data name="Keys_KeyDictionary_cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Keys_KeyDictionary_capital" xml:space="preserve">
+    <value>Capital</value>
+  </data>
+  <data name="Keys_KeyDictionary_capslock" xml:space="preserve">
+    <value>CapsLock</value>
+  </data>
+  <data name="Keys_KeyDictionary_clear" xml:space="preserve">
+    <value>Limpiar</value>
+  </data>
+  <data name="Keys_KeyDictionary_control" xml:space="preserve">
+    <value>Control</value>
+  </data>
+  <data name="Keys_KeyDictionary_controlkey" xml:space="preserve">
+    <value>ControlKey</value>
+  </data>
+  <data name="Keys_KeyDictionary_crsel" xml:space="preserve">
+    <value>Crsel</value>
+  </data>
+  <data name="Keys_KeyDictionary_d" xml:space="preserve">
+    <value>D</value>
+  </data>
+  <data name="Keys_KeyDictionary_d0" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Keys_KeyDictionary_d1" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Keys_KeyDictionary_d2" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="Keys_KeyDictionary_d3" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="Keys_KeyDictionary_d4" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="Keys_KeyDictionary_d5" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="Keys_KeyDictionary_d6" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="Keys_KeyDictionary_d7" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="Keys_KeyDictionary_d8" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="Keys_KeyDictionary_d9" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="Keys_KeyDictionary_decimal" xml:space="preserve">
+    <value>Decimal</value>
+  </data>
+  <data name="Keys_KeyDictionary_delete" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="Keys_KeyDictionary_divide" xml:space="preserve">
+    <value>Dividir</value>
+  </data>
+  <data name="Keys_KeyDictionary_down" xml:space="preserve">
+    <value>Abajo</value>
+  </data>
+  <data name="Keys_KeyDictionary_e" xml:space="preserve">
+    <value>E</value>
+  </data>
+  <data name="Keys_KeyDictionary_end" xml:space="preserve">
+    <value>End</value>
+  </data>
+  <data name="Keys_KeyDictionary_enter" xml:space="preserve">
+    <value>Enter</value>
+  </data>
+  <data name="Keys_KeyDictionary_eraseeof" xml:space="preserve">
+    <value>EraseEof</value>
+  </data>
+  <data name="Keys_KeyDictionary_escape" xml:space="preserve">
+    <value>Escape</value>
+  </data>
+  <data name="Keys_KeyDictionary_execute" xml:space="preserve">
+    <value>Execute</value>
+  </data>
+  <data name="Keys_KeyDictionary_exsel" xml:space="preserve">
+    <value>Exsel</value>
+  </data>
+  <data name="Keys_KeyDictionary_f" xml:space="preserve">
+    <value>F</value>
+  </data>
+  <data name="Keys_KeyDictionary_f1" xml:space="preserve">
+    <value>F1</value>
+  </data>
+  <data name="Keys_KeyDictionary_f10" xml:space="preserve">
+    <value>F10</value>
+  </data>
+  <data name="Keys_KeyDictionary_f11" xml:space="preserve">
+    <value>F11</value>
+  </data>
+  <data name="Keys_KeyDictionary_f12" xml:space="preserve">
+    <value>F12</value>
+  </data>
+  <data name="Keys_KeyDictionary_f13" xml:space="preserve">
+    <value>F13</value>
+  </data>
+  <data name="Keys_KeyDictionary_f14" xml:space="preserve">
+    <value>F14</value>
+  </data>
+  <data name="Keys_KeyDictionary_f15" xml:space="preserve">
+    <value>F15</value>
+  </data>
+  <data name="Keys_KeyDictionary_f16" xml:space="preserve">
+    <value>F16</value>
+  </data>
+  <data name="Keys_KeyDictionary_f17" xml:space="preserve">
+    <value>F17</value>
+  </data>
+  <data name="Keys_KeyDictionary_f18" xml:space="preserve">
+    <value>F18</value>
+  </data>
+  <data name="Keys_KeyDictionary_f19" xml:space="preserve">
+    <value>F19</value>
+  </data>
+  <data name="Keys_KeyDictionary_f2" xml:space="preserve">
+    <value>F2</value>
+  </data>
+  <data name="Keys_KeyDictionary_f20" xml:space="preserve">
+    <value>F20</value>
+  </data>
+  <data name="Keys_KeyDictionary_f21" xml:space="preserve">
+    <value>F21</value>
+  </data>
+  <data name="Keys_KeyDictionary_f22" xml:space="preserve">
+    <value>F22</value>
+  </data>
+  <data name="Keys_KeyDictionary_f23" xml:space="preserve">
+    <value>F23</value>
+  </data>
+  <data name="Keys_KeyDictionary_f24" xml:space="preserve">
+    <value>F24</value>
+  </data>
+  <data name="Keys_KeyDictionary_f3" xml:space="preserve">
+    <value>F3</value>
+  </data>
+  <data name="Keys_KeyDictionary_f4" xml:space="preserve">
+    <value>F4</value>
+  </data>
+  <data name="Keys_KeyDictionary_f5" xml:space="preserve">
+    <value>F5</value>
+  </data>
+  <data name="Keys_KeyDictionary_f6" xml:space="preserve">
+    <value>F6</value>
+  </data>
+  <data name="Keys_KeyDictionary_f7" xml:space="preserve">
+    <value>F7</value>
+  </data>
+  <data name="Keys_KeyDictionary_f8" xml:space="preserve">
+    <value>F8</value>
+  </data>
+  <data name="Keys_KeyDictionary_f9" xml:space="preserve">
+    <value>F9</value>
+  </data>
+  <data name="Keys_KeyDictionary_finalmode" xml:space="preserve">
+    <value>FinalMode</value>
+  </data>
+  <data name="Keys_KeyDictionary_g" xml:space="preserve">
+    <value>G</value>
+  </data>
+  <data name="Keys_KeyDictionary_h" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="Keys_KeyDictionary_hanguelmode" xml:space="preserve">
+    <value>HanguelMode</value>
+  </data>
+  <data name="Keys_KeyDictionary_hangulmode" xml:space="preserve">
+    <value>HangulMode</value>
+  </data>
+  <data name="Keys_KeyDictionary_hanjamode" xml:space="preserve">
+    <value>HanjaMode</value>
+  </data>
+  <data name="Keys_KeyDictionary_help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Keys_KeyDictionary_home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Keys_KeyDictionary_i" xml:space="preserve">
+    <value>I</value>
+  </data>
+  <data name="Keys_KeyDictionary_imeaccept" xml:space="preserve">
+    <value>IMEAccept</value>
+  </data>
+  <data name="Keys_KeyDictionary_imeaceept" xml:space="preserve">
+    <value>IMEAceept</value>
+  </data>
+  <data name="Keys_KeyDictionary_imeconvert" xml:space="preserve">
+    <value>IMEConvert</value>
+  </data>
+  <data name="Keys_KeyDictionary_imemodechange" xml:space="preserve">
+    <value>IMEModeChange</value>
+  </data>
+  <data name="Keys_KeyDictionary_imenonconvert" xml:space="preserve">
+    <value>IMENonconvert</value>
+  </data>
+  <data name="Keys_KeyDictionary_insert" xml:space="preserve">
+    <value>Insertar</value>
+  </data>
+  <data name="Keys_KeyDictionary_j" xml:space="preserve">
+    <value>J</value>
+  </data>
+  <data name="Keys_KeyDictionary_junjamode" xml:space="preserve">
+    <value>JunjaMode</value>
+  </data>
+  <data name="Keys_KeyDictionary_k" xml:space="preserve">
+    <value>K</value>
+  </data>
+  <data name="Keys_KeyDictionary_kanamode" xml:space="preserve">
+    <value>KanaMode</value>
+  </data>
+  <data name="Keys_KeyDictionary_kanjimode" xml:space="preserve">
+    <value>KanjiMode</value>
+  </data>
+  <data name="Keys_KeyDictionary_keycode" xml:space="preserve">
+    <value>KeyCode</value>
+  </data>
+  <data name="Keys_KeyDictionary_l" xml:space="preserve">
+    <value>L</value>
+  </data>
+  <data name="Keys_KeyDictionary_launchapplication1" xml:space="preserve">
+    <value>LaunchApplication1</value>
+  </data>
+  <data name="Keys_KeyDictionary_launchapplication2" xml:space="preserve">
+    <value>LaunchApplication2</value>
+  </data>
+  <data name="Keys_KeyDictionary_launchmail" xml:space="preserve">
+    <value>LaunchMail</value>
+  </data>
+  <data name="Keys_KeyDictionary_lbutton" xml:space="preserve">
+    <value>Mouse Izquierda</value>
+  </data>
+  <data name="Keys_KeyDictionary_lcontrolkey" xml:space="preserve">
+    <value>L Control</value>
+  </data>
+  <data name="Keys_KeyDictionary_left" xml:space="preserve">
+    <value>Izquierda</value>
+  </data>
+  <data name="Keys_KeyDictionary_linefeed" xml:space="preserve">
+    <value>LineFeed</value>
+  </data>
+  <data name="Keys_KeyDictionary_lmenu" xml:space="preserve">
+    <value>L Menu</value>
+  </data>
+  <data name="Keys_KeyDictionary_lshiftkey" xml:space="preserve">
+    <value>L Shift</value>
+  </data>
+  <data name="Keys_KeyDictionary_lwin" xml:space="preserve">
+    <value>LWin</value>
+  </data>
+  <data name="Keys_KeyDictionary_m" xml:space="preserve">
+    <value>M</value>
+  </data>
+  <data name="Keys_KeyDictionary_mbutton" xml:space="preserve">
+    <value>Mouse Medio</value>
+  </data>
+  <data name="Keys_KeyDictionary_medianexttrack" xml:space="preserve">
+    <value>MediaNextTrack</value>
+  </data>
+  <data name="Keys_KeyDictionary_mediaplaypause" xml:space="preserve">
+    <value>MediaPlayPause</value>
+  </data>
+  <data name="Keys_KeyDictionary_mediaprevioustrack" xml:space="preserve">
+    <value>MediaPreviousTrack</value>
+  </data>
+  <data name="Keys_KeyDictionary_mediastop" xml:space="preserve">
+    <value>MediaStop</value>
+  </data>
+  <data name="Keys_KeyDictionary_menu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="Keys_KeyDictionary_modifiers" xml:space="preserve">
+    <value>Modificador</value>
+  </data>
+  <data name="Keys_KeyDictionary_multiply" xml:space="preserve">
+    <value>Multiplicador</value>
+  </data>
+  <data name="Keys_KeyDictionary_n" xml:space="preserve">
+    <value>N</value>
+  </data>
+  <data name="Keys_KeyDictionary_next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Keys_KeyDictionary_noname" xml:space="preserve">
+    <value>NoName</value>
+  </data>
+  <data name="Keys_KeyDictionary_none" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Keys_KeyDictionary_numlock" xml:space="preserve">
+    <value>NumLock</value>
+  </data>
+  <data name="Keys_KeyDictionary_numpad0" xml:space="preserve">
+    <value>NumPad 0</value>
+  </data>
+  <data name="Keys_KeyDictionary_numpad1" xml:space="preserve">
+    <value>NumPad 1</value>
+  </data>
+  <data name="Keys_KeyDictionary_numpad2" xml:space="preserve">
+    <value>NumPad 2</value>
+  </data>
+  <data name="Keys_KeyDictionary_numpad3" xml:space="preserve">
+    <value>NumPad 3</value>
+  </data>
+  <data name="Keys_KeyDictionary_numpad4" xml:space="preserve">
+    <value>NumPad 4</value>
+  </data>
+  <data name="Keys_KeyDictionary_numpad5" xml:space="preserve">
+    <value>NumPad 5</value>
+  </data>
+  <data name="Keys_KeyDictionary_numpad6" xml:space="preserve">
+    <value>NumPad 6</value>
+  </data>
+  <data name="Keys_KeyDictionary_numpad7" xml:space="preserve">
+    <value>NumPad 7</value>
+  </data>
+  <data name="Keys_KeyDictionary_numpad8" xml:space="preserve">
+    <value>NumPad 8</value>
+  </data>
+  <data name="Keys_KeyDictionary_numpad9" xml:space="preserve">
+    <value>NumPad 9</value>
+  </data>
+  <data name="Keys_KeyDictionary_o" xml:space="preserve">
+    <value>O</value>
+  </data>
+  <data name="Keys_KeyDictionary_oem1" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Keys_KeyDictionary_oem102" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Keys_KeyDictionary_oem2" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="Keys_KeyDictionary_oem3" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="Keys_KeyDictionary_oem4" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="Keys_KeyDictionary_oem5" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="Keys_KeyDictionary_oem6" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="Keys_KeyDictionary_oem7" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="Keys_KeyDictionary_oem8" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="Keys_KeyDictionary_oembackslash" xml:space="preserve">
+    <value>\</value>
+  </data>
+  <data name="Keys_KeyDictionary_oemclear" xml:space="preserve">
+    <value>OemClear</value>
+  </data>
+  <data name="Keys_KeyDictionary_oemclosebrackets" xml:space="preserve">
+    <value>]</value>
+  </data>
+  <data name="Keys_KeyDictionary_oemcomma" xml:space="preserve">
+    <value>,</value>
+  </data>
+  <data name="Keys_KeyDictionary_oemminus" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="Keys_KeyDictionary_oemopenbrackets" xml:space="preserve">
+    <value>[</value>
+  </data>
+  <data name="Keys_KeyDictionary_oemperiod" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="Keys_KeyDictionary_oempipe" xml:space="preserve">
+    <value>|</value>
+  </data>
+  <data name="Keys_KeyDictionary_oemplus" xml:space="preserve">
+    <value>+</value>
+  </data>
+  <data name="Keys_KeyDictionary_oemquestion" xml:space="preserve">
+    <value>?</value>
+  </data>
+  <data name="Keys_KeyDictionary_oemquotes" xml:space="preserve">
+    <value>'</value>
+  </data>
+  <data name="Keys_KeyDictionary_oemsemicolon" xml:space="preserve">
+    <value>OemSemicolon</value>
+  </data>
+  <data name="Keys_KeyDictionary_oemtilde" xml:space="preserve">
+    <value>`</value>
+  </data>
+  <data name="Keys_KeyDictionary_p" xml:space="preserve">
+    <value>P</value>
+  </data>
+  <data name="Keys_KeyDictionary_pa1" xml:space="preserve">
+    <value>Pa1</value>
+  </data>
+  <data name="Keys_KeyDictionary_packet" xml:space="preserve">
+    <value>Packet</value>
+  </data>
+  <data name="Keys_KeyDictionary_pagedown" xml:space="preserve">
+    <value>Page Down</value>
+  </data>
+  <data name="Keys_KeyDictionary_pageup" xml:space="preserve">
+    <value>Page Up</value>
+  </data>
+  <data name="Keys_KeyDictionary_pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Keys_KeyDictionary_play" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="Keys_KeyDictionary_print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="Keys_KeyDictionary_printscreen" xml:space="preserve">
+    <value>PrintScreen</value>
+  </data>
+  <data name="Keys_KeyDictionary_prior" xml:space="preserve">
+    <value>Prior</value>
+  </data>
+  <data name="Keys_KeyDictionary_processkey" xml:space="preserve">
+    <value>ProcessKey</value>
+  </data>
+  <data name="Keys_KeyDictionary_q" xml:space="preserve">
+    <value>Q</value>
+  </data>
+  <data name="Keys_KeyDictionary_r" xml:space="preserve">
+    <value>R</value>
+  </data>
+  <data name="Keys_KeyDictionary_rbutton" xml:space="preserve">
+    <value>Mouse Derecha</value>
+  </data>
+  <data name="Keys_KeyDictionary_rcontrolkey" xml:space="preserve">
+    <value>R Control</value>
+  </data>
+  <data name="Keys_KeyDictionary_return" xml:space="preserve">
+    <value>Volver</value>
+  </data>
+  <data name="Keys_KeyDictionary_right" xml:space="preserve">
+    <value>Derecha</value>
+  </data>
+  <data name="Keys_KeyDictionary_rmenu" xml:space="preserve">
+    <value>R Menu</value>
+  </data>
+  <data name="Keys_KeyDictionary_rshiftkey" xml:space="preserve">
+    <value>R Shift</value>
+  </data>
+  <data name="Keys_KeyDictionary_rwin" xml:space="preserve">
+    <value>RWin</value>
+  </data>
+  <data name="Keys_KeyDictionary_s" xml:space="preserve">
+    <value>S</value>
+  </data>
+  <data name="Keys_KeyDictionary_scroll" xml:space="preserve">
+    <value>Scroll</value>
+  </data>
+  <data name="Keys_KeyDictionary_select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Keys_KeyDictionary_selectmedia" xml:space="preserve">
+    <value>SelectMedia</value>
+  </data>
+  <data name="Keys_KeyDictionary_separator" xml:space="preserve">
+    <value>Separator</value>
+  </data>
+  <data name="Keys_KeyDictionary_shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="Keys_KeyDictionary_shiftkey" xml:space="preserve">
+    <value>ShiftKey</value>
+  </data>
+  <data name="Keys_KeyDictionary_sleep" xml:space="preserve">
+    <value>Dormir</value>
+  </data>
+  <data name="Keys_KeyDictionary_snapshot" xml:space="preserve">
+    <value>Snapshot</value>
+  </data>
+  <data name="Keys_KeyDictionary_space" xml:space="preserve">
+    <value>Espacio</value>
+  </data>
+  <data name="Keys_KeyDictionary_subtract" xml:space="preserve">
+    <value>Restar</value>
+  </data>
+  <data name="Keys_KeyDictionary_t" xml:space="preserve">
+    <value>T</value>
+  </data>
+  <data name="Keys_KeyDictionary_tab" xml:space="preserve">
+    <value>Tab</value>
+  </data>
+  <data name="Keys_KeyDictionary_u" xml:space="preserve">
+    <value>U</value>
+  </data>
+  <data name="Keys_KeyDictionary_up" xml:space="preserve">
+    <value>Arriba</value>
+  </data>
+  <data name="Keys_KeyDictionary_v" xml:space="preserve">
+    <value>V</value>
+  </data>
+  <data name="Keys_KeyDictionary_volumedown" xml:space="preserve">
+    <value>Volumen -</value>
+  </data>
+  <data name="Keys_KeyDictionary_volumemute" xml:space="preserve">
+    <value>Silencio</value>
+  </data>
+  <data name="Keys_KeyDictionary_volumeup" xml:space="preserve">
+    <value>Volumen +</value>
+  </data>
+  <data name="Keys_KeyDictionary_w" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="Keys_KeyDictionary_x" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="Keys_KeyDictionary_xbutton1" xml:space="preserve">
+    <value>XButton1</value>
+  </data>
+  <data name="Keys_KeyDictionary_xbutton2" xml:space="preserve">
+    <value>XButton2</value>
+  </data>
+  <data name="Keys_KeyDictionary_y" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="Keys_KeyDictionary_z" xml:space="preserve">
+    <value>Z</value>
+  </data>
+  <data name="Keys_KeyDictionary_zoom" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="Keys_KeyNameWithModifier" xml:space="preserve">
+    <value>{00} + {01}</value>
+  </data>
+  <data name="LoginWindow_Back" xml:space="preserve">
+    <value>Volver</value>
+  </data>
+  <data name="LoginWindow_ForgotPassword" xml:space="preserve">
+    <value>Contraseña olvidada?</value>
+  </data>
+  <data name="LoginWindow_Login" xml:space="preserve">
+    <value>Acceder</value>
+  </data>
+  <data name="LoginWindow_Password" xml:space="preserve">
+    <value>Contraseña:</value>
+  </data>
+  <data name="LoginWindow_SavePassword" xml:space="preserve">
+    <value>Guardar contraseña</value>
+  </data>
+  <data name="LoginWindow_Title" xml:space="preserve">
+    <value>Acceso</value>
+  </data>
+  <data name="LoginWindow_Username" xml:space="preserve">
+    <value>Usuario:</value>
+  </data>
+  <data name="Main_GameName" xml:space="preserve">
+    <value>Intersect</value>
+  </data>
+  <data name="MainMenu_Credits" xml:space="preserve">
+    <value>Creditos</value>
+  </data>
+  <data name="MainMenu_Exit" xml:space="preserve">
+    <value>Salir</value>
+  </data>
+  <data name="MainMenu_Login" xml:space="preserve">
+    <value>Acceder</value>
+  </data>
+  <data name="MainMenu_Register" xml:space="preserve">
+    <value>Registro</value>
+  </data>
+  <data name="MainMenu_Settings" xml:space="preserve">
+    <value>Ajustes</value>
+  </data>
+  <data name="MainMenu_SettingsTooltip" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="MainMenu_Start" xml:space="preserve">
+    <value>Iniciar</value>
+  </data>
+  <data name="MainMenu_Title" xml:space="preserve">
+    <value>Menu principal</value>
+  </data>
+  <data name="MapItemWindow_LootButton" xml:space="preserve">
+    <value>Levantar todo</value>
+  </data>
+  <data name="MapItemWindow_Title" xml:space="preserve">
+    <value>Drop</value>
+  </data>
+  <data name="Numbers_Billions" xml:space="preserve">
+    <value>b</value>
+  </data>
+  <data name="Numbers_Comma" xml:space="preserve">
+    <value>,</value>
+  </data>
+  <data name="Numbers_Decimal" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="Numbers_Millions" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="Numbers_Thousands" xml:space="preserve">
+    <value>k</value>
+  </data>
+  <data name="Parties_InFight" xml:space="preserve">
+    <value>Estás actualmente en combate!</value>
+  </data>
+  <data name="Parties_InvitePrompt" xml:space="preserve">
+    <value>{00} te invito a su equipo. ¿Lo aceptas?</value>
+  </data>
+  <data name="Parties_Kick" xml:space="preserve">
+    <value>Patear {00}</value>
+  </data>
+  <data name="Parties_KickLabel" xml:space="preserve">
+    <value>Patear</value>
+  </data>
+  <data name="Parties_Leader" xml:space="preserve">
+    <value>Lider</value>
+  </data>
+  <data name="Parties_LeaderTip" xml:space="preserve">
+    <value>Lider</value>
+  </data>
+  <data name="Parties_Leave" xml:space="preserve">
+    <value>Abandonar Equipo</value>
+  </data>
+  <data name="Parties_LeaveTip" xml:space="preserve">
+    <value>Dejar Equipo</value>
+  </data>
+  <data name="Parties_Name" xml:space="preserve">
+    <value>{00} - Lv. {01}</value>
+  </data>
+  <data name="Parties_PartyInvite" xml:space="preserve">
+    <value>Invitación a equipo</value>
+  </data>
+  <data name="Parties_Title" xml:space="preserve">
+    <value>Equipo</value>
+  </data>
+  <data name="Parties_Vital0" xml:space="preserve">
+    <value>HP:</value>
+  </data>
+  <data name="Parties_Vital0Value" xml:space="preserve">
+    <value>{00} / {01}</value>
+  </data>
+  <data name="Parties_Vital1" xml:space="preserve">
+    <value>MP:</value>
+  </data>
+  <data name="Parties_Vital1Value" xml:space="preserve">
+    <value>{00} / {01}</value>
+  </data>
+  <data name="QuestLog_Abandon" xml:space="preserve">
+    <value>Abandonar</value>
+  </data>
+  <data name="QuestLog_AbandonPrompt" xml:space="preserve">
+    <value>Estas seguro que quieres abandonar la misión "{00}"?</value>
+  </data>
+  <data name="QuestLog_AbandonTitle" xml:space="preserve">
+    <value>Abandonar misión: {00}</value>
+  </data>
+  <data name="QuestLog_Back" xml:space="preserve">
+    <value>Volver</value>
+  </data>
+  <data name="QuestLog_Completed" xml:space="preserve">
+    <value>Misión completa</value>
+  </data>
+  <data name="QuestLog_CurrentTask" xml:space="preserve">
+    <value>Tarea actual:</value>
+  </data>
+  <data name="QuestLog_InProgress" xml:space="preserve">
+    <value>Misión en progreso</value>
+  </data>
+  <data name="QuestLog_NotStarted" xml:space="preserve">
+    <value>Misión no iniciada!</value>
+  </data>
+  <data name="QuestLog_TaskItem" xml:space="preserve">
+    <value>{00}/{01} {02}(s) Obtenidos.</value>
+  </data>
+  <data name="QuestLog_TaskNpc" xml:space="preserve">
+    <value>{00}/{01} {02}(s) Asesinados.</value>
+  </data>
+  <data name="QuestLog_Title" xml:space="preserve">
+    <value>Misiones</value>
+  </data>
+  <data name="QuestOffer_Accept" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+  <data name="QuestOffer_Decline" xml:space="preserve">
+    <value>Rechazar</value>
+  </data>
+  <data name="QuestOffer_Title" xml:space="preserve">
+    <value>Oferta de Misión</value>
+  </data>
+  <data name="Regex_Email" xml:space="preserve">
+    <value>^(([\w-]+\.)+[\w-]+|([a-zA-Z]{1}|[\w-]{2,}))@((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|([a-zA-Z]+[\w-]+\.)+[a-zA-Z]{2,4})$</value>
+  </data>
+  <data name="Regex_Password" xml:space="preserve">
+    <value>^[-_=\+`~!@#\$%\^&amp;\*()\[\]{}\\|;\:'",&lt;\.&gt;/\?a-zA-Z0-9]{4,64}$</value>
+  </data>
+  <data name="Regex_Username" xml:space="preserve">
+    <value>^[a-zA-Z0-9]{2,20}$</value>
+  </data>
+  <data name="Registration_Back" xml:space="preserve">
+    <value>Volver</value>
+  </data>
+  <data name="Registration_ConfirmPassword" xml:space="preserve">
+    <value>Confirmar contraseña:</value>
+  </data>
+  <data name="Registration_Email" xml:space="preserve">
+    <value>Email:</value>
+  </data>
+  <data name="Registration_EmailInvalid" xml:space="preserve">
+    <value>Email Invalido!.</value>
+  </data>
+  <data name="Registration_Password" xml:space="preserve">
+    <value>Contraseña:</value>
+  </data>
+  <data name="Registration_PasswordMismatch" xml:space="preserve">
+    <value>Las contraseñas no coinciden.</value>
+  </data>
+  <data name="Registration_Register" xml:space="preserve">
+    <value>Registrar</value>
+  </data>
+  <data name="Registration_Title" xml:space="preserve">
+    <value>Registro</value>
+  </data>
+  <data name="Registration_Username" xml:space="preserve">
+    <value>Usuario:</value>
+  </data>
+  <data name="ResetPass_Back" xml:space="preserve">
+    <value>Volver</value>
+  </data>
+  <data name="ResetPass_Code" xml:space="preserve">
+    <value>Ingrese el código de reinicio que se le envió:</value>
+  </data>
+  <data name="ResetPass_ConfirmPassword" xml:space="preserve">
+    <value>Confirmar contraseña:</value>
+  </data>
+  <data name="ResetPass_Error" xml:space="preserve">
+    <value>Error!</value>
+  </data>
+  <data name="ResetPass_ErrorMessage" xml:space="preserve">
+    <value>El código de restablecimiento no era válido, ha caducado o la cuenta no existe!</value>
+  </data>
+  <data name="ResetPass_InputCode" xml:space="preserve">
+    <value>Por favor ingrese su código de restablecimiento de contraseña.</value>
+  </data>
+  <data name="ResetPass_NewPassword" xml:space="preserve">
+    <value>Nueva contraseña:</value>
+  </data>
+  <data name="ResetPass_Submit" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="ResetPass_Success" xml:space="preserve">
+    <value>Éxito!</value>
+  </data>
+  <data name="ResetPass_SuccessMessage" xml:space="preserve">
+    <value>Tu contraseña ha sido restablecida!</value>
+  </data>
+  <data name="ResetPass_Title" xml:space="preserve">
+    <value>Restablecimiento de contraseña</value>
+  </data>
+  <data name="Server_Connecting" xml:space="preserve">
+    <value>Conectando...</value>
+  </data>
+  <data name="Server_Failed" xml:space="preserve">
+    <value>Error conexión</value>
+  </data>
+  <data name="Server_HandshakeFailure" xml:space="preserve">
+    <value>Error Handshake</value>
+  </data>
+  <data name="Server_Offline" xml:space="preserve">
+    <value>Apagado</value>
+  </data>
+  <data name="Server_Online" xml:space="preserve">
+    <value>En Linea!</value>
+  </data>
+  <data name="Server_ServerFull" xml:space="preserve">
+    <value>LLENO!</value>
+  </data>
+  <data name="Server_StatusLabel" xml:space="preserve">
+    <value>Estado de server: {00}</value>
+  </data>
+  <data name="Server_Unknown" xml:space="preserve">
+    <value>Desconocido</value>
+  </data>
+  <data name="Server_VersionMismatch" xml:space="preserve">
+    <value>Versión obsoleta</value>
+  </data>
+  <data name="Settings_Apply" xml:space="preserve">
+    <value>Aplicar</value>
+  </data>
+  <data name="Settings_AudioSettingsTab" xml:space="preserve">
+    <value>Audio</value>
+  </data>
+  <data name="Settings_AutoCloseWindows" xml:space="preserve">
+    <value>Auto-cerrar ventanas</value>
+  </data>
+  <data name="Settings_AutoToggleChatLog" xml:space="preserve">
+    <value>Auto-habilitar chat</value>
+  </data>
+  <data name="Settings_AutoTurnToTarget" xml:space="preserve">
+    <value>Auto-girar a objetivo</value>
+  </data>
+  <data name="Settings_Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Settings_EnableLighting" xml:space="preserve">
+    <value>Habilitar efectos de luz</value>
+  </data>
+  <data name="Settings_Fps120" xml:space="preserve">
+    <value>120</value>
+  </data>
+  <data name="Settings_Fps30" xml:space="preserve">
+    <value>30</value>
+  </data>
+  <data name="Settings_Fps60" xml:space="preserve">
+    <value>60</value>
+  </data>
+  <data name="Settings_Fps90" xml:space="preserve">
+    <value>90</value>
+  </data>
+  <data name="Settings_Fullscreen" xml:space="preserve">
+    <value>Pantalla completa</value>
+  </data>
+  <data name="Settings_GameSettingsTab" xml:space="preserve">
+    <value>Juego</value>
+  </data>
+  <data name="Settings_InformationSettings" xml:space="preserve">
+    <value>Visibilidad</value>
+  </data>
+  <data name="Settings_InterfaceSettings" xml:space="preserve">
+    <value>Interfaz</value>
+  </data>
+  <data name="Settings_KeyBindingSettingsTab" xml:space="preserve">
+    <value>Controles</value>
+  </data>
+  <data name="Settings_MusicVolume" xml:space="preserve">
+    <value>Vol. Música: {00}%</value>
+  </data>
+  <data name="Settings_Resolution" xml:space="preserve">
+    <value>Resolución:</value>
+  </data>
+  <data name="Settings_ResolutionCustom" xml:space="preserve">
+    <value>Resolución Custom</value>
+  </data>
+  <data name="Settings_Restore" xml:space="preserve">
+    <value>Por defecto</value>
+  </data>
+  <data name="Settings_ShowExperienceAsPercentage" xml:space="preserve">
+    <value>Mostrar EXP en porcentaje</value>
+  </data>
+  <data name="Settings_ShowFriendOverheadHpBar" xml:space="preserve">
+    <value>Ver barra de HP de amigos</value>
+  </data>
+  <data name="Settings_ShowFriendOverheadInformation" xml:space="preserve">
+    <value>Ver nicks de Amigos</value>
+  </data>
+  <data name="Settings_ShowGuildOverheadHpBar" xml:space="preserve">
+    <value>Ver barra de HP de miembros de clan</value>
+  </data>
+  <data name="Settings_ShowGuildOverheadInformation" xml:space="preserve">
+    <value>Ver nicks de miembros del Clan</value>
+  </data>
+  <data name="Settings_ShowHealthAsPercentage" xml:space="preserve">
+    <value>Mostrar Vida como porcentaje</value>
+  </data>
+  <data name="Settings_ShowManaAsPercentage" xml:space="preserve">
+    <value>Mostrar Maná como porcentaje</value>
+  </data>
+  <data name="Settings_ShowMyOverheadHpBar" xml:space="preserve">
+    <value>Ver barra de HP propia</value>
+  </data>
+  <data name="Settings_ShowMyOverheadInformation" xml:space="preserve">
+    <value>Ver nick propio</value>
+  </data>
+  <data name="Settings_ShowNpcOverheadHpBar" xml:space="preserve">
+    <value>Ver barra de HP de NPCs</value>
+  </data>
+  <data name="Settings_ShowNpcOverheadInformation" xml:space="preserve">
+    <value>Ver nicks de NPCs</value>
+  </data>
+  <data name="Settings_ShowPartyOverheadHpBar" xml:space="preserve">
+    <value>Ver barra de HP de miembros de equipo</value>
+  </data>
+  <data name="Settings_ShowPartyOverheadInformation" xml:space="preserve">
+    <value>Ver nicks de miembros de equipo</value>
+  </data>
+  <data name="Settings_ShowPlayerOverheadHpBar" xml:space="preserve">
+    <value>Ver barra de HP de otros jugadores</value>
+  </data>
+  <data name="Settings_ShowPlayerOverheadInformation" xml:space="preserve">
+    <value>Ver nicks de jugadores</value>
+  </data>
+  <data name="Settings_SimplifiedEscapeMenu" xml:space="preserve">
+    <value>Menú de escape simplificado</value>
+  </data>
+  <data name="Settings_SoundVolume" xml:space="preserve">
+    <value>Vol Sonido: {00}%</value>
+  </data>
+  <data name="Settings_StickyTarget" xml:space="preserve">
+    <value>Objetivo fijo</value>
+  </data>
+  <data name="Settings_TargetFps" xml:space="preserve">
+    <value>Fotogramas:</value>
+  </data>
+  <data name="Settings_TargetingSettings" xml:space="preserve">
+    <value>Objetivos</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Ajustes</value>
+  </data>
+  <data name="Settings_TypewriterText" xml:space="preserve">
+    <value>Maquina de escribir</value>
+  </data>
+  <data name="Settings_UIScale" xml:space="preserve">
+    <value>Escala IU</value>
+  </data>
+  <data name="Settings_UnlimitedFps" xml:space="preserve">
+    <value>Sin límite</value>
+  </data>
+  <data name="Settings_VideoSettingsTab" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="Settings_Vsync" xml:space="preserve">
+    <value>V-Sync</value>
+  </data>
+  <data name="Settings_WorldScale" xml:space="preserve">
+    <value>Escalar Mundo</value>
+  </data>
+  <data name="Shop_BuyItem" xml:space="preserve">
+    <value>Comprar Item</value>
+  </data>
+  <data name="Shop_BuyItemPrompt" xml:space="preserve">
+    <value>Cuanto/s {00} quieres comprar?</value>
+  </data>
+  <data name="Shop_CannotSell" xml:space="preserve">
+    <value>Esta tienda no acepta este item!!</value>
+  </data>
+  <data name="Shop_Costs" xml:space="preserve">
+    <value>Cuesta {00} {01}(s)</value>
+  </data>
+  <data name="Shop_SellItem" xml:space="preserve">
+    <value>Item de hechizo</value>
+  </data>
+  <data name="Shop_SellItemPrompt" xml:space="preserve">
+    <value>Cuanto/s {00} quieres vender?</value>
+  </data>
+  <data name="Shop_SellPrompt" xml:space="preserve">
+    <value>Quieres vender el item: {00}?</value>
+  </data>
+  <data name="Shop_SellsFor" xml:space="preserve">
+    <value>Vender por {00} {01}(s)</value>
+  </data>
+  <data name="Shop_WontBuy" xml:space="preserve">
+    <value>La tienda no compra este item</value>
+  </data>
+  <data name="ShopContextMenu_Buy" xml:space="preserve">
+    <value>Comprar {00}</value>
+  </data>
+  <data name="SpellContextMenu_Cast" xml:space="preserve">
+    <value>Conjurar {00}</value>
+  </data>
+  <data name="SpellContextMenu_Forget" xml:space="preserve">
+    <value>Olvidar {00}</value>
+  </data>
+  <data name="SpellDescription_Bound" xml:space="preserve">
+    <value>No se puede olvidar.</value>
+  </data>
+  <data name="SpellDescription_CastTime" xml:space="preserve">
+    <value>Casteo:</value>
+  </data>
+  <data name="SpellDescription_Cooldown" xml:space="preserve">
+    <value>CD:</value>
+  </data>
+  <data name="SpellDescription_CooldownGroup" xml:space="preserve">
+    <value>Grupo de enfriamiento:</value>
+  </data>
+  <data name="SpellDescription_CritChance" xml:space="preserve">
+    <value>Chance crítica:</value>
+  </data>
+  <data name="SpellDescription_CritMultiplier" xml:space="preserve">
+    <value>Multiplicador crítico:</value>
+  </data>
+  <data name="SpellDescription_DamageType" xml:space="preserve">
+    <value>Tipo de daño:</value>
+  </data>
+  <data name="SpellDescription_DamageTypes_0" xml:space="preserve">
+    <value>Físico</value>
+  </data>
+  <data name="SpellDescription_DamageTypes_1" xml:space="preserve">
+    <value>Mágico</value>
+  </data>
+  <data name="SpellDescription_DamageTypes_2" xml:space="preserve">
+    <value>Real</value>
+  </data>
+  <data name="SpellDescription_Distance" xml:space="preserve">
+    <value>Distancia:</value>
+  </data>
+  <data name="SpellDescription_DoT" xml:space="preserve">
+    <value>Daña por segundo</value>
+  </data>
+  <data name="SpellDescription_Duration" xml:space="preserve">
+    <value>Duración:</value>
+  </data>
+  <data name="SpellDescription_Effect" xml:space="preserve">
+    <value>Efecto:</value>
+  </data>
+  <data name="SpellDescription_Effects_0" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="SpellDescription_Effects_1" xml:space="preserve">
+    <value>Silencia</value>
+  </data>
+  <data name="SpellDescription_Effects_2" xml:space="preserve">
+    <value>Paraliza</value>
+  </data>
+  <data name="SpellDescription_Effects_3" xml:space="preserve">
+    <value>Captura</value>
+  </data>
+  <data name="SpellDescription_Effects_4" xml:space="preserve">
+    <value>Ceguera</value>
+  </data>
+  <data name="SpellDescription_Effects_5" xml:space="preserve">
+    <value>Camufla</value>
+  </data>
+  <data name="SpellDescription_Effects_6" xml:space="preserve">
+    <value>Transforma</value>
+  </data>
+  <data name="SpellDescription_Effects_7" xml:space="preserve">
+    <value>Purifica</value>
+  </data>
+  <data name="SpellDescription_Effects_8" xml:space="preserve">
+    <value>Inmortaliza</value>
+  </data>
+  <data name="SpellDescription_Effects_9" xml:space="preserve">
+    <value>Escuda</value>
+  </data>
+  <data name="SpellDescription_Effects_10" xml:space="preserve">
+    <value>Duerme</value>
+  </data>
+  <data name="SpellDescription_Effects_11" xml:space="preserve">
+    <value>Potencia</value>
+  </data>
+  <data name="SpellDescription_Effects_12" xml:space="preserve">
+    <value>Provoca</value>
+  </data>
+  <data name="SpellDescription_Friendly" xml:space="preserve">
+    <value>Amigable</value>
+  </data>
+  <data name="SpellDescription_HoT" xml:space="preserve">
+    <value>Cura por segundo</value>
+  </data>
+  <data name="SpellDescription_IgnoreConsumedResourceBlock" xml:space="preserve">
+    <value>Ignora recurso consumido</value>
+  </data>
+  <data name="SpellDescription_IgnoreCooldownReduction" xml:space="preserve">
+    <value>Ignora reducción de enfriamiento</value>
+  </data>
+  <data name="SpellDescription_IgnoreGlobalCooldown" xml:space="preserve">
+    <value>Ignora enfriamiento global</value>
+  </data>
+  <data name="SpellDescription_IgnoreMapBlock" xml:space="preserve">
+    <value>Ignora bloqueos de mapa</value>
+  </data>
+  <data name="SpellDescription_IgnoreResourceBlock" xml:space="preserve">
+    <value>Ignora recurso activo</value>
+  </data>
+  <data name="SpellDescription_IgnoreZDimension" xml:space="preserve">
+    <value>Ignora dif de altura</value>
+  </data>
+  <data name="SpellDescription_Instant" xml:space="preserve">
+    <value>Insta</value>
+  </data>
+  <data name="SpellDescription_Multiplier" xml:space="preserve">
+    <value>x {00}</value>
+  </data>
+  <data name="SpellDescription_Percentage" xml:space="preserve">
+    <value>{00}%</value>
+  </data>
+  <data name="SpellDescription_RegularAndPercentage" xml:space="preserve">
+    <value>{00} + {01}%</value>
+  </data>
+  <data name="SpellDescription_ScalingPercentage" xml:space="preserve">
+    <value>Porcentaje escalado:</value>
+  </data>
+  <data name="SpellDescription_ScalingStat" xml:space="preserve">
+    <value>Escala en:</value>
+  </data>
+  <data name="SpellDescription_SpellTypes_0" xml:space="preserve">
+    <value>Hechizo de combate</value>
+  </data>
+  <data name="SpellDescription_SpellTypes_1" xml:space="preserve">
+    <value>Teletransportar</value>
+  </data>
+  <data name="SpellDescription_SpellTypes_2" xml:space="preserve">
+    <value>Salto a objetivo</value>
+  </data>
+  <data name="SpellDescription_SpellTypes_3" xml:space="preserve">
+    <value>Desplazamiento</value>
+  </data>
+  <data name="SpellDescription_SpellTypes_4" xml:space="preserve">
+    <value>Especial</value>
+  </data>
+  <data name="SpellDescription_StatBuff" xml:space="preserve">
+    <value>Stat buff</value>
+  </data>
+  <data name="SpellDescription_StatCounts_0" xml:space="preserve">
+    <value>AD:</value>
+  </data>
+  <data name="SpellDescription_StatCounts_1" xml:space="preserve">
+    <value>AP:</value>
+  </data>
+  <data name="SpellDescription_StatCounts_2" xml:space="preserve">
+    <value>P.Def:</value>
+  </data>
+  <data name="SpellDescription_StatCounts_3" xml:space="preserve">
+    <value>M.Def:</value>
+  </data>
+  <data name="SpellDescription_StatCounts_4" xml:space="preserve">
+    <value>Agi:</value>
+  </data>
+  <data name="SpellDescription_Stats_0" xml:space="preserve">
+    <value>AD</value>
+  </data>
+  <data name="SpellDescription_Stats_1" xml:space="preserve">
+    <value>AP</value>
+  </data>
+  <data name="SpellDescription_Stats_2" xml:space="preserve">
+    <value>P.Def</value>
+  </data>
+  <data name="SpellDescription_Stats_3" xml:space="preserve">
+    <value>M.Def</value>
+  </data>
+  <data name="SpellDescription_Stats_4" xml:space="preserve">
+    <value>Agi</value>
+  </data>
+  <data name="SpellDescription_TargetTypes_0" xml:space="preserve">
+    <value>Auto casteo</value>
+  </data>
+  <data name="SpellDescription_TargetTypes_1" xml:space="preserve">
+    <value>Objetivo - Rango: {00} Tiles</value>
+  </data>
+  <data name="SpellDescription_TargetTypes_2" xml:space="preserve">
+    <value>Area de efecto</value>
+  </data>
+  <data name="SpellDescription_TargetTypes_3" xml:space="preserve">
+    <value>Proyectíl - Rango: {00} Tiles</value>
+  </data>
+  <data name="SpellDescription_TargetTypes_4" xml:space="preserve">
+    <value>Al golpear</value>
+  </data>
+  <data name="SpellDescription_TargetTypes_5" xml:space="preserve">
+    <value>Trampa</value>
+  </data>
+  <data name="SpellDescription_Tick" xml:space="preserve">
+    <value>Efecto cada:</value>
+  </data>
+  <data name="SpellDescription_Tiles" xml:space="preserve">
+    <value>{00} Tiles</value>
+  </data>
+  <data name="SpellDescription_Unfriendly" xml:space="preserve">
+    <value>No Amigable</value>
+  </data>
+  <data name="SpellDescription_VitalCosts_0" xml:space="preserve">
+    <value>Costo HP:</value>
+  </data>
+  <data name="SpellDescription_VitalCosts_1" xml:space="preserve">
+    <value>Costo MP:</value>
+  </data>
+  <data name="SpellDescription_VitalDamage_0" xml:space="preserve">
+    <value>Daña HP:</value>
+  </data>
+  <data name="SpellDescription_VitalDamage_1" xml:space="preserve">
+    <value>Daña MP:</value>
+  </data>
+  <data name="SpellDescription_VitalRecovery_0" xml:space="preserve">
+    <value>Cura HP:</value>
+  </data>
+  <data name="SpellDescription_VitalRecovery_1" xml:space="preserve">
+    <value>Cura MP:</value>
+  </data>
+  <data name="Spells_ForgetSpell" xml:space="preserve">
+    <value>Olvidar hechizo</value>
+  </data>
+  <data name="Spells_ForgetSpellPrompt" xml:space="preserve">
+    <value>Estas seguro que quieres olvidarte {00}?</value>
+  </data>
+  <data name="Spells_Title" xml:space="preserve">
+    <value>Hechizos</value>
+  </data>
+  <data name="TradeContextMenu_Withdraw" xml:space="preserve">
+    <value>Rechazar {00}</value>
+  </data>
+  <data name="Trading_Accept" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+  <data name="Trading_InFight" xml:space="preserve">
+    <value>Estás actualmente peleando!</value>
+  </data>
+  <data name="Trading_OfferItem" xml:space="preserve">
+    <value>Ofertar Item</value>
+  </data>
+  <data name="Trading_OfferItemPrompt" xml:space="preserve">
+    <value>Cuanto/s {00} te gustaria ofertar?</value>
+  </data>
+  <data name="Trading_Pending" xml:space="preserve">
+    <value>Pendiente</value>
+  </data>
+  <data name="Trading_RequestPrompt" xml:space="preserve">
+    <value>{00} te ha invitado a intercambiar items con el. ¿Aceptas?</value>
+  </data>
+  <data name="Trading_RevokeItem" xml:space="preserve">
+    <value>Revocar item</value>
+  </data>
+  <data name="Trading_RevokeItemPrompt" xml:space="preserve">
+    <value>Cuanto/s {00} te gustaria revocar??</value>
+  </data>
+  <data name="Trading_TheirOffer" xml:space="preserve">
+    <value>Su oferta:</value>
+  </data>
+  <data name="Trading_Title" xml:space="preserve">
+    <value>Tradeando con {00}</value>
+  </data>
+  <data name="Trading_TradeRequest" xml:space="preserve">
+    <value>Invitación a tradear</value>
+  </data>
+  <data name="Trading_Value" xml:space="preserve">
+    <value>Valor: {00}</value>
+  </data>
+  <data name="Trading_YourOffer" xml:space="preserve">
+    <value>Tu oferta:</value>
+  </data>
+  <data name="Update_Checking" xml:space="preserve">
+    <value>Verificando actualizaciones, por favor espere!</value>
+  </data>
+  <data name="Update_Done" xml:space="preserve">
+    <value>Actualización completada! Iniciando juego!</value>
+  </data>
+  <data name="Update_Error" xml:space="preserve">
+    <value>Error de actualización! Verifique los logs para más info!</value>
+  </data>
+  <data name="Update_FilesRemaining" xml:space="preserve">
+    <value>{00} Archivos restantes</value>
+  </data>
+  <data name="Update_PercentComplete" xml:space="preserve">
+    <value>{00}%</value>
+  </data>
+  <data name="Update_RemainingSize" xml:space="preserve">
+    <value>Faltan {00}</value>
+  </data>
+  <data name="Update_Restart" xml:space="preserve">
+    <value>Actualización completada! Reinicie {00} para jugar!</value>
+  </data>
+  <data name="Update_Updating" xml:space="preserve">
+    <value>Descargando actualizaciones, por favor espere!</value>
+  </data>
+  <data name="Words_LcaseSound" xml:space="preserve">
+    <value>sonidos</value>
+  </data>
+  <data name="Words_LcaseSprite" xml:space="preserve">
+    <value>sprite</value>
+  </data>
+</root>

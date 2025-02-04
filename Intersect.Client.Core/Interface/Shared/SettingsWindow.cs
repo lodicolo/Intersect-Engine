@@ -1,3 +1,4 @@
+using System.Globalization;
 using Intersect.Client.Core;
 using Intersect.Client.Core.Controls;
 using Intersect.Client.Framework.Content;
@@ -14,7 +15,10 @@ using Intersect.Client.Interface.Game;
 using Intersect.Client.Interface.Menu;
 using Intersect.Client.Localization;
 using Intersect.Config;
+using Intersect.Core;
+using Intersect.Framework.Core.Config;
 using Intersect.Utilities;
+using Microsoft.Extensions.Logging;
 using static Intersect.Client.Framework.File_Management.GameContentManager;
 using MathHelper = Intersect.Client.Utilities.MathHelper;
 
@@ -42,6 +46,7 @@ public partial class SettingsWindow : WindowControl
     // Game Settings - Interface
     private readonly TabButton _gameSettingsTabInterface;
     private readonly ScrollControl _interfaceSettings;
+    private readonly LabeledComboBox _languageSelection;
     private readonly LabeledCheckBox _autoCloseWindowsCheckbox;
     private readonly LabeledCheckBox _autoToggleChatLogCheckbox;
     private readonly LabeledCheckBox _showExperienceAsPercentageCheckbox;
@@ -181,6 +186,41 @@ public partial class SettingsWindow : WindowControl
         );
 
         // Game Settings - Interface.
+
+        _languageSelection = new LabeledComboBox(parent: _interfaceSettings, name: nameof(_languageSelection))
+        {
+            Dock = Pos.Top,
+            Font = _defaultFont,
+            Label = Strings.Settings.Language,
+            LabelTextPadding = new Padding(4, 0, 0, 0),
+            TextPadding = new Padding(8, 4),
+        };
+        var supportedCultures = Options.Instance?.Localization.SupportedCultures ??
+                                LocalizationOptions.DefaultSupportedCultures;
+        foreach (var supportedCulture in supportedCultures)
+        {
+            _ = _languageSelection.AddItem(
+                label: supportedCulture.NativeName,
+                userData: supportedCulture.IetfLanguageTag
+            );
+        }
+
+        if (Globals.Database.Language is not { } language || _languageSelection.SelectByUserData(userData: language))
+        {
+            var currentCulture = CultureInfo.CurrentUICulture;
+            while (!_languageSelection.SelectByUserData(userData: currentCulture.IetfLanguageTag) &&
+                   currentCulture.LCID != CultureInfo.InvariantCulture.LCID)
+            {
+                currentCulture = currentCulture.Parent;
+            }
+
+            if (currentCulture.LCID == CultureInfo.InvariantCulture.LCID)
+            {
+                _languageSelection.SelectByUserData(userData: supportedCultures[index: 0].IetfLanguageTag);
+            }
+        }
+
+        _languageSelection.ItemSelected += LanguageSelectionOnItemSelected;
 
         // Game Settings - Interface: Auto-close Windows.
         _autoCloseWindowsCheckbox = new LabeledCheckBox(parent: _interfaceSettings, name: nameof(_autoCloseWindowsCheckbox))
@@ -678,9 +718,9 @@ public partial class SettingsWindow : WindowControl
 
         GameFont? defaultFont = Current.GetFont("sourcesansproblack", 10);
 
-            var offset = row++ * 32;
+        var offset = row++ * 32;
         var controlName = control.GetControlId();
-            var name = controlName?.ToLower() ?? string.Empty;
+        var name = controlName?.ToLower() ?? string.Empty;
 
         if (!Strings.Controls.KeyDictionary.TryGetValue(name, out var localizedControlName))
         {
@@ -742,6 +782,30 @@ public partial class SettingsWindow : WindowControl
         keyButtons = [key1, key2];
         _controlBindingButtons.Add(control, keyButtons);
         return true;
+    }
+
+    private void LanguageSelectionOnItemSelected(Base sender, ItemSelectedEventArgs arguments)
+    {
+        if (arguments.SelectedUserData is string languageTag)
+        {
+            try
+            {
+                CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfoByIetfLanguageTag(languageTag);
+                Globals.Database.Language = languageTag;
+            }
+            catch (Exception exception)
+            {
+                ApplicationContext.CurrentContext.Logger.LogWarning(
+                    exception,
+                    "Failed to set language to '{LanguageTag}'",
+                    languageTag
+                );
+            }
+        }
+        else
+        {
+            Globals.Database.Language = null;
+        }
     }
 
     protected override void OnVisibilityChanged(object? sender, VisibilityChangedEventArgs eventArgs)

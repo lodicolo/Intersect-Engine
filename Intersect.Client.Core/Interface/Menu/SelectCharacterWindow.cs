@@ -9,6 +9,7 @@ using Intersect.Client.Interface.Game.Chat;
 using Intersect.Client.Interface.Shared;
 using Intersect.Client.Localization;
 using Intersect.Client.Networking;
+using Intersect.Extensions;
 using Intersect.Network.Packets.Server;
 
 namespace Intersect.Client.Interface.Menu;
@@ -140,10 +141,9 @@ public partial class SelectCharacterWindow : ImagePanel
         }
 
         _labelCharname.SetText(Strings.CharacterSelection.Name.ToString(Characters[mSelectedChar].Name));
-        _labelInfo.SetText(
-            Strings.CharacterSelection.Info.ToString(
-                Characters[mSelectedChar].Level, Characters[mSelectedChar].Class
-            )
+        _labelInfo.Text = ClientStrings.CharacterSelection_Info.Format(
+            Characters[mSelectedChar].Level,
+            Characters[mSelectedChar].Class
         );
 
         _buttonPlay.Show();

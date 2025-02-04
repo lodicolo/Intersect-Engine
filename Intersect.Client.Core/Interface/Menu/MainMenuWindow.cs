@@ -47,8 +47,9 @@ public partial class MainMenuWindow : Window
             IsDisabled = MainMenu.ActiveNetworkStatus != NetworkStatus.Online,
             IsHidden = ClientContext.IsSinglePlayer,
             IsTabable = true,
-            Text = Strings.MainMenu.Login,
+            Text = ClientStrings.MainMenu_Login,
         };
+
         _buttonLogin.Clicked += _buttonLogin_Clicked;
 
         _buttonRegister = new Button(this, nameof(_buttonRegister))

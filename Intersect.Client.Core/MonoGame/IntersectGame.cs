@@ -14,6 +14,7 @@ using Intersect.Updater;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using HarmonyLib;
 using Intersect.Client.Framework.Database;
@@ -24,6 +25,7 @@ using MainMenu = Intersect.Client.Interface.Menu.MainMenu;
 using Intersect.Client.Interface.Shared;
 using Intersect.Client.MonoGame.NativeInterop;
 using Intersect.Core;
+using Intersect.Framework.Resources;
 using Microsoft.Extensions.Logging;
 
 namespace Intersect.Client.MonoGame;
@@ -100,6 +102,36 @@ internal partial class IntersectGame : Game
 
         // Load configuration.
         Globals.Database.LoadPreferences();
+
+        if (Globals.Database.Language is { } languageTag)
+        {
+            try
+            {
+                ClientStrings.ResourceManager.TryInjectResourceSetFromJson(
+                    CultureInfo.GetCultureInfoByIetfLanguageTag("es"),
+                    "resources/ClientStrings"
+                );
+
+                ClientStrings.ResourceManager.TryDumpResourcesToJson("resources/ClientStrings");
+
+                var loadedCulture = CultureInfo.GetCultureInfoByIetfLanguageTag(languageTag);
+                CultureInfo.CurrentUICulture = loadedCulture;
+
+                ApplicationContext.CurrentContext.Logger.LogInformation(
+                    "Set current culture to saved preference '{LanguageName}' ({LanguageTag})",
+                    loadedCulture.NativeName,
+                    languageTag
+                );
+            }
+            catch (Exception exception)
+            {
+                ApplicationContext.CurrentContext.Logger.LogWarning(
+                    exception,
+                    "Failed to set culture to '{LanguageTag}'",
+                    languageTag
+                );
+            }
+        }
 
         Window.IsBorderless = Context.StartupOptions.BorderlessWindow;
 

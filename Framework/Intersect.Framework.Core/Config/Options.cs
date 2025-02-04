@@ -3,6 +3,7 @@ using Intersect.Config;
 using Intersect.Config.Guilds;
 using Intersect.Core;
 using Intersect.Framework.Annotations;
+using Intersect.Framework.Core.Config;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -187,6 +188,8 @@ public partial record Options
     public PassabilityOptions Passability { get; set; } = new();
 
     public ushort ValidPasswordResetTimeMinutes { get; set; } = 30;
+
+    public LocalizationOptions Localization { get; set; } = new();
 
     public MapOptions Map { get; set; } = new();
 
