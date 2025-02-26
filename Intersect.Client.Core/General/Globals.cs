@@ -160,7 +160,7 @@ public static partial class Globals
     {
         // Gather all known entities before passing them on to the plugins!
         // The global entity list is incomplete and lacks events.
-        var knownEntities = new Dictionary<Guid, IEntity>();
+        var knownEntities = new Dictionary<Guid, IClientEntity>();
 
         if (Entities != null)
         {
@@ -204,7 +204,7 @@ public static partial class Globals
         ClientLifecycleHelpers.ForEach(clientLifecycleHelper => clientLifecycleHelper?.OnGameDraw(state, deltaTime));
     }
 
-    internal static void OnGameDraw(DrawStates state, IEntity entity, TimeSpan deltaTime)
+    internal static void OnGameDraw(DrawStates state, IClientEntity entity, TimeSpan deltaTime)
     {
         ClientLifecycleHelpers.ForEach(
             clientLifecycleHelper => clientLifecycleHelper?.OnGameDraw(state, entity, deltaTime)

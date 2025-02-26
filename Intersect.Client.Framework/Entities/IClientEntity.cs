@@ -4,14 +4,12 @@ using Intersect.Client.Framework.Graphics;
 using Intersect.Client.Framework.Items;
 using Intersect.Client.Framework.Maps;
 using Intersect.Enums;
+using Intersect.Framework.Core.Entities;
 
 namespace Intersect.Client.Framework.Entities;
 
-public interface IEntity : IDisposable
+public interface IClientEntity : IEntity
 {
-    Guid Id { get; }
-    EntityType Type { get; }
-    string Name { get; }
     Gender Gender { get; }
     Color? NameColor { get; }
     Label FooterLabel { get; }

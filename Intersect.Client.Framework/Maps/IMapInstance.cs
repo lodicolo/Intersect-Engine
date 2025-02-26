@@ -14,9 +14,9 @@ public interface IMapInstance
     IReadOnlyList<IMapSound> AttributeSounds { get; }
     IMapSound BackgroundSound { get; }
     IReadOnlyList<IMapItemInstance> Items { get; }
-    IReadOnlyList<IEntity> Entities { get; }
+    IReadOnlyList<IClientEntity> Entities { get; }
     IReadOnlyList<IMapAnimation> Animations { get; }
-    IReadOnlyList<IEntity> Critters { get; }
+    IReadOnlyList<IClientEntity> Critters { get; }
 
     MapZone ZoneType { get; }
 
@@ -32,7 +32,7 @@ public interface IMapInstance
         int tileX,
         int tileY,
         Direction dir = Direction.None,
-        IEntity? owner = null,
+        IClientEntity? owner = null,
         AnimationSource source = default
     );
 

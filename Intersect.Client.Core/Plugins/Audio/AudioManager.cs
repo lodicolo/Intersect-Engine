@@ -7,7 +7,7 @@ namespace Intersect.Client.Plugins.Audio;
 public partial class AudioManager : IAudioManager
 {
     /// <inheritdoc />
-    public IMapSound PlayMapSound(string filename, int x, int y, Guid mapId, bool loop, int loopInterval, int distance, IEntity parent = null) => Core.Audio.AddMapSound(filename, x, y, mapId, loop, loopInterval, distance, parent);
+    public IMapSound PlayMapSound(string filename, int x, int y, Guid mapId, bool loop, int loopInterval, int distance, IClientEntity parent = null) => Core.Audio.AddMapSound(filename, x, y, mapId, loop, loopInterval, distance, parent);
 
     /// <inheritdoc />
     public ISound PlaySound(string filename, bool loop) => Core.Audio.AddGameSound(filename, loop);

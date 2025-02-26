@@ -367,7 +367,7 @@ internal sealed partial class PacketHandler
     //NpcEntityPacket
     public void HandlePacket(IPacketSender packetSender, NpcEntityPacket packet)
     {
-        var en = Globals.GetEntity(packet.EntityId, EntityType.GlobalEntity);
+        var en = Globals.GetEntity(packet.EntityId, EntityType.NPC);
         if (en != null)
         {
             en.Load(packet);
@@ -375,7 +375,7 @@ internal sealed partial class PacketHandler
         }
         else
         {
-            var entity = new Entity(packet.EntityId, packet, EntityType.GlobalEntity)
+            var entity = new Entity(packet.EntityId, packet, EntityType.NPC)
             {
                 Aggression = packet.Aggression,
             };
@@ -1935,7 +1935,7 @@ internal sealed partial class PacketHandler
         var id = packet.EntityId;
         var type = packet.Type;
         var mapId = packet.MapId;
-        IEntity en = null;
+        IClientEntity en = null;
         if (type < EntityType.Event)
         {
             if (!Globals.Entities.ContainsKey(id))

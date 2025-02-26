@@ -80,12 +80,12 @@ public partial class MapInstance : MapBase, IGameObject<Guid, MapInstance>, IMap
 
     public Dictionary<Guid, Entity> LocalEntities { get; } = [];
 
-    IReadOnlyList<IEntity> IMapInstance.Entities => LocalEntities.Values.ToList();
+    IReadOnlyList<IClientEntity> IMapInstance.Entities => LocalEntities.Values.ToList();
 
     //Map Critters
     public Dictionary<Guid, Critter> LocalCritters { get; set; } = new Dictionary<Guid, Critter>();
 
-    IReadOnlyList<IEntity> IMapInstance.Critters => LocalCritters.Values.ToList();
+    IReadOnlyList<IClientEntity> IMapInstance.Critters => LocalCritters.Values.ToList();
 
     //Map Players/Events/Npcs
     public List<Guid> LocalEntitiesToDispose { get; set; } = new List<Guid>();
@@ -727,7 +727,7 @@ public partial class MapInstance : MapBase, IGameObject<Guid, MapInstance>, IMap
         int tileX,
         int tileY,
         Direction dir = Direction.None,
-        IEntity? owner = null,
+        IClientEntity? owner = null,
         AnimationSource source = default
     )
     {

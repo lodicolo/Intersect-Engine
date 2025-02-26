@@ -11,4 +11,8 @@ public enum EntityType
     Projectile = 3,
 
     Event = 4,
+
+    NPC,
+
+    None,
 }

@@ -29,7 +29,7 @@ public partial class Animation : IAnimation
 
     private readonly int mLowerLoop;
 
-    private readonly IEntity? mParent;
+    private readonly IClientEntity? mParent;
 
     private Direction mRenderDir;
 
@@ -66,7 +66,7 @@ public partial class Animation : IAnimation
         bool loopForever,
         bool autoRotate = false,
         int zDimension = -1,
-        IEntity? parent = null,
+        IClientEntity? parent = null,
         AnimationSource source = default
     )
     {

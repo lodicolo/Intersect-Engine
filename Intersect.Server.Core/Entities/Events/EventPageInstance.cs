@@ -1,5 +1,6 @@
 using Intersect.Enums;
 using Intersect.Framework.Core;
+using Intersect.GameLogic.Entities;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Events;
 using Intersect.Network.Packets.Server;
@@ -247,10 +248,7 @@ public partial class EventPageInstance : Entity
         }
     }
 
-    public override EntityType GetEntityType()
-    {
-        return EntityType.Event;
-    }
+    public override EntityType Type => EntityType.Event;
 
     public override EntityPacket EntityPacket(EntityPacket packet = null, Player forPlayer = null)
     {

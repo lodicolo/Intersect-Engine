@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using Intersect.Core;
 using Intersect.Enums;
 using Intersect.Framework.Core;
+using Intersect.GameLogic.Entities;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Animations;
 using Intersect.Network.Packets.Server;
@@ -156,10 +157,7 @@ public partial class Npc : Entity
 
     private bool IsUnableToCastSpells => CachedStatuses.Any(PredicateUnableToCastSpells);
 
-    public override EntityType GetEntityType()
-    {
-        return EntityType.GlobalEntity;
-    }
+    public override EntityType Type => EntityType.NPC;
 
     public override void Die(bool generateLoot = true, Entity killer = null)
     {
@@ -1701,8 +1699,8 @@ public partial class Npc : Entity
     {
         return new EntityItemSource
         {
-            EntityType = GetEntityType(),
-            EntityReference = new WeakReference<IEntity>(this),
+            EntityType = Type,
+            EntityReference = new WeakReference<IServerEntity>(this),
             Id = this.Base.Id
         };
     }

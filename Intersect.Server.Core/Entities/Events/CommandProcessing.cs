@@ -169,7 +169,7 @@ public static partial class CommandProcessing
                 PacketSender.SendChatBubbleToProximity(
                         player,
                         instance.PageInstance.Id,
-                        instance.PageInstance.GetEntityType(),
+                        instance.PageInstance.Type,
                         txt,
                         instance.PageInstance.MapId
                     );
@@ -180,7 +180,7 @@ public static partial class CommandProcessing
                 PacketSender.SendChatBubbleToPlayer(
                     player,
                     instance.PageInstance.Id,
-                    instance.PageInstance.GetEntityType(),
+                    instance.PageInstance.Type,
                     txt,
                     instance.PageInstance.MapId
                 );
@@ -1005,7 +1005,7 @@ public static partial class CommandProcessing
             {
                 if (command.X == 0 && command.Y == 0 && command.Dir == 0)
                 {
-                    var targetType = targetEntity.GetEntityType() == EntityType.Event ? 2 : 1;
+                    var targetType = targetEntity.Type == EntityType.Event ? 2 : 1;
                     //Attach to entity instead of playing on tile
                     if (command.InstanceToPlayer)
                     {

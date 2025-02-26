@@ -192,9 +192,9 @@ partial class Pathfinder
 
                                                 if (!en.IsPassable() && en.X > -1 && en.X < Options.Instance.Map.MapWidth && en.Y > -1 && en.Y < Options.Instance.Map.MapHeight)
                                                 {
-                                                    mapGrid[mx + en.X, my + en.Y].BlockType = en.GetEntityType() switch
+                                                    mapGrid[mx + en.X, my + en.Y].BlockType = en.Type switch
                                                     {
-                                                        EntityType.GlobalEntity => PathNodeBlockType.Npc,
+                                                        EntityType.NPC => PathNodeBlockType.Npc,
                                                         EntityType.Player => PathNodeBlockType.Player,
                                                         EntityType.Resource => PathNodeBlockType.Entity,
                                                         EntityType.Projectile => PathNodeBlockType.Entity,

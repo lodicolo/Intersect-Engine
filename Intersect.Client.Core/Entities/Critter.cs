@@ -78,7 +78,7 @@ public partial class Critter : Entity
         DirectionMoving = Randomization.NextDirection();
         var tmpX = (sbyte)X;
         var tmpY = (sbyte)Y;
-        IEntity? blockedBy = null;
+        IClientEntity? blockedBy = null;
 
         if (IsMoving || MoveTimer >= Timing.Global.MillisecondsUtc)
         {

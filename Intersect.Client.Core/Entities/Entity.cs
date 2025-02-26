@@ -17,6 +17,7 @@ using Intersect.Client.Spells;
 using Intersect.Core;
 using Intersect.Enums;
 using Intersect.Framework.Core;
+using Intersect.Framework.Core.Entities;
 using Intersect.Framework.Core.GameObjects.Animations;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Animations;
@@ -27,7 +28,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Intersect.Client.Entities;
 
-public partial class Entity : IEntity
+public partial class Entity : IClientEntity
 {
     public int AnimationFrame { get; set; }
 
@@ -90,7 +91,7 @@ public partial class Entity : IEntity
         }
     }
 
-    IReadOnlyList<int> IEntity.EquipmentSlots => [..MyEquipment];
+    IReadOnlyList<int> IClientEntity.EquipmentSlots => [..MyEquipment];
 
     public Animation?[] EquipmentAnimations { get; set; } = new Animation[Options.Instance.Equipment.Slots.Count];
 
@@ -113,7 +114,7 @@ public partial class Entity : IEntity
     //Inventory/Spells/Equipment
     public IItem[] Inventory { get; } = new IItem[Options.Instance.Player.MaxInventory];
 
-    IReadOnlyList<IItem> IEntity.Items => [.. Inventory];
+    IReadOnlyList<IItem> IClientEntity.Items => [.. Inventory];
 
     public bool InView { get; set; } = true;
 
@@ -127,7 +128,7 @@ public partial class Entity : IEntity
     //Vitals & Stats
     public long[] MaxVital { get; set; } = new long[Enum.GetValues<Vital>().Length];
 
-    IReadOnlyDictionary<Vital, long> IEntity.MaxVitals =>
+    IReadOnlyDictionary<Vital, long> IClientEntity.MaxVitals =>
         Enum.GetValues<Vital>().ToDictionary(vital => vital, vital => MaxVital[(int)vital]);
 
     protected Vector2 mOrigin = Vector2.Zero;
@@ -185,11 +186,11 @@ public partial class Entity : IEntity
 
     public Spell[] Spells { get; set; } = new Spell[Options.Instance.Player.MaxSpells];
 
-    IReadOnlyList<Guid> IEntity.Spells => Spells.Select(x => x.Id).ToList();
+    IReadOnlyList<Guid> IClientEntity.Spells => Spells.Select(x => x.Id).ToList();
 
     public int[] Stat { get; set; } = new int[Enum.GetValues<Stat>().Length];
 
-    IReadOnlyDictionary<Stat, int> IEntity.Stats =>
+    IReadOnlyDictionary<Stat, int> IClientEntity.Stats =>
         Enum.GetValues<Stat>().ToDictionary(stat => stat, stat => Stat[(int)stat]);
 
     public IGameTexture? Texture { get; set; }
@@ -216,7 +217,7 @@ public partial class Entity : IEntity
 
     public long[] Vital { get; set; } = new long[Enum.GetValues<Vital>().Length];
 
-    IReadOnlyDictionary<Vital, long> IEntity.Vitals =>
+    IReadOnlyDictionary<Vital, long> IClientEntity.Vitals =>
         Enum.GetValues<Vital>().ToDictionary(vital => vital, vital => Vital[(int)vital]);
 
     public int WalkFrame { get; set; }
@@ -224,7 +225,7 @@ public partial class Entity : IEntity
     public FloatRect WorldPos { get; set; } = new FloatRect();
 
     public bool IsHovered { get; set; }
-    
+
     private Vector3 _position;
 
     public Vector3 Position
@@ -249,7 +250,28 @@ public partial class Entity : IEntity
     public int TileX => (int)float.Floor(Position.X);
     public int TileY => (int)float.Floor(Position.Y);
     public int TileZ => (int)float.Floor(Position.Z);
-    
+
+    public virtual bool IsBlockedBy(MapAttribute mapAttribute)
+    {
+        switch (mapAttribute.Type)
+        {
+            case MapAttributeType.NpcAvoid when Type == EntityType.NPC:
+            case MapAttributeType.Blocked:
+                return true;
+            case MapAttributeType.ZDimension:
+                return mapAttribute is MapZDimensionAttribute zDimensionAttribute &&
+                       zDimensionAttribute.BlockedLevel == TileZ + 1;
+        }
+
+        // TODO: Other cases?
+        return false;
+    }
+
+    public virtual bool IsBlockedBy(IEntity entity)
+    {
+        return true;
+    }
+
     //Location Info
     public byte X
     {
@@ -320,7 +342,7 @@ public partial class Entity : IEntity
     //Status effects
     public List<IStatus> Status { get; private set; } = [];
 
-    IReadOnlyList<IStatus> IEntity.Status => Status;
+    IReadOnlyList<IStatus> IClientEntity.Status => Status;
 
     public Vector2 Origin => LatestMap == default ? Vector2.Zero : mOrigin;
 
@@ -2376,7 +2398,7 @@ public partial class Entity : IEntity
         Point delta,
         int z,
         Guid mapId,
-        ref IEntity? blockedBy,
+        ref IClientEntity? blockedBy,
         bool ignoreAliveResources = true,
         bool ignoreDeadResources = true,
         bool ignoreNpcAvoids = true,
@@ -2477,8 +2499,8 @@ public partial class Entity : IEntity
 
                                 case Player player:
                                     //Return the entity key as this should block the player.  Only exception is if the MapZone this entity is on is passable.
-                                    var entityMap = Maps.MapInstance.Get(player.MapId);
-                                    if (Options.Instance.Passability.Passable[(int)entityMap.ZoneType])
+                                    if (Maps.MapInstance.TryGet(player.MapId, out var playerMapInstance) &&
+                                        Options.Instance.Passability.IsPassable(playerMapInstance.ZoneType))
                                     {
                                         continue;
                                     }

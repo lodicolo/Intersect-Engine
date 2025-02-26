@@ -11,7 +11,7 @@ public partial class MapSound : Sound, IMapSound
 {
     private readonly int mDistance;
 
-    private readonly IEntity? mEntity;
+    private readonly IClientEntity? mEntity;
 
     private Guid mMapId;
 
@@ -33,7 +33,7 @@ public partial class MapSound : Sound, IMapSound
         bool loop,
         int loopInterval,
         int distance,
-        IEntity? parent = null
+        IClientEntity? parent = null
     ) : base(filename, loop, loopInterval)
     {
         if (string.IsNullOrEmpty(filename) || mSound == null)

@@ -21,6 +21,7 @@ using System.Diagnostics;
 using System.Text;
 using Intersect.Core;
 using Intersect.Framework.Core;
+using Intersect.GameLogic.Entities;
 using Intersect.Network.Packets.Server;
 using Intersect.Server.Core;
 using Microsoft.Extensions.Logging;

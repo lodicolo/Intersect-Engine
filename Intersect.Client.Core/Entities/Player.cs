@@ -1344,6 +1344,12 @@ public partial class Player : Entity, IPlayer
             }
         }
 
+        if (spellDescriptor is { SpellType: SpellType.Dash, Dash: { } dashDescriptor })
+        {
+            // TODO: Client-side calculation of dash
+            // dashDescriptor.
+        }
+
         PacketSender.SendUseSpell(index, TargetId);
     }
 
@@ -1626,7 +1632,7 @@ public partial class Player : Entity, IPlayer
         }
     }
 
-    protected int GetDistanceTo(IEntity target)
+    protected int GetDistanceTo(IClientEntity target)
     {
         if (target != null)
         {
@@ -1816,7 +1822,7 @@ public partial class Player : Entity, IPlayer
         }
     }
 
-    private void SetTargetBox(IEntity? targetEntity)
+    private void SetTargetBox(IClientEntity? targetEntity)
     {
         switch (targetEntity)
         {
@@ -2117,7 +2123,7 @@ public partial class Player : Entity, IPlayer
         var y = (int)mouseInWorld.Y;
         var targetRect = new FloatRect(x - 8, y - 8, 16, 16); //Adjust to allow more/less error
 
-        IEntity? bestMatch = null;
+        IClientEntity? bestMatch = null;
         var bestAreaMatch = 0f;
 
         foreach (MapInstance map in Maps.MapInstance.Lookup.Values.Cast<MapInstance>())
@@ -2202,7 +2208,7 @@ public partial class Player : Entity, IPlayer
         return false;
     }
 
-    public bool TryTarget(IEntity entity, bool force = false)
+    public bool TryTarget(IClientEntity entity, bool force = false)
     {
         //Check for taunt status if so don't allow to change target
         for (var i = 0; i < Status.Count; i++)
@@ -2244,9 +2250,9 @@ public partial class Player : Entity, IPlayer
 
     }
 
-    private IEntity? _target;
+    private IClientEntity? _target;
 
-    public IEntity? Target
+    public IClientEntity? Target
     {
         get => _target;
         set
@@ -2438,7 +2444,7 @@ public partial class Player : Entity, IPlayer
         }
 
         Point position = new(X, Y);
-        IEntity? blockedBy = null;
+        IClientEntity? blockedBy = null;
 
         if (DirectionMoving <= Direction.None || Globals.EventDialogs.Count != 0)
         {

@@ -1,10 +1,10 @@
 using Intersect.GameObjects;
 
-namespace Intersect.Client.Framework.Entities;
+namespace Intersect.Framework.Core.Entities;
 
-public interface IResource : IEntity
+public interface IResourceEntity : IEntity
 {
     ResourceBase? Descriptor { get; }
-    
+
     bool IsDepleted { get; }
 }

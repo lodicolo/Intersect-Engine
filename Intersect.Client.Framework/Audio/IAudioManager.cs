@@ -18,9 +18,9 @@ public interface IAudioManager
     /// <param name="loop">Determines whether the sound loops once it's over or not.</param>
     /// <param name="loopInterval">The time (in ms) between the sound stopping and starting again once it loops.</param>
     /// <param name="distance">The maximum distance from which the sound can still be heard.</param>
-    /// <param name="parent">The <see cref="IEntity"/> this sound belongs to.</param>
+    /// <param name="parent">The <see cref="IClientEntity"/> this sound belongs to.</param>
     /// <returns>Returns a new instance of <see cref="IMapSound"/> for the sound that will be played.</returns>
-    IMapSound PlayMapSound(string filename, int x, int y, Guid mapId, bool loop, int loopInterval, int distance, IEntity parent = null);
+    IMapSound PlayMapSound(string filename, int x, int y, Guid mapId, bool loop, int loopInterval, int distance, IClientEntity parent = null);
 
     /// <summary>
     /// Start playing a sound effect.

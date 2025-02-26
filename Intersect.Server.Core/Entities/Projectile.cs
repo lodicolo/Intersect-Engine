@@ -1,5 +1,6 @@
 using Intersect.Enums;
 using Intersect.Framework.Core;
+using Intersect.Framework.Core.Entities;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Maps;
 using Intersect.Network.Packets.Server;
@@ -624,6 +625,18 @@ public partial class Projectile : Entity
         }
     }
 
+    public override bool IsBlockedBy(MapAttribute mapAttribute)
+    {
+        var blocked = base.IsBlockedBy(mapAttribute);
+        return blocked;
+    }
+
+    public override bool IsBlockedBy(IEntity entity)
+    {
+        var blocked = base.IsBlockedBy(entity);
+        return blocked;
+    }
+
     public override void Die(bool dropItems = true, Entity killer = null)
     {
         for (var i = 0; i < Spawns.Length; i++)
@@ -651,11 +664,8 @@ public partial class Projectile : Entity
         return pkt;
     }
 
-    public override EntityType GetEntityType()
-    {
-        return EntityType.Projectile;
-    }
-    
+    public override EntityType Type => EntityType.Projectile;
+
     protected override EntityItemSource? AsItemSource()
     {
         return null;

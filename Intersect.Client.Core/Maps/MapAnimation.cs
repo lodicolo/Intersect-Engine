@@ -23,7 +23,7 @@ public partial class MapAnimation : Animation, IMapAnimation
         int tileX,
         int tileY,
         Direction dir,
-        IEntity? owner = null,
+        IClientEntity? owner = null,
         AnimationSource source = default
     ) : base(
         animBase,

@@ -4,7 +4,7 @@ using Intersect.GameObjects;
 
 namespace Intersect.Client.Framework.Entities;
 
-public interface IPlayer : IEntity
+public interface IPlayer : IClientEntity
 {
     Guid Class { get; }
     long Experience { get; }
@@ -28,7 +28,7 @@ public interface IPlayer : IEntity
 
     bool TryGetRealLocation(ref int x, ref int y, ref Guid mapId);
     bool TryTarget();
-    bool TryTarget(IEntity entity, bool force = false);
+    bool TryTarget(IClientEntity entity, bool force = false);
     void AutoTarget();
     bool ClearTarget();
     void AddToHotbar(int hotbarSlot, sbyte itemType, int itemSlot);

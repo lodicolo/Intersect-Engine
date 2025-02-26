@@ -1,6 +1,7 @@
 using Intersect.Core;
 using Intersect.Enums;
 using Intersect.Framework.Core;
+using Intersect.GameLogic.Entities;
 using Intersect.Server.Networking;
 using Intersect.Utilities;
 using Microsoft.Extensions.Logging;

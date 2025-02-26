@@ -578,7 +578,7 @@ public static partial class PacketSender
 
         client.Send(
             new EntityPositionPacket(
-                en.Id, en.GetEntityType(), en.MapId, (byte)en.X, (byte)en.Y, (byte)en.Dir, en.Passable,
+                en.Id, en.Type, en.MapId, (byte)en.X, (byte)en.Y, (byte)en.Dir, en.Passable,
                 en.HideName
             )
         );
@@ -595,7 +595,7 @@ public static partial class PacketSender
         SendDataToProximityOnMapInstance(
             en.MapId, en.MapInstanceId,
             new EntityPositionPacket(
-                en.Id, en.GetEntityType(), en.MapId, (byte)en.X, (byte)en.Y, (byte)en.Dir, en.Passable,
+                en.Id, en.Type, en.MapId, (byte)en.X, (byte)en.Y, (byte)en.Dir, en.Passable,
                 en.HideName
             )
         );
@@ -632,31 +632,31 @@ public static partial class PacketSender
     //EntityLeftArea
     public static void SendEntityLeaveMap(Entity en, Guid leftMap)
     {
-        SendDataToMapInstance(leftMap, en.MapInstanceId, new EntityLeftPacket(en.Id, en.GetEntityType(), en.MapId));
+        SendDataToMapInstance(leftMap, en.MapInstanceId, new EntityLeftPacket(en.Id, en.Type, en.MapId));
     }
 
     //EntityLeftPacket
     public static void SendEntityLeave(Entity en)
     {
-        SendDataToProximityOnMapInstance(en.MapId, en.MapInstanceId, new EntityLeftPacket(en.Id, en.GetEntityType(), en.MapId));
+        SendDataToProximityOnMapInstance(en.MapId, en.MapInstanceId, new EntityLeftPacket(en.Id, en.Type, en.MapId));
     }
 
     //EntityLeftPacket
     public static void SendEntityLeaveLayer(Entity en, Guid mapInstanceId)
     {
-        SendDataToProximityOnMapInstance(en.MapId, mapInstanceId, new EntityLeftPacket(en.Id, en.GetEntityType(), en.MapId));
+        SendDataToProximityOnMapInstance(en.MapId, mapInstanceId, new EntityLeftPacket(en.Id, en.Type, en.MapId));
     }
 
     //EntityLeftPacket
     public static void SendEntityLeaveInstanceOfMap(Entity en, Guid mapId, Guid mapInstanceId)
     {
-        SendDataToProximityOnMapInstance(mapId, mapInstanceId, new EntityLeftPacket(en.Id, en.GetEntityType(), en.MapId));
+        SendDataToProximityOnMapInstance(mapId, mapInstanceId, new EntityLeftPacket(en.Id, en.Type, en.MapId));
     }
 
     //EntityLeavePacket
     public static void SendEntityLeaveTo(Player player, Entity en)
     {
-        player.SendPacket(new EntityLeftPacket(en.Id, en.GetEntityType(), en.MapId));
+        player.SendPacket(new EntityLeftPacket(en.Id, en.Type, en.MapId));
     }
 
     //EventLeavePacket
@@ -892,7 +892,7 @@ public static partial class PacketSender
                 SendDataToProximityOnMapInstance(
                     en.MapId, en.MapInstanceId,
                     new EntityMovePacket(
-                        en.Id, en.GetEntityType(), en.MapId, (byte)en.X, (byte)en.Y, (byte)en.Dir, correction
+                        en.Id, en.Type, en.MapId, (byte)en.X, (byte)en.Y, (byte)en.Dir, correction
                     ), null, TransmissionMode.Any
                 );
                 return;
@@ -916,7 +916,7 @@ public static partial class PacketSender
             {
                 player.SendPacket(
                     new EntityMovePacket(
-                        en.Id, en.GetEntityType(), en.MapId, (byte)en.X, (byte)en.Y, (byte)en.Dir, correction
+                        en.Id, en.Type, en.MapId, (byte)en.X, (byte)en.Y, (byte)en.Dir, correction
                     )
                 );
                 return;
@@ -930,7 +930,7 @@ public static partial class PacketSender
     public static EntityVitalsPacket GenerateEntityVitalsPacket(Entity en)
     {
         return new EntityVitalsPacket(
-            en.Id, en.GetEntityType(), en.MapId, en.GetVitals(), en.GetMaxVitals(), en.StatusPackets(),
+            en.Id, en.Type, en.MapId, en.GetVitals(), en.GetMaxVitals(), en.StatusPackets(),
             en.CombatTimer - Timing.Global.Milliseconds
         );
     }
@@ -945,7 +945,7 @@ public static partial class PacketSender
             data.Add(new EntityVitalData()
             {
                 Id = entity.Id,
-                Type = entity.GetEntityType(),
+                Type = entity.Type,
                 Vitals = entity.GetVitals(),
                 MaxVitals = entity.GetMaxVitals(),
                 CombatTimeRemaining = entity.CombatTimer - Timing.Global.Milliseconds
@@ -965,7 +965,7 @@ public static partial class PacketSender
             data.Add(new EntityStatusData()
             {
                 Id = entity.Id,
-                Type = entity.GetEntityType(),
+                Type = entity.Type,
                 Statuses = entity.StatusPackets()
             });
         }
@@ -1005,7 +1005,7 @@ public static partial class PacketSender
             stats[i] = en.Stat[i].Value();
         }
 
-        return new EntityStatsPacket(en.Id, en.GetEntityType(), en.MapId, stats);
+        return new EntityStatsPacket(en.Id, en.Type, en.MapId, stats);
     }
 
     //EntityStatsPacket
@@ -1018,26 +1018,26 @@ public static partial class PacketSender
     public static void SendEntityDir(Entity en)
     {
         SendDataToProximityOnMapInstance(
-            en.MapId, en.MapInstanceId, new EntityDirectionPacket(en.Id, en.GetEntityType(), en.MapId, (byte)en.Dir), null, TransmissionMode.Any
+            en.MapId, en.MapInstanceId, new EntityDirectionPacket(en.Id, en.Type, en.MapId, (byte)en.Dir), null, TransmissionMode.Any
         );
     }
 
     //EntityAttackPacket
     public static void SendEntityAttack(Entity en, int attackTime, bool isBlocking = false)
     {
-        SendDataToProximityOnMapInstance(en.MapId, en.MapInstanceId, new EntityAttackPacket(en.Id, en.GetEntityType(), en.MapId, attackTime, isBlocking), null, TransmissionMode.Any);
+        SendDataToProximityOnMapInstance(en.MapId, en.MapInstanceId, new EntityAttackPacket(en.Id, en.Type, en.MapId, attackTime, isBlocking), null, TransmissionMode.Any);
     }
 
     //EntityDiePacket
     public static void SendEntityDie(Entity en)
     {
-        SendDataToProximityOnMapInstance(en.MapId, en.MapInstanceId, new EntityDiePacket(en.Id, en.GetEntityType(), en.MapId));
+        SendDataToProximityOnMapInstance(en.MapId, en.MapInstanceId, new EntityDiePacket(en.Id, en.Type, en.MapId));
     }
 
     //EntityDirectionPacket
     public static void SendEntityDirTo(Player player, Entity en)
     {
-        player.SendPacket(new EntityDirectionPacket(en.Id, en.GetEntityType(), en.MapId, (byte)en.Dir), TransmissionMode.Any);
+        player.SendPacket(new EntityDirectionPacket(en.Id, en.Type, en.MapId, (byte)en.Dir), TransmissionMode.Any);
     }
 
     //EventDialogPacket

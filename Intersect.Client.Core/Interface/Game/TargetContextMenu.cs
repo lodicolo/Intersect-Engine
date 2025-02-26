@@ -29,7 +29,7 @@ public sealed partial class TargetContextMenu : ContextMenu
     private readonly MenuItem _guildMenuItem;
     private readonly MenuItem _privateMessageMenuItem;
     private readonly Player? _me;
-    private IEntity? _entity;
+    private IClientEntity? _entity;
 
     public TargetContextMenu(Canvas gameCanvas) : base(gameCanvas, nameof(TargetContextMenu))
     {

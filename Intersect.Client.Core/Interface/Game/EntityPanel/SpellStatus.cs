@@ -70,7 +70,7 @@ public partial class SpellStatus
     }
 
     public static void UpdateSpellStatus(
-        IEntity myEntity,
+        IClientEntity myEntity,
         ScrollControl spellStatusControl,
         Dictionary<Guid, SpellStatus> activeStatuses
     )

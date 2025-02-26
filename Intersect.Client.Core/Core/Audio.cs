@@ -242,7 +242,7 @@ public static partial class Audio
         bool loop,
         int loopInterval,
         int distance,
-        IEntity? parent = null
+        IClientEntity? parent = null
     )
     {
         if (sGameSounds?.Count > 128)

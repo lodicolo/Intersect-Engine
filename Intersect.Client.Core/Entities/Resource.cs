@@ -5,12 +5,13 @@ using Intersect.Client.Framework.GenericClasses;
 using Intersect.Client.Framework.Maps;
 using Intersect.Client.General;
 using Intersect.Enums;
+using Intersect.Framework.Core.Entities;
 using Intersect.GameObjects;
 using Intersect.Network.Packets.Server;
 
 namespace Intersect.Client.Entities;
 
-public partial class Resource : Entity, IResource
+public partial class Resource : Entity, IResourceEntity
 {
     private FloatRect _renderBoundsDest = FloatRect.Empty;
     private FloatRect _renderBoundsSrc = FloatRect.Empty;

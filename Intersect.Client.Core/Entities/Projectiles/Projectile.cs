@@ -2,6 +2,7 @@ using Intersect.Client.Framework.Entities;
 using Intersect.Client.General;
 using Intersect.Enums;
 using Intersect.Framework.Core;
+using Intersect.Framework.Core.Entities;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Maps;
 using Intersect.Network.Packets.Server;
@@ -701,6 +702,12 @@ public partial class Projectile : Entity
         }
     }
 
+    public override bool IsBlockedBy(IEntity entity)
+    {
+        var isBlockedBy = base.IsBlockedBy(entity);
+        return isBlockedBy;
+    }
+
     /// <summary>
     /// Determines if a projectile spawn has collided with an entity, resource, or map block.
     /// </summary>
@@ -714,7 +721,7 @@ public partial class Projectile : Entity
         }
 
         var killSpawn = false;
-        IEntity? blockedBy = default;
+        IClientEntity? blockedBy = default;
         var spawn = _spawns[i];
 
         if (spawn == null)

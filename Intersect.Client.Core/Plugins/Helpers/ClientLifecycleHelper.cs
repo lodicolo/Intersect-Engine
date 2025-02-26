@@ -40,7 +40,7 @@ internal sealed partial class ClientLifecycleHelper : ContextHelper<IClientPlugi
     }
 
     /// <inheritdoc />
-    public void OnGameUpdate(GameStates state, IPlayer player, Dictionary<Guid, IEntity> knownEntities, TimeSpan deltaTime)
+    public void OnGameUpdate(GameStates state, IPlayer player, Dictionary<Guid, IClientEntity> knownEntities, TimeSpan deltaTime)
     {
         var GameUpdateArgs = new GameUpdateArgs(state, player, knownEntities, deltaTime);
         GameUpdate?.Invoke(Context, GameUpdateArgs);
@@ -54,7 +54,7 @@ internal sealed partial class ClientLifecycleHelper : ContextHelper<IClientPlugi
     }
 
     /// <inheritdoc />
-    public void OnGameDraw(DrawStates state, IEntity entity, TimeSpan deltaTime)
+    public void OnGameDraw(DrawStates state, IClientEntity entity, TimeSpan deltaTime)
     {
         var gameDrawArgs = new GameDrawArgs(state, entity, deltaTime);
         GameDraw?.Invoke(Context, gameDrawArgs);

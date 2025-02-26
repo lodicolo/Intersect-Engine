@@ -8,7 +8,9 @@ using Intersect.Core;
 using Intersect.Enums;
 using Intersect.Framework;
 using Intersect.Framework.Core;
+using Intersect.Framework.Core.Entities;
 using Intersect.Framework.Core.GameObjects.Variables;
+using Intersect.GameLogic.Entities;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Animations;
 using Intersect.GameObjects.Crafting;
@@ -1079,10 +1081,7 @@ public partial class Player : Entity
         return pkt;
     }
 
-    public override EntityType GetEntityType()
-    {
-        return EntityType.Player;
-    }
+    public override EntityType Type => EntityType.Player;
 
     //Spawning/Dying
     private void Respawn()
@@ -2981,8 +2980,8 @@ public partial class Player : Entity
     {
         return new EntityItemSource
         {
-            EntityType = GetEntityType(),
-            EntityReference = new WeakReference<IEntity>(this),
+            EntityType = Type,
+            EntityReference = new WeakReference<IServerEntity>(this),
             Id = this.Id
         };
     }
@@ -7276,9 +7275,14 @@ public partial class Player : Entity
         return base.CanMoveInDirection(direction, out blockerType, out entityType);
     }
 
-    protected override bool CanPassPlayer(MapController targetMap)
+    public override bool IsBlockedBy(IEntity entity)
     {
-        return Options.Instance.Passability.Passable[(int)targetMap.ZoneType];
+        if (entity is Player)
+        {
+            return !Options.Instance.Passability.IsPassable(Map.ZoneType);
+        }
+
+        return base.IsBlockedBy(entity);
     }
 
     protected override bool IsBlockedByEvent(

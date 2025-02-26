@@ -27,9 +27,9 @@ public partial class GameUpdateArgs : TimedArgs
 
     public IPlayer Player { get; }
 
-    public IReadOnlyDictionary<Guid, IEntity> KnownEntities { get; }
+    public IReadOnlyDictionary<Guid, IClientEntity> KnownEntities { get; }
 
-    public GameUpdateArgs(GameStates state, IPlayer player, Dictionary<Guid, IEntity> knownEntities, TimeSpan deltaTime) : base(deltaTime)
+    public GameUpdateArgs(GameStates state, IPlayer player, Dictionary<Guid, IClientEntity> knownEntities, TimeSpan deltaTime) : base(deltaTime)
     {
         State = state;
         Player = player;
@@ -41,14 +41,14 @@ public partial class GameDrawArgs : TimedArgs
 {
     public DrawStates State { get; }
 
-    public IEntity Entity { get; }
+    public IClientEntity Entity { get; }
 
     public GameDrawArgs(DrawStates state, TimeSpan deltaTime) : base(deltaTime)
     {
         State = state;
     }
 
-    public GameDrawArgs(DrawStates state, IEntity entity, TimeSpan deltaTime) : base(deltaTime)
+    public GameDrawArgs(DrawStates state, IClientEntity entity, TimeSpan deltaTime) : base(deltaTime)
     {
         State = state;
         Entity = entity;
@@ -115,7 +115,7 @@ public interface IClientLifecycleHelper : ILifecycleHelper
     /// </summary>
     /// <param name="state">The new <see cref="GameStates"/>.</param>
     /// <param name="deltaTime">Time passed since the last update.</param>
-    void OnGameUpdate(GameStates state, IPlayer player, Dictionary<Guid, IEntity> knownEntities, TimeSpan deltaTime);
+    void OnGameUpdate(GameStates state, IPlayer player, Dictionary<Guid, IClientEntity> knownEntities, TimeSpan deltaTime);
 
     /// <summary>
     /// Invokes <see cref="GameDraw"/> handlers for <paramref name="state"/>.
@@ -128,7 +128,7 @@ public interface IClientLifecycleHelper : ILifecycleHelper
     /// Invokes <see cref="GameDraw"/> handlers for <paramref name="state"/>.
     /// </summary>
     /// <param name="state">The new <see cref="DrawStates"/>.</param>
-    /// <param name="entity">The <see cref="IEntity"/> that is being drawn.</param>
+    /// <param name="entity">The <see cref="IClientEntity"/> that is being drawn.</param>
     /// <param name="deltaTime">Time passed since the last update.</param>
-    void OnGameDraw(DrawStates state, IEntity entity, TimeSpan deltaTime);
+    void OnGameDraw(DrawStates state, IClientEntity entity, TimeSpan deltaTime);
 }

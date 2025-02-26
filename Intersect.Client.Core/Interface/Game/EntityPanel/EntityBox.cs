@@ -86,7 +86,7 @@ public partial class EntityBox
 
     public Label MpTitle;
 
-    public IEntity? MyEntity;
+    public IClientEntity? MyEntity;
 
     public ImagePanel[] PaperdollPanels;
 
@@ -203,7 +203,7 @@ public partial class EntityBox
         mLastUpdateTime = Timing.Global.MillisecondsUtc;
     }
 
-    public void SetEntity(IEntity? entity)
+    public void SetEntity(IClientEntity? entity)
     {
         MyEntity = entity;
         if (MyEntity != null)
@@ -220,7 +220,7 @@ public partial class EntityBox
         }
     }
 
-    public void SetEntity(IEntity? entity, EntityType type)
+    public void SetEntity(IClientEntity? entity, EntityType type)
     {
         MyEntity = entity;
         EntityType = type;

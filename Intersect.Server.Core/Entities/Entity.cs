@@ -6,6 +6,8 @@ using Intersect.Collections.Slotting;
 using Intersect.Core;
 using Intersect.Enums;
 using Intersect.Framework.Core;
+using Intersect.Framework.Core.Entities;
+using Intersect.GameLogic.Entities;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Events;
 using Intersect.GameObjects.Maps;
@@ -27,7 +29,7 @@ using Stat = Intersect.Enums.Stat;
 
 namespace Intersect.Server.Entities;
 
-public abstract partial class Entity : IEntity
+public abstract partial class Entity : IServerEntity
 {
     //Instance Values
     private Guid _id = Guid.NewGuid();
@@ -72,8 +74,63 @@ public abstract partial class Entity : IEntity
         Id = instanceId;
     }
 
+    public virtual EntityType Type => EntityType.GlobalEntity;
+
     [Column(Order = 1), JsonProperty(Order = -2)]
     public string Name { get; set; }
+
+    private Vector3 _position;
+
+    [NotMapped]
+    public Vector3 Position
+    {
+        get => _position;
+        set
+        {
+            if (_position == value)
+            {
+                return;
+            }
+
+            var oldValue = _position;
+            var delta = value - oldValue;
+            _position = value;
+            OnPositionChanged(value, oldValue);
+        }
+    }
+
+    protected virtual void OnPositionChanged(Vector3 newPosition, Vector3 oldPosition) {}
+
+    [NotMapped]
+    public int TileX => (int)float.Floor(Position.X);
+
+    [NotMapped]
+    public int TileY => (int)float.Floor(Position.Y);
+
+    [NotMapped]
+    public int TileZ => (int)float.Floor(Position.Z);
+
+    public virtual bool IsBlockedBy(MapAttribute mapAttribute)
+    {
+        return mapAttribute switch
+        {
+            MapZDimensionAttribute zDimensionAttribute => zDimensionAttribute.BlockedLevel == TileZ + 1,
+            MapBlockedAttribute => true,
+            MapAnimationAttribute animationAttribute => animationAttribute.IsBlock,
+            _ => false
+        };
+    }
+
+    public virtual bool IsBlockedBy(IEntity entity)
+    {
+        return entity switch
+        {
+            Player => !Options.Instance.Passability.IsPassable(Map.ZoneType),
+            Resource resource => !resource.IsPassable(),
+            Entity e => !e.Passable,
+            _ => true,
+        };
+    }
 
     public Guid MapId { get; set; }
 
@@ -584,25 +641,16 @@ public abstract partial class Entity : IEntity
         {
             // Set a target if a projectile
             CollisionIndex = mapEntity.Id;
-            switch (mapEntity)
+
+            if (!IsBlockedBy(mapEntity))
             {
-                case Player _ when !CanPassPlayer(mapController):
-                    blockerType = MovementBlockerType.Entity;
-                    entityType = EntityType.Player;
-                    blockingEntity = mapEntity;
-                    return false;
-                case Npc _:
-                    // There should honestly be an Npc EntityType...
-                    blockerType = MovementBlockerType.Entity;
-                    entityType = EntityType.Player;
-                    blockingEntity = mapEntity;
-                    return false;
-                case Resource resource when !resource.IsPassable():
-                    blockerType = MovementBlockerType.Entity;
-                    entityType = EntityType.Resource;
-                    blockingEntity = mapEntity;
-                    return false;
+                continue;
             }
+
+            blockerType = MovementBlockerType.Entity;
+            entityType = mapEntity.Type;
+            blockingEntity = mapEntity;
+            return false;
         }
 
         if (IsBlockedByEvent(mapInstance, tileHelper.GetX(), tileHelper.GetY(), out var blockingEvent))
@@ -665,8 +713,6 @@ public abstract partial class Entity : IEntity
 
         return blockerType != MovementBlockerType.NotBlocked;
     }
-
-    protected virtual bool CanPassPlayer(MapController targetMap) => false;
 
     protected virtual bool IsBlockedByEvent(
         MapInstance mapInstance,
@@ -1049,11 +1095,6 @@ public abstract partial class Entity : IEntity
         }
 
         return Math.Min(1000f, time);
-    }
-
-    public virtual EntityType GetEntityType()
-    {
-        return EntityType.GlobalEntity;
     }
 
     public virtual void Move(Direction moveDir, Player forPlayer, bool doNotUpdate = false,

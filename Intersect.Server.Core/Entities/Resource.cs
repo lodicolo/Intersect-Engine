@@ -208,8 +208,8 @@ public partial class Resource : Entity
     {
         return new EntityItemSource
         {
-            EntityType = GetEntityType(),
-            EntityReference = new WeakReference<IEntity>(this),
+            EntityType = Type,
+            EntityReference = new WeakReference<IServerEntity>(this),
             Id = Descriptor.Id,
         };
     }
@@ -259,8 +259,5 @@ public partial class Resource : Entity
         return resourceEntityPacket;
     }
 
-    public override EntityType GetEntityType()
-    {
-        return EntityType.Resource;
-    }
+    public override EntityType Type => EntityType.Resource;
 }

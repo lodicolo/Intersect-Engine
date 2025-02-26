@@ -2,7 +2,7 @@ using Intersect.Server.Framework.Entities;
 
 namespace Intersect.Server.Framework.Items;
 
-public class EntityItemSource<TEntity> : EntityItemSource where TEntity : class, IEntity
+public class EntityItemSource<TEntity> : EntityItemSource where TEntity : class, IServerEntity
 {
     private WeakReference<TEntity> _entityReference;
 
@@ -14,7 +14,7 @@ public class EntityItemSource<TEntity> : EntityItemSource where TEntity : class,
             _entityReference = value;
             if (_entityReference.TryGetTarget(out TEntity target))
             {
-                base.EntityReference = new WeakReference<IEntity>(target);
+                base.EntityReference = new WeakReference<IServerEntity>(target);
             }
         }
     }
