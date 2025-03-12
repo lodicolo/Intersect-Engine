@@ -1,4 +1,4 @@
-﻿namespace Intersect.Core;
+﻿namespace Intersect.Framework.IO;
 
 /// <summary>
 /// Declares the common basic command line options for all applications.
@@ -8,10 +8,10 @@ public interface ICommandLineOptions
     /// <summary>
     /// The override working directory.
     /// </summary>
-    string WorkingDirectory { get; }
+    string? WorkingDirectory { get; }
 
     /// <summary>
     /// Additional plugin directories besides <c>/working/directory/plugins</c>.
     /// </summary>
-    IEnumerable<string> PluginDirectories { get; }
+    IEnumerable<string>? PluginDirectories { get; }
 }

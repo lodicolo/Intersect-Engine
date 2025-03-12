@@ -1,4 +1,6 @@
-﻿namespace Intersect.Core;
+﻿using Intersect.Framework.IO;
+
+namespace Intersect.Core;
 
 /// <summary>
 /// Declares the API surface for applications with specialized startup options types.

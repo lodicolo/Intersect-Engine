@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using Intersect.Core;
+using Intersect.Framework.IO;
 using Intersect.Network;
 
 namespace Intersect.Server.Core;
@@ -25,10 +26,10 @@ internal partial record ServerCommandLineOptions : ICommandLineOptions
     public ushort Port { get; init; }
 
     [Option("working-directory", Default = null, Required = false)]
-    public string WorkingDirectory { get; init; }
+    public string? WorkingDirectory { get; init; }
 
     [Option('p', "plugin-directory", Default = null, Required = false)]
-    public IEnumerable<string> PluginDirectories { get; init; }
+    public IEnumerable<string>? PluginDirectories { get; init; }
 
     public ushort ValidPort(ushort defaultPort)
     {

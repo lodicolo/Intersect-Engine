@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <UserSecretsId>e6ab2128-c47d-4aaa-8663-37767de692c4</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3"/>
+    <PackageReference Include="Octokit" Version="14.0.0"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Intersect.Framework\Intersect.Framework.csproj"/>
+  </ItemGroup>
+
+</Project>

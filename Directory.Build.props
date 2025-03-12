@@ -6,7 +6,7 @@
 
   <Import Project=".\Common.props"/>
 
-  <Import Condition="Exists('$(IntersectRepoPath)/CustomCommon.props')" Project=".\CustomCommon.props" />
+  <Import Condition="Exists('$(IntersectRepoPath)/CustomCommon.props')" Project=".\CustomCommon.props"/>
 
   <Import Project=".\Intersect.props"/>
 

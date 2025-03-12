@@ -6,4 +6,4 @@ Console.WriteLine(
     $"Starting {executingAssembly.GetMetadataName()} in {Environment.CurrentDirectory}...\n\t{string.Join(' ', args)}"
 );
 
-Intersect.Client.Core.Program.Main(Assembly.GetExecutingAssembly(), args);
+Intersect.Client.Core.Program.Main(executingAssembly, args);
